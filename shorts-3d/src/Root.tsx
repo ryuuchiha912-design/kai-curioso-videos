@@ -37,6 +37,7 @@ export const Root = () => (
     <Composition id="Microondas" component={Microondas} durationInFrames={Math.ceil(MICRO_SEC * FPS)} {...V} defaultProps={{ captions: true }} />
     {/* Vídeo longo 16:9 (canal do Ren) */}
     <Composition id="Ultimo" component={Ultimo} durationInFrames={Math.ceil(ULTIMO_SEC * FPS)} fps={FPS} width={1920} height={1080} defaultProps={{ captions: true, audio: true }} />
+    <Composition id="UltimoHD" component={Ultimo} durationInFrames={Math.ceil(ULTIMO_SEC * FPS)} fps={FPS} width={1280} height={720} defaultProps={{ captions: true, audio: false }} />
     <Composition id="Reel3D" component={Reel} durationInFrames={Math.ceil(REEL_SEC * FPS)} {...V} defaultProps={{ captions: true }} />
     {/* Folhas de personagem (para conferir modelos) */}
     <Composition id="CharacterSheet" component={CharacterSheet} durationInFrames={100} fps={30} width={1080} height={1080} />

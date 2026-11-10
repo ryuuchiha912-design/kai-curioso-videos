@@ -4,6 +4,10 @@ import { Box } from "../kit/props";
 import { Lights } from "../kit/Stage";
 import { canvasTexture, FONT } from "../kit/textures";
 import { clamp01, rand } from "../kit/anim";
+import { getInputProps } from "remotion";
+
+/** Modo leve (render sem placa de vídeo): sem sombras projetadas. */
+const LITE = (getInputProps() as { lite?: boolean }).lite === true;
 
 type V3 = [number, number, number];
 const M: React.FC<{ c: string; r?: number; m?: number; e?: string; ei?: number; map?: THREE.Texture; side?: THREE.Side; t?: number }> = ({ c, r = 0.7, m = 0, e, ei = 0, map, side, t }) => (
@@ -12,10 +16,10 @@ const M: React.FC<{ c: string; r?: number; m?: number; e?: string; ei?: number; 
 const lerpC = (a: string, b: string, k: number) => "#" + new THREE.Color(a).lerp(new THREE.Color(b), clamp01(k)).getHexString();
 
 // ------------------------------------------------------------------ luzes por clima
-export const LIGHT_DAY = <Lights warm="#fff1d6" sky="#dbe9ff" key={2.3} keyPos={[-5, 8, 6]} />;
-export const LIGHT_GOLD = <Lights warm="#ffc27a" sky="#ffd9b0" key={2.4} keyPos={[6, 4, 5]} />;
-export const LIGHT_NIGHT = <Lights warm="#9fb4ff" sky="#3a4a8a" key={1.1} keyPos={[4, 8, 3]} />;
-export const LIGHT_GREY = <Lights warm="#e6e6e6" sky="#c9d2dc" key={1.7} keyPos={[-4, 7, 5]} />;
+export const LIGHT_DAY = <Lights warm="#fff1d6" sky="#dbe9ff" key={2.3} keyPos={[-5, 8, 6]} shadows={!LITE} />;
+export const LIGHT_GOLD = <Lights warm="#ffc27a" sky="#ffd9b0" key={2.4} keyPos={[6, 4, 5]} shadows={!LITE} />;
+export const LIGHT_NIGHT = <Lights warm="#9fb4ff" sky="#3a4a8a" key={1.1} keyPos={[4, 8, 3]} shadows={!LITE} />;
+export const LIGHT_GREY = <Lights warm="#e6e6e6" sky="#c9d2dc" key={1.7} keyPos={[-4, 7, 5]} shadows={!LITE} />;
 
 // ------------------------------------------------------------------ céu
 export const Sky: React.FC<{ night?: boolean; dusk?: boolean; frame?: number; milky?: boolean; color?: string }> = ({ night, dusk, frame = 0, milky = true, color }) => {
@@ -311,7 +315,7 @@ export const Earth: React.FC<{ p?: V3; r?: number; frame: number; night?: boolea
   <group position={p}>
     <mesh rotation={[0.3, frame * 0.002, 0]}><sphereGeometry args={[r, 48, 32]} /><meshStandardMaterial map={earthTex()} roughness={0.8} /></mesh>
     <mesh scale={1.03}><sphereGeometry args={[r, 32, 24]} /><meshBasicMaterial color="#8fd0ff" transparent opacity={0.15} side={THREE.BackSide} /></mesh>
-    {night && <mesh scale={1.001} rotation={[0.3, frame * 0.002, 0]}><sphereGeometry args={[r, 32, 24]} /><meshBasicMaterial color="#000010" transparent opacity={0.45} /></mesh>}
+    {night && <mesh scale={1.015} rotation={[0.3, frame * 0.002, 0]}><sphereGeometry args={[r, 48, 32]} /><meshBasicMaterial color="#000010" transparent opacity={0.4} depthWrite={false} /></mesh>}
   </group>
 );
 export const Satellite: React.FC<{ p: V3; rot?: V3; s?: number; burn?: number }> = ({ p, rot = [0, 0, 0], s = 1, burn = 0 }) => (

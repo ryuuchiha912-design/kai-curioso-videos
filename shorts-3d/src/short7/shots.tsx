@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, interpolate } from "remotion";
+import { AbsoluteFill, interpolate, useVideoConfig } from "remotion";
 import data from "../data/ultimo-timeline.json";
 import { Capybara } from "../kit/Capybara";
 import { Pose } from "../kit/Character";
@@ -53,27 +53,32 @@ const CityS: React.FC<{ f: number; cam: Cam; st?: Partial<CityState>; look?: Loo
 
 // ------------------------------------------------------------------ 2D: cartões de tempo, celular, HUD
 const SECTIONS: [number, string][] = [[6, "1 HORA"], [20, "1 DIA"], [28, "1 SEMANA"], [41, "1 MÊS"], [47, "1 ANO"], [57, "10 ANOS"], [68, "100 ANOS"], [73, "1.000 ANOS"]];
+/** Desenha conteúdo 2D pensado em 1920x1080 em qualquer resolução 16:9. */
+const Fit: React.FC<{ children: React.ReactNode; style?: React.CSSProperties }> = ({ children, style }) => {
+  const { width } = useVideoConfig();
+  return <AbsoluteFill style={{ overflow: "hidden" }}><div style={{ position: "absolute", left: 0, top: 0, width: 1920, height: 1080, transform: `scale(${width / 1920})`, transformOrigin: "0 0", display: "flex", ...style }}>{children}</div></AbsoluteFill>;
+};
 const TimeCard: React.FC<{ f: number; s: number; label: string }> = ({ f, s, label }) => {
   const k = interpolate(f - s, [0, 8], [0.85, 1], { extrapolateRight: "clamp" });
   return (
-    <AbsoluteFill style={{ background: "#0d0d10", justifyContent: "center", alignItems: "center" }}>
+    <Fit style={{ background: "#0d0d10", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
       <div style={{ fontFamily: FONT, color: "#8d929c", fontSize: 46, letterSpacing: 12 }}>SEM HUMANOS HÁ</div>
       <div style={{ fontFamily: FONT, color: "#ffffff", fontSize: 200, transform: `scale(${k})`, textShadow: "0 0 40px rgba(255,255,255,0.25)" }}>{label}</div>
-    </AbsoluteFill>
+    </Fit>
   );
 };
 export const hudLabel = (f: number) => { let lab = ""; for (const [li, l] of SECTIONS) if (f >= Math.round(LINES[li].start * FPS) - 3) lab = l; return lab; };
 const Phone: React.FC<{ f: number; s: number; mode: "signal" | "msg" }> = ({ f, s, mode }) => {
   const k = interpolate(f - s, [0, 10], [0, 1], { extrapolateRight: "clamp" });
   return (
-    <AbsoluteFill style={{ justifyContent: "center", alignItems: "flex-end", paddingRight: 220, pointerEvents: "none" }}>
+    <Fit style={{ justifyContent: "flex-end", alignItems: "center", paddingRight: 220, boxSizing: "border-box", pointerEvents: "none" }}>
       <div style={{ width: 360, height: 680, borderRadius: 48, background: "#111", border: "10px solid #2a2a30", transform: `translateY(${(1 - k) * 400}px) rotate(-4deg)`, padding: 24, boxSizing: "border-box", display: "flex", flexDirection: "column", gap: 18 }}>
         <div style={{ fontFamily: FONT, color: "#e04b3c", fontSize: 30 }}>{mode === "signal" ? "SEM SERVIÇO" : "Mãe"}</div>
         {mode === "msg" && <div style={{ alignSelf: "flex-end", background: "#2c6fb6", color: "#fff", fontFamily: FONT, fontSize: 30, padding: "14px 20px", borderRadius: 22 }}>mãe cadê vc??</div>}
         {mode === "msg" && <div style={{ alignSelf: "flex-end", color: "#9aa3ad", fontFamily: FONT, fontSize: 24 }}>Enviando{".".repeat(1 + (Math.floor(f / 10) % 3))}</div>}
         {mode === "signal" && <div style={{ fontFamily: FONT, color: "#9aa3ad", fontSize: 120, textAlign: "center", marginTop: 120 }}>✕</div>}
       </div>
-    </AbsoluteFill>
+    </Fit>
   );
 };
 
