@@ -1,0 +1,19 @@
+[
+ {"id":1,"who":"narrador","text":"Essa capivara comeu tanto doce que saiu voando."},
+ {"id":2,"who":"narrador","text":"De manhã, a Jujuba comeu um brigadeiro."},
+ {"id":3,"who":"narrador","text":"No almoço, dois pirulitos e três sorvetes."},
+ {"id":4,"who":"jujuba","text":"Sobremesa também é comida!"},
+ {"id":5,"who":"narrador","text":"De tarde, foram dez bombons."},
+ {"id":6,"who":"narrador","text":"E de noite, um bolo inteiro de chocolate."},
+ {"id":7,"who":"narrador","text":"Só que a barriga dela começou a crescer, e crescer, e crescer."},
+ {"id":8,"who":"jujuba","text":"Ih... acho que exagerei."},
+ {"id":9,"who":"narrador","text":"E os pezinhos saíram do chão."},
+ {"id":10,"who":"narrador","text":"A Jujuba virou um balão!"},
+ {"id":11,"who":"narrador","text":"Passou por cima do rio, das árvores, e subiu até as nuvens."},
+ {"id":12,"who":"jujuba","text":"Alguém me desce daqui!"},
+ {"id":13,"who":"narrador","text":"Aí um passarinho deu uma bicadinha."},
+ {"id":14,"pause":1.3,"sfx":"pfff"},
+ {"id":15,"who":"narrador","text":"E ela desceu, devagarinho, de volta pra beira do rio."},
+ {"id":16,"who":"narrador","text":"Desde aquele dia, a Jujuba come doce só uma vez por semana."},
+ {"id":17,"who":"jujuba","text":"E melancia todo dia!"}
+]

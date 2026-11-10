@@ -1,0 +1,18 @@
+[
+ {"id":1,"who":"narrador","text":"Mil novecentos e noventa e oito."},
+ {"id":2,"who":"narrador","text":"Esse menino tinha uma missão: salvar um reino inteiro."},
+ {"id":3,"who":"narrador","text":"Do lado, um pacote de bala e um refri."},
+ {"id":4,"who":"caio","text":"Só mais uma fase, mãe!"},
+ {"id":5,"who":"narrador","text":"No jogo, tinha uma flauta mágica. Três notas, e uma ponte de luz aparecia."},
+ {"id":6,"who":"narrador","text":"Aí os anos passaram."},
+ {"id":7,"who":"narrador","text":"Escola. Faculdade. Trabalho. Boleto."},
+ {"id":8,"who":"narrador","text":"Vinte e oito anos depois,"},
+ {"id":9,"who":"narrador","text":"saiu a versão nova daquele jogo de aventura."},
+ {"id":10,"who":"adulto","text":"Não acredito."},
+ {"id":11,"who":"narrador","text":"Ele sentou no chão. Pegou uma bala. Abriu um refri."},
+ {"id":12,"who":"narrador","text":"E quando a flauta tocou as mesmas três notas,","rate":"+0%"},
+ {"id":13,"pause":1.6},
+ {"id":14,"who":"narrador","text":"por um segundo, ele tinha oito anos de novo.","rate":"-4%"},
+ {"id":15,"who":"adulto","text":"Valeu, moleque."},
+ {"id":16,"who":"narrador","text":"Tem jogo que a gente zera. E tem jogo que fica com a gente pra sempre.","rate":"-4%"}
+]

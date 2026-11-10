@@ -1,0 +1,745 @@
+{
+ "total": 40.137,
+ "lines": [
+  {
+   "id": 1,
+   "who": "narrador",
+   "text": "Dá pra narrar um vídeo inteiro com voz de inteligência artificial, sem pagar nada.",
+   "audio": "audio/reel/l01.mp3",
+   "audioStart": 0.203,
+   "fileDur": 5.232,
+   "start": 0.3,
+   "end": 4.616,
+   "words": [
+    {
+     "text": "Dá",
+     "start": 0.3,
+     "end": 0.477
+    },
+    {
+     "text": "pra",
+     "start": 0.489,
+     "end": 0.63
+    },
+    {
+     "text": "narrar",
+     "start": 0.642,
+     "end": 0.925
+    },
+    {
+     "text": "um",
+     "start": 0.937,
+     "end": 1.043
+    },
+    {
+     "text": "vídeo",
+     "start": 1.055,
+     "end": 1.314
+    },
+    {
+     "text": "inteiro",
+     "start": 1.326,
+     "end": 1.727
+    },
+    {
+     "text": "com",
+     "start": 1.739,
+     "end": 1.927
+    },
+    {
+     "text": "voz",
+     "start": 1.939,
+     "end": 2.21
+    },
+    {
+     "text": "de",
+     "start": 2.222,
+     "end": 2.293
+    },
+    {
+     "text": "inteligência",
+     "start": 2.305,
+     "end": 2.871
+    },
+    {
+     "text": "artificial",
+     "start": 2.883,
+     "end": 3.508
+    },
+    {
+     "text": "sem",
+     "start": 3.767,
+     "end": 3.932
+    },
+    {
+     "text": "pagar",
+     "start": 3.944,
+     "end": 4.262
+    },
+    {
+     "text": "nada",
+     "start": 4.274,
+     "end": 4.616
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "who": "leo",
+   "text": "Mas voz boa custa caro todo mês!",
+   "audio": "audio/reel/l02.mp3",
+   "audioStart": 4.75,
+   "fileDur": 2.4,
+   "start": 4.796,
+   "end": 6.827,
+   "words": [
+    {
+     "text": "Mas",
+     "start": 4.796,
+     "end": 5.019
+    },
+    {
+     "text": "voz",
+     "start": 5.019,
+     "end": 5.298
+    },
+    {
+     "text": "boa",
+     "start": 5.298,
+     "end": 5.588
+    },
+    {
+     "text": "custa",
+     "start": 5.588,
+     "end": 5.957
+    },
+    {
+     "text": "caro",
+     "start": 5.957,
+     "end": 6.225
+    },
+    {
+     "text": "todo",
+     "start": 6.225,
+     "end": 6.504
+    },
+    {
+     "text": "mês",
+     "start": 6.504,
+     "end": 6.827
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "who": "narrador",
+   "text": "Só que tem o Voice Studio, de código aberto no GitHub: você baixa e roda no seu computador.",
+   "audio": "audio/reel/l03.mp3",
+   "audioStart": 6.91,
+   "fileDur": 6.384,
+   "start": 7.007,
+   "end": 12.467,
+   "words": [
+    {
+     "text": "Só",
+     "start": 7.007,
+     "end": 7.29
+    },
+    {
+     "text": "que",
+     "start": 7.302,
+     "end": 7.432
+    },
+    {
+     "text": "tem",
+     "start": 7.444,
+     "end": 7.573
+    },
+    {
+     "text": "o",
+     "start": 7.585,
+     "end": 7.644
+    },
+    {
+     "text": "Voice",
+     "start": 7.656,
+     "end": 7.986
+    },
+    {
+     "text": "Studio",
+     "start": 7.998,
+     "end": 8.399
+    },
+    {
+     "text": "de",
+     "start": 8.646,
+     "end": 8.776
+    },
+    {
+     "text": "código",
+     "start": 8.788,
+     "end": 9.118
+    },
+    {
+     "text": "aberto",
+     "start": 9.13,
+     "end": 9.531
+    },
+    {
+     "text": "no",
+     "start": 9.543,
+     "end": 9.625
+    },
+    {
+     "text": "GitHub",
+     "start": 9.637,
+     "end": 10.132
+    },
+    {
+     "text": "você",
+     "start": 10.463,
+     "end": 10.734
+    },
+    {
+     "text": "baixa",
+     "start": 10.745,
+     "end": 11.182
+    },
+    {
+     "text": "e",
+     "start": 11.194,
+     "end": 11.229
+    },
+    {
+     "text": "roda",
+     "start": 11.241,
+     "end": 11.559
+    },
+    {
+     "text": "no",
+     "start": 11.571,
+     "end": 11.665
+    },
+    {
+     "text": "seu",
+     "start": 11.677,
+     "end": 11.854
+    },
+    {
+     "text": "computador",
+     "start": 11.866,
+     "end": 12.467
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "who": "eco",
+   "text": "Oi, Leo! Agora eu falo igualzinho a você.",
+   "audio": "audio/reel/l04.mp3",
+   "audioStart": 12.591,
+   "fileDur": 3.168,
+   "start": 12.647,
+   "end": 15.45,
+   "words": [
+    {
+     "text": "Oi",
+     "start": 12.647,
+     "end": 12.926
+    },
+    {
+     "text": "Leo",
+     "start": 13.049,
+     "end": 13.406
+    },
+    {
+     "text": "Agora",
+     "start": 13.709,
+     "end": 14.111
+    },
+    {
+     "text": "eu",
+     "start": 14.111,
+     "end": 14.155
+    },
+    {
+     "text": "falo",
+     "start": 14.155,
+     "end": 14.423
+    },
+    {
+     "text": "igualzinho",
+     "start": 14.423,
+     "end": 15.07
+    },
+    {
+     "text": "a",
+     "start": 15.07,
+     "end": 15.093
+    },
+    {
+     "text": "você",
+     "start": 15.093,
+     "end": 15.45
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "who": "leo",
+   "text": "Ei! Essa voz é minha!",
+   "audio": "audio/reel/l05.mp3",
+   "audioStart": 15.584,
+   "fileDur": 2.016,
+   "start": 15.63,
+   "end": 17.28,
+   "words": [
+    {
+     "text": "Ei",
+     "start": 15.63,
+     "end": 15.864
+    },
+    {
+     "text": "Essa",
+     "start": 16.198,
+     "end": 16.599
+    },
+    {
+     "text": "voz",
+     "start": 16.599,
+     "end": 16.823
+    },
+    {
+     "text": "é",
+     "start": 16.823,
+     "end": 16.957
+    },
+    {
+     "text": "minha",
+     "start": 16.957,
+     "end": 17.28
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "who": "narrador",
+   "text": "E dá pra inventar uma voz nova, só escrevendo como ela é.",
+   "audio": "audio/reel/l06.mp3",
+   "audioStart": 17.363,
+   "fileDur": 4.248,
+   "start": 17.46,
+   "end": 20.798,
+   "words": [
+    {
+     "text": "E",
+     "start": 17.46,
+     "end": 17.566
+    },
+    {
+     "text": "dá",
+     "start": 17.578,
+     "end": 17.72
+    },
+    {
+     "text": "pra",
+     "start": 17.732,
+     "end": 17.861
+    },
+    {
+     "text": "inventar",
+     "start": 17.873,
+     "end": 18.333
+    },
+    {
+     "text": "uma",
+     "start": 18.345,
+     "end": 18.498
+    },
+    {
+     "text": "voz",
+     "start": 18.51,
+     "end": 18.769
+    },
+    {
+     "text": "nova",
+     "start": 18.781,
+     "end": 19.111
+    },
+    {
+     "text": "só",
+     "start": 19.359,
+     "end": 19.524
+    },
+    {
+     "text": "escrevendo",
+     "start": 19.536,
+     "end": 20.125
+    },
+    {
+     "text": "como",
+     "start": 20.137,
+     "end": 20.385
+    },
+    {
+     "text": "ela",
+     "start": 20.397,
+     "end": 20.597
+    },
+    {
+     "text": "é",
+     "start": 20.609,
+     "end": 20.798
+    }
+   ]
+  },
+  {
+   "id": 7,
+   "who": "leo",
+   "text": "Voz de contador de terror, bem grossa, com cem anos de idade!",
+   "audio": "audio/reel/l07.mp3",
+   "audioStart": 20.932,
+   "fileDur": 3.912,
+   "start": 20.978,
+   "end": 24.527,
+   "words": [
+    {
+     "text": "Voz",
+     "start": 20.978,
+     "end": 21.268
+    },
+    {
+     "text": "de",
+     "start": 21.268,
+     "end": 21.346
+    },
+    {
+     "text": "contador",
+     "start": 21.346,
+     "end": 21.792
+    },
+    {
+     "text": "de",
+     "start": 21.792,
+     "end": 21.882
+    },
+    {
+     "text": "terror",
+     "start": 21.882,
+     "end": 22.25
+    },
+    {
+     "text": "bem",
+     "start": 22.428,
+     "end": 22.685
+    },
+    {
+     "text": "grossa",
+     "start": 22.685,
+     "end": 23.132
+    },
+    {
+     "text": "com",
+     "start": 23.277,
+     "end": 23.411
+    },
+    {
+     "text": "cem",
+     "start": 23.411,
+     "end": 23.768
+    },
+    {
+     "text": "anos",
+     "start": 23.768,
+     "end": 24.013
+    },
+    {
+     "text": "de",
+     "start": 24.013,
+     "end": 24.08
+    },
+    {
+     "text": "idade",
+     "start": 24.08,
+     "end": 24.527
+    }
+   ]
+  },
+  {
+   "id": 8,
+   "who": "ecoGrave",
+   "text": "Era uma noite escura... e tempestuosa.",
+   "audio": "audio/reel/l08.mp3",
+   "audioStart": 24.596,
+   "fileDur": 3.936,
+   "start": 24.707,
+   "end": 27.481,
+   "words": [
+    {
+     "text": "Era",
+     "start": 24.707,
+     "end": 24.966
+    },
+    {
+     "text": "uma",
+     "start": 24.981,
+     "end": 25.118
+    },
+    {
+     "text": "noite",
+     "start": 25.133,
+     "end": 25.545
+    },
+    {
+     "text": "escura",
+     "start": 25.56,
+     "end": 26.109
+    },
+    {
+     "text": "e",
+     "start": 26.353,
+     "end": 26.475
+    },
+    {
+     "text": "tempestuosa",
+     "start": 26.49,
+     "end": 27.481
+    }
+   ]
+  },
+  {
+   "id": 9,
+   "who": "leo",
+   "text": "Ficou melhor que a minha!",
+   "audio": "audio/reel/l09.mp3",
+   "audioStart": 27.615,
+   "fileDur": 1.872,
+   "start": 27.661,
+   "end": 28.889,
+   "words": [
+    {
+     "text": "Ficou",
+     "start": 27.661,
+     "end": 28.018
+    },
+    {
+     "text": "melhor",
+     "start": 28.018,
+     "end": 28.465
+    },
+    {
+     "text": "que",
+     "start": 28.465,
+     "end": 28.554
+    },
+    {
+     "text": "a",
+     "start": 28.554,
+     "end": 28.598
+    },
+    {
+     "text": "minha",
+     "start": 28.598,
+     "end": 28.889
+    }
+   ]
+  },
+  {
+   "id": 10,
+   "who": "narrador",
+   "text": "Com isso, o Leo abriu canal de histórias em três lugares.",
+   "audio": "audio/reel/l10.mp3",
+   "audioStart": 28.971,
+   "fileDur": 4.272,
+   "start": 29.069,
+   "end": 32.418,
+   "words": [
+    {
+     "text": "Com",
+     "start": 29.069,
+     "end": 29.328
+    },
+    {
+     "text": "isso",
+     "start": 29.34,
+     "end": 29.623
+    },
+    {
+     "text": "o",
+     "start": 29.882,
+     "end": 29.965
+    },
+    {
+     "text": "Leo",
+     "start": 29.977,
+     "end": 30.248
+    },
+    {
+     "text": "abriu",
+     "start": 30.26,
+     "end": 30.543
+    },
+    {
+     "text": "canal",
+     "start": 30.554,
+     "end": 30.885
+    },
+    {
+     "text": "de",
+     "start": 30.896,
+     "end": 30.967
+    },
+    {
+     "text": "histórias",
+     "start": 30.979,
+     "end": 31.345
+    },
+    {
+     "text": "em",
+     "start": 31.356,
+     "end": 31.545
+    },
+    {
+     "text": "três",
+     "start": 31.557,
+     "end": 31.84
+    },
+    {
+     "text": "lugares",
+     "start": 31.852,
+     "end": 32.418
+    }
+   ]
+  },
+  {
+   "id": 11,
+   "who": "eco",
+   "text": "Só uma regra: clone só a sua voz, ou de quem deixou.",
+   "audio": "audio/reel/l11.mp3",
+   "audioStart": 32.552,
+   "fileDur": 3.552,
+   "start": 32.598,
+   "end": 35.767,
+   "words": [
+    {
+     "text": "Só",
+     "start": 32.598,
+     "end": 32.843
+    },
+    {
+     "text": "uma",
+     "start": 32.843,
+     "end": 32.988
+    },
+    {
+     "text": "regra",
+     "start": 32.988,
+     "end": 33.334
+    },
+    {
+     "text": "clone",
+     "start": 33.546,
+     "end": 33.903
+    },
+    {
+     "text": "só",
+     "start": 33.904,
+     "end": 34.183
+    },
+    {
+     "text": "a",
+     "start": 34.183,
+     "end": 34.227
+    },
+    {
+     "text": "sua",
+     "start": 34.227,
+     "end": 34.45
+    },
+    {
+     "text": "voz",
+     "start": 34.45,
+     "end": 34.785
+    },
+    {
+     "text": "ou",
+     "start": 34.986,
+     "end": 35.12
+    },
+    {
+     "text": "de",
+     "start": 35.12,
+     "end": 35.209
+    },
+    {
+     "text": "quem",
+     "start": 35.209,
+     "end": 35.343
+    },
+    {
+     "text": "deixou",
+     "start": 35.343,
+     "end": 35.767
+    }
+   ]
+  },
+  {
+   "id": 12,
+   "who": "leo",
+   "text": "Comenta Voice Studio que eu te mando o projeto!",
+   "audio": "audio/reel/l12.mp3",
+   "audioStart": 35.903,
+   "fileDur": 2.568,
+   "start": 35.947,
+   "end": 38.157,
+   "words": [
+    {
+     "text": "Comenta",
+     "start": 35.947,
+     "end": 36.383
+    },
+    {
+     "text": "Voice",
+     "start": 36.383,
+     "end": 36.74
+    },
+    {
+     "text": "Studio",
+     "start": 36.74,
+     "end": 37.186
+    },
+    {
+     "text": "que",
+     "start": 37.186,
+     "end": 37.264
+    },
+    {
+     "text": "eu",
+     "start": 37.264,
+     "end": 37.331
+    },
+    {
+     "text": "te",
+     "start": 37.331,
+     "end": 37.443
+    },
+    {
+     "text": "mando",
+     "start": 37.443,
+     "end": 37.666
+    },
+    {
+     "text": "o",
+     "start": 37.666,
+     "end": 37.677
+    },
+    {
+     "text": "projeto",
+     "start": 37.677,
+     "end": 38.157
+    }
+   ]
+  }
+ ],
+ "pauses": []
+}

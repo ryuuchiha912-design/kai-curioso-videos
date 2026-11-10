@@ -1,0 +1,775 @@
+{
+ "total": 42.418,
+ "lines": [
+  {
+   "id": 1,
+   "who": "narrador",
+   "text": "Essa capivara comeu tanto doce que saiu voando.",
+   "audio": "audio/capivara/l01.mp3",
+   "audioStart": 0.203,
+   "fileDur": 3.576,
+   "start": 0.3,
+   "end": 2.965,
+   "words": [
+    {
+     "text": "Essa",
+     "start": 0.3,
+     "end": 0.559
+    },
+    {
+     "text": "capivara",
+     "start": 0.571,
+     "end": 1.043
+    },
+    {
+     "text": "comeu",
+     "start": 1.055,
+     "end": 1.349
+    },
+    {
+     "text": "tanto",
+     "start": 1.361,
+     "end": 1.692
+    },
+    {
+     "text": "doce",
+     "start": 1.703,
+     "end": 2.057
+    },
+    {
+     "text": "que",
+     "start": 2.069,
+     "end": 2.175
+    },
+    {
+     "text": "saiu",
+     "start": 2.187,
+     "end": 2.517
+    },
+    {
+     "text": "voando",
+     "start": 2.529,
+     "end": 2.965
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "who": "narrador",
+   "text": "De manhã, a Jujuba comeu um brigadeiro.",
+   "audio": "audio/capivara/l02.mp3",
+   "audioStart": 3.048,
+   "fileDur": 3.12,
+   "start": 3.145,
+   "end": 5.35,
+   "words": [
+    {
+     "text": "De",
+     "start": 3.145,
+     "end": 3.287
+    },
+    {
+     "text": "manhã",
+     "start": 3.298,
+     "end": 3.676
+    },
+    {
+     "text": "a",
+     "start": 3.9,
+     "end": 3.971
+    },
+    {
+     "text": "Jujuba",
+     "start": 3.982,
+     "end": 4.431
+    },
+    {
+     "text": "comeu",
+     "start": 4.442,
+     "end": 4.702
+    },
+    {
+     "text": "um",
+     "start": 4.714,
+     "end": 4.772
+    },
+    {
+     "text": "brigadeiro",
+     "start": 4.784,
+     "end": 5.35
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "who": "narrador",
+   "text": "No almoço, dois pirulitos e três sorvetes.",
+   "audio": "audio/capivara/l03.mp3",
+   "audioStart": 5.433,
+   "fileDur": 3.624,
+   "start": 5.53,
+   "end": 8.231,
+   "words": [
+    {
+     "text": "No",
+     "start": 5.53,
+     "end": 5.672
+    },
+    {
+     "text": "almoço",
+     "start": 5.684,
+     "end": 6.167
+    },
+    {
+     "text": "dois",
+     "start": 6.391,
+     "end": 6.686
+    },
+    {
+     "text": "pirulitos",
+     "start": 6.698,
+     "end": 7.17
+    },
+    {
+     "text": "e",
+     "start": 7.181,
+     "end": 7.323
+    },
+    {
+     "text": "três",
+     "start": 7.335,
+     "end": 7.559
+    },
+    {
+     "text": "sorvetes",
+     "start": 7.57,
+     "end": 8.231
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "who": "jujuba",
+   "text": "Sobremesa também é comida!",
+   "audio": "audio/capivara/l04.mp3",
+   "audioStart": 8.316,
+   "fileDur": 2.376,
+   "start": 8.411,
+   "end": 9.906,
+   "words": [
+    {
+     "text": "Sobremesa",
+     "start": 8.411,
+     "end": 9.047
+    },
+    {
+     "text": "também",
+     "start": 9.058,
+     "end": 9.359
+    },
+    {
+     "text": "é",
+     "start": 9.371,
+     "end": 9.415
+    },
+    {
+     "text": "comida",
+     "start": 9.426,
+     "end": 9.906
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "who": "narrador",
+   "text": "De tarde, foram dez bombons.",
+   "audio": "audio/capivara/l05.mp3",
+   "audioStart": 9.989,
+   "fileDur": 2.928,
+   "start": 10.086,
+   "end": 12.091,
+   "words": [
+    {
+     "text": "De",
+     "start": 10.086,
+     "end": 10.287
+    },
+    {
+     "text": "tarde",
+     "start": 10.299,
+     "end": 10.652
+    },
+    {
+     "text": "foram",
+     "start": 10.865,
+     "end": 11.159
+    },
+    {
+     "text": "dez",
+     "start": 11.171,
+     "end": 11.466
+    },
+    {
+     "text": "bombons",
+     "start": 11.478,
+     "end": 12.091
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "who": "narrador",
+   "text": "E de noite, um bolo inteiro de chocolate.",
+   "audio": "audio/capivara/l06.mp3",
+   "audioStart": 12.174,
+   "fileDur": 3.264,
+   "start": 12.271,
+   "end": 14.606,
+   "words": [
+    {
+     "text": "E",
+     "start": 12.271,
+     "end": 12.354
+    },
+    {
+     "text": "de",
+     "start": 12.365,
+     "end": 12.472
+    },
+    {
+     "text": "noite",
+     "start": 12.483,
+     "end": 12.861
+    },
+    {
+     "text": "um",
+     "start": 13.002,
+     "end": 13.144
+    },
+    {
+     "text": "bolo",
+     "start": 13.155,
+     "end": 13.438
+    },
+    {
+     "text": "inteiro",
+     "start": 13.45,
+     "end": 13.828
+    },
+    {
+     "text": "de",
+     "start": 13.839,
+     "end": 13.922
+    },
+    {
+     "text": "chocolate",
+     "start": 13.934,
+     "end": 14.606
+    }
+   ]
+  },
+  {
+   "id": 7,
+   "who": "narrador",
+   "text": "Só que a barriga dela começou a crescer, e crescer, e crescer.",
+   "audio": "audio/capivara/l07.mp3",
+   "audioStart": 14.689,
+   "fileDur": 4.56,
+   "start": 14.786,
+   "end": 18.43,
+   "words": [
+    {
+     "text": "Só",
+     "start": 14.786,
+     "end": 15.057
+    },
+    {
+     "text": "que",
+     "start": 15.069,
+     "end": 15.14
+    },
+    {
+     "text": "a",
+     "start": 15.152,
+     "end": 15.175
+    },
+    {
+     "text": "barriga",
+     "start": 15.187,
+     "end": 15.588
+    },
+    {
+     "text": "dela",
+     "start": 15.6,
+     "end": 15.812
+    },
+    {
+     "text": "começou",
+     "start": 15.824,
+     "end": 16.236
+    },
+    {
+     "text": "a",
+     "start": 16.248,
+     "end": 16.295
+    },
+    {
+     "text": "crescer",
+     "start": 16.307,
+     "end": 16.767
+    },
+    {
+     "text": "e",
+     "start": 17.062,
+     "end": 17.133
+    },
+    {
+     "text": "crescer",
+     "start": 17.144,
+     "end": 17.628
+    },
+    {
+     "text": "e",
+     "start": 17.911,
+     "end": 17.97
+    },
+    {
+     "text": "crescer",
+     "start": 17.982,
+     "end": 18.43
+    }
+   ]
+  },
+  {
+   "id": 8,
+   "who": "jujuba",
+   "text": "Ih... acho que exagerei.",
+   "audio": "audio/capivara/l08.mp3",
+   "audioStart": 18.515,
+   "fileDur": 2.184,
+   "start": 18.61,
+   "end": 19.927,
+   "words": [
+    {
+     "text": "Ih",
+     "start": 18.61,
+     "end": 18.8
+    },
+    {
+     "text": "acho",
+     "start": 19.023,
+     "end": 19.313
+    },
+    {
+     "text": "que",
+     "start": 19.324,
+     "end": 19.391
+    },
+    {
+     "text": "exagerei",
+     "start": 19.402,
+     "end": 19.927
+    }
+   ]
+  },
+  {
+   "id": 9,
+   "who": "narrador",
+   "text": "E os pezinhos saíram do chão.",
+   "audio": "audio/capivara/l09.mp3",
+   "audioStart": 20.01,
+   "fileDur": 2.52,
+   "start": 20.107,
+   "end": 21.711,
+   "words": [
+    {
+     "text": "E",
+     "start": 20.107,
+     "end": 20.201
+    },
+    {
+     "text": "os",
+     "start": 20.213,
+     "end": 20.331
+    },
+    {
+     "text": "pezinhos",
+     "start": 20.343,
+     "end": 20.885
+    },
+    {
+     "text": "saíram",
+     "start": 20.897,
+     "end": 21.239
+    },
+    {
+     "text": "do",
+     "start": 21.251,
+     "end": 21.369
+    },
+    {
+     "text": "chão",
+     "start": 21.38,
+     "end": 21.711
+    }
+   ]
+  },
+  {
+   "id": 10,
+   "who": "narrador",
+   "text": "A Jujuba virou um balão!",
+   "audio": "audio/capivara/l10.mp3",
+   "audioStart": 21.793,
+   "fileDur": 2.4,
+   "start": 21.891,
+   "end": 23.376,
+   "words": [
+    {
+     "text": "A",
+     "start": 21.891,
+     "end": 22.032
+    },
+    {
+     "text": "Jujuba",
+     "start": 22.044,
+     "end": 22.575
+    },
+    {
+     "text": "virou",
+     "start": 22.586,
+     "end": 22.834
+    },
+    {
+     "text": "um",
+     "start": 22.846,
+     "end": 22.917
+    },
+    {
+     "text": "balão",
+     "start": 22.928,
+     "end": 23.376
+    }
+   ]
+  },
+  {
+   "id": 11,
+   "who": "narrador",
+   "text": "Passou por cima do rio, das árvores, e subiu até as nuvens.",
+   "audio": "audio/capivara/l11.mp3",
+   "audioStart": 23.459,
+   "fileDur": 4.728,
+   "start": 23.556,
+   "end": 27.365,
+   "words": [
+    {
+     "text": "Passou",
+     "start": 23.556,
+     "end": 23.922
+    },
+    {
+     "text": "por",
+     "start": 23.934,
+     "end": 24.087
+    },
+    {
+     "text": "cima",
+     "start": 24.099,
+     "end": 24.417
+    },
+    {
+     "text": "do",
+     "start": 24.429,
+     "end": 24.535
+    },
+    {
+     "text": "rio",
+     "start": 24.547,
+     "end": 24.818
+    },
+    {
+     "text": "das",
+     "start": 25.054,
+     "end": 25.196
+    },
+    {
+     "text": "árvores",
+     "start": 25.207,
+     "end": 25.785
+    },
+    {
+     "text": "e",
+     "start": 26.021,
+     "end": 26.068
+    },
+    {
+     "text": "subiu",
+     "start": 26.08,
+     "end": 26.493
+    },
+    {
+     "text": "até",
+     "start": 26.505,
+     "end": 26.74
+    },
+    {
+     "text": "as",
+     "start": 26.752,
+     "end": 26.87
+    },
+    {
+     "text": "nuvens",
+     "start": 26.882,
+     "end": 27.365
+    }
+   ]
+  },
+  {
+   "id": 12,
+   "who": "jujuba",
+   "text": "Alguém me desce daqui!",
+   "audio": "audio/capivara/l12.mp3",
+   "audioStart": 27.451,
+   "fileDur": 1.92,
+   "start": 27.545,
+   "end": 28.583,
+   "words": [
+    {
+     "text": "Alguém",
+     "start": 27.545,
+     "end": 27.824
+    },
+    {
+     "text": "me",
+     "start": 27.836,
+     "end": 27.914
+    },
+    {
+     "text": "desce",
+     "start": 27.925,
+     "end": 28.182
+    },
+    {
+     "text": "daqui",
+     "start": 28.193,
+     "end": 28.583
+    }
+   ]
+  },
+  {
+   "id": 13,
+   "who": "narrador",
+   "text": "Aí um passarinho deu uma bicadinha.",
+   "audio": "audio/capivara/l13.mp3",
+   "audioStart": 28.666,
+   "fileDur": 2.664,
+   "start": 28.763,
+   "end": 30.509,
+   "words": [
+    {
+     "text": "Aí",
+     "start": 28.763,
+     "end": 29.011
+    },
+    {
+     "text": "um",
+     "start": 29.023,
+     "end": 29.117
+    },
+    {
+     "text": "passarinho",
+     "start": 29.129,
+     "end": 29.601
+    },
+    {
+     "text": "deu",
+     "start": 29.612,
+     "end": 29.742
+    },
+    {
+     "text": "uma",
+     "start": 29.754,
+     "end": 29.872
+    },
+    {
+     "text": "bicadinha",
+     "start": 29.884,
+     "end": 30.509
+    }
+   ]
+  },
+  {
+   "id": 15,
+   "who": "narrador",
+   "text": "E ela desceu, devagarinho, de volta pra beira do rio.",
+   "audio": "audio/capivara/l15.mp3",
+   "audioStart": 31.891,
+   "fileDur": 4.272,
+   "start": 31.989,
+   "end": 35.349,
+   "words": [
+    {
+     "text": "E",
+     "start": 31.989,
+     "end": 32.083
+    },
+    {
+     "text": "ela",
+     "start": 32.095,
+     "end": 32.331
+    },
+    {
+     "text": "desceu",
+     "start": 32.342,
+     "end": 32.791
+    },
+    {
+     "text": "devagarinho",
+     "start": 33.015,
+     "end": 33.651
+    },
+    {
+     "text": "de",
+     "start": 33.923,
+     "end": 34.041
+    },
+    {
+     "text": "volta",
+     "start": 34.052,
+     "end": 34.453
+    },
+    {
+     "text": "pra",
+     "start": 34.465,
+     "end": 34.607
+    },
+    {
+     "text": "beira",
+     "start": 34.618,
+     "end": 34.937
+    },
+    {
+     "text": "do",
+     "start": 34.949,
+     "end": 35.066
+    },
+    {
+     "text": "rio",
+     "start": 35.078,
+     "end": 35.349
+    }
+   ]
+  },
+  {
+   "id": 16,
+   "who": "narrador",
+   "text": "Desde aquele dia, a Jujuba come doce só uma vez por semana.",
+   "audio": "audio/capivara/l16.mp3",
+   "audioStart": 35.432,
+   "fileDur": 4.392,
+   "start": 35.529,
+   "end": 39.008,
+   "words": [
+    {
+     "text": "Desde",
+     "start": 35.529,
+     "end": 35.895
+    },
+    {
+     "text": "aquele",
+     "start": 35.907,
+     "end": 36.166
+    },
+    {
+     "text": "dia",
+     "start": 36.178,
+     "end": 36.473
+    },
+    {
+     "text": "a",
+     "start": 36.662,
+     "end": 36.732
+    },
+    {
+     "text": "Jujuba",
+     "start": 36.744,
+     "end": 37.204
+    },
+    {
+     "text": "come",
+     "start": 37.216,
+     "end": 37.452
+    },
+    {
+     "text": "doce",
+     "start": 37.463,
+     "end": 37.794
+    },
+    {
+     "text": "só",
+     "start": 37.805,
+     "end": 37.947
+    },
+    {
+     "text": "uma",
+     "start": 37.959,
+     "end": 38.124
+    },
+    {
+     "text": "vez",
+     "start": 38.136,
+     "end": 38.36
+    },
+    {
+     "text": "por",
+     "start": 38.371,
+     "end": 38.501
+    },
+    {
+     "text": "semana",
+     "start": 38.513,
+     "end": 39.008
+    }
+   ]
+  },
+  {
+   "id": 17,
+   "who": "jujuba",
+   "text": "E melancia todo dia!",
+   "audio": "audio/capivara/l17.mp3",
+   "audioStart": 39.094,
+   "fileDur": 2.136,
+   "start": 39.188,
+   "end": 40.438,
+   "words": [
+    {
+     "text": "E",
+     "start": 39.188,
+     "end": 39.266
+    },
+    {
+     "text": "melancia",
+     "start": 39.278,
+     "end": 39.802
+    },
+    {
+     "text": "todo",
+     "start": 39.824,
+     "end": 40.081
+    },
+    {
+     "text": "dia",
+     "start": 40.092,
+     "end": 40.438
+    }
+   ]
+  }
+ ],
+ "pauses": [
+  {
+   "id": 14,
+   "sfx": "pfff",
+   "start": 30.689,
+   "end": 31.989
+  }
+ ]
+}

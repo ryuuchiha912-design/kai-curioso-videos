@@ -1,0 +1,18 @@
+[
+ {"id":1,"who":"narrador","text":"E se o seu dinheiro dobrasse a cada hora?"},
+ {"id":2,"who":"kai","text":"Eu só tenho um real."},
+ {"id":3,"who":"narrador","text":"Hora dez: mil e vinte e quatro reais."},
+ {"id":4,"who":"kai","text":"Bia! Pastel pra escola inteira!"},
+ {"id":5,"who":"narrador","text":"Hora vinte: mais de um milhão."},
+ {"id":6,"who":"bia","text":"Kai... por que tem três motos na sua garagem?"},
+ {"id":7,"who":"kai","text":"Uma pra cada dia que eu lembro de usar."},
+ {"id":8,"who":"narrador","text":"Hora trinta: mais de um bilhão."},
+ {"id":9,"who":"kai","text":"Comprei a escola. Agora o recreio dura duas horas."},
+ {"id":10,"who":"narrador","text":"Hora quarenta: mais de um trilhão."},
+ {"id":11,"who":"bia","text":"Kai... e aquela dívida de cinquenta reais no cartão?"},
+ {"id":12,"who":"kai","text":"Que dívida?"},
+ {"id":13,"who":"narrador","text":"O problema: tudo que é seu dobra. Inclusive a dívida."},
+ {"id":14,"pause":0.6},
+ {"id":15,"who":"kai","text":"Bia... me empresta um real?"},
+ {"id":16,"who":"narrador","text":"Comenta DOBRA se você aceitaria esse poder!"}
+]

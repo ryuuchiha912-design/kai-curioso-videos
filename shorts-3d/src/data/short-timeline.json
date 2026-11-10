@@ -1,0 +1,911 @@
+{
+ "total": 46.945,
+ "lines": [
+  {
+   "id": 1,
+   "who": "narrador",
+   "text": "Esse menino juntou moedas por três meses só pra comprar um peixe.",
+   "audio": "audio/short/l01.mp3",
+   "audioStart": 0.154,
+   "fileDur": 4.272,
+   "start": 0.25,
+   "end": 3.607,
+   "words": [
+    {
+     "text": "Esse",
+     "start": 0.25,
+     "end": 0.516
+    },
+    {
+     "text": "menino",
+     "start": 0.528,
+     "end": 0.875
+    },
+    {
+     "text": "juntou",
+     "start": 0.887,
+     "end": 1.211
+    },
+    {
+     "text": "moedas",
+     "start": 1.222,
+     "end": 1.65
+    },
+    {
+     "text": "por",
+     "start": 1.662,
+     "end": 1.836
+    },
+    {
+     "text": "três",
+     "start": 1.847,
+     "end": 2.125
+    },
+    {
+     "text": "meses",
+     "start": 2.137,
+     "end": 2.507
+    },
+    {
+     "text": "só",
+     "start": 2.519,
+     "end": 2.634
+    },
+    {
+     "text": "pra",
+     "start": 2.646,
+     "end": 2.773
+    },
+    {
+     "text": "comprar",
+     "start": 2.785,
+     "end": 3.109
+    },
+    {
+     "text": "um",
+     "start": 3.12,
+     "end": 3.225
+    },
+    {
+     "text": "peixe",
+     "start": 3.236,
+     "end": 3.607
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "who": "narrador",
+   "text": "Todo dia, uma moeda caía no porquinho.",
+   "audio": "audio/short/l02.mp3",
+   "audioStart": 3.69,
+   "fileDur": 3.192,
+   "start": 3.787,
+   "end": 6.078,
+   "words": [
+    {
+     "text": "Todo",
+     "start": 3.787,
+     "end": 4.053
+    },
+    {
+     "text": "dia",
+     "start": 4.064,
+     "end": 4.319
+    },
+    {
+     "text": "uma",
+     "start": 4.585,
+     "end": 4.724
+    },
+    {
+     "text": "moeda",
+     "start": 4.736,
+     "end": 5.118
+    },
+    {
+     "text": "caía",
+     "start": 5.129,
+     "end": 5.488
+    },
+    {
+     "text": "no",
+     "start": 5.499,
+     "end": 5.592
+    },
+    {
+     "text": "porquinho",
+     "start": 5.604,
+     "end": 6.078
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "who": "narrador",
+   "text": "No sábado, ele quebrou o cofrinho.",
+   "audio": "audio/short/l03.mp3",
+   "audioStart": 6.162,
+   "fileDur": 2.856,
+   "start": 6.258,
+   "end": 8.214,
+   "words": [
+    {
+     "text": "No",
+     "start": 6.258,
+     "end": 6.443
+    },
+    {
+     "text": "sábado",
+     "start": 6.455,
+     "end": 6.953
+    },
+    {
+     "text": "ele",
+     "start": 7.173,
+     "end": 7.311
+    },
+    {
+     "text": "quebrou",
+     "start": 7.323,
+     "end": 7.647
+    },
+    {
+     "text": "o",
+     "start": 7.659,
+     "end": 7.693
+    },
+    {
+     "text": "cofrinho",
+     "start": 7.705,
+     "end": 8.214
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "who": "narrador",
+   "text": "Doze reais e cinquenta centavos.",
+   "audio": "audio/short/l04.mp3",
+   "audioStart": 8.298,
+   "fileDur": 2.88,
+   "start": 8.394,
+   "end": 10.373,
+   "words": [
+    {
+     "text": "Doze",
+     "start": 8.394,
+     "end": 8.765
+    },
+    {
+     "text": "reais",
+     "start": 8.776,
+     "end": 9.123
+    },
+    {
+     "text": "e",
+     "start": 9.135,
+     "end": 9.239
+    },
+    {
+     "text": "cinquenta",
+     "start": 9.251,
+     "end": 9.714
+    },
+    {
+     "text": "centavos",
+     "start": 9.725,
+     "end": 10.373
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "who": "narrador",
+   "text": "Ele correu pela rua até o petshop da esquina.",
+   "audio": "audio/short/l05.mp3",
+   "audioStart": 10.457,
+   "fileDur": 3.096,
+   "start": 10.553,
+   "end": 12.752,
+   "words": [
+    {
+     "text": "Ele",
+     "start": 10.553,
+     "end": 10.739
+    },
+    {
+     "text": "correu",
+     "start": 10.75,
+     "end": 11.086
+    },
+    {
+     "text": "pela",
+     "start": 11.097,
+     "end": 11.283
+    },
+    {
+     "text": "rua",
+     "start": 11.294,
+     "end": 11.537
+    },
+    {
+     "text": "até",
+     "start": 11.549,
+     "end": 11.722
+    },
+    {
+     "text": "o",
+     "start": 11.734,
+     "end": 11.792
+    },
+    {
+     "text": "petshop",
+     "start": 11.803,
+     "end": 12.22
+    },
+    {
+     "text": "da",
+     "start": 12.232,
+     "end": 12.313
+    },
+    {
+     "text": "esquina",
+     "start": 12.324,
+     "end": 12.752
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "who": "narrador",
+   "text": "Lá dentro, uma parede inteira de aquários brilhando.",
+   "audio": "audio/short/l06.mp3",
+   "audioStart": 12.836,
+   "fileDur": 3.672,
+   "start": 12.932,
+   "end": 15.71,
+   "words": [
+    {
+     "text": "Lá",
+     "start": 12.932,
+     "end": 13.118
+    },
+    {
+     "text": "dentro",
+     "start": 13.129,
+     "end": 13.557
+    },
+    {
+     "text": "uma",
+     "start": 13.835,
+     "end": 13.986
+    },
+    {
+     "text": "parede",
+     "start": 13.997,
+     "end": 14.333
+    },
+    {
+     "text": "inteira",
+     "start": 14.344,
+     "end": 14.692
+    },
+    {
+     "text": "de",
+     "start": 14.703,
+     "end": 14.773
+    },
+    {
+     "text": "aquários",
+     "start": 14.784,
+     "end": 15.189
+    },
+    {
+     "text": "brilhando",
+     "start": 15.201,
+     "end": 15.71
+    }
+   ]
+  },
+  {
+   "id": 7,
+   "who": "bia",
+   "text": "Oi! Posso te ajudar?",
+   "audio": "audio/short/l07.mp3",
+   "audioStart": 15.793,
+   "fileDur": 2.496,
+   "start": 15.89,
+   "end": 17.424,
+   "words": [
+    {
+     "text": "Oi",
+     "start": 15.89,
+     "end": 16.283
+    },
+    {
+     "text": "Posso",
+     "start": 16.555,
+     "end": 16.852
+    },
+    {
+     "text": "te",
+     "start": 16.864,
+     "end": 16.947
+    },
+    {
+     "text": "ajudar",
+     "start": 16.959,
+     "end": 17.424
+    }
+   ]
+  },
+  {
+   "id": 8,
+   "who": "leo",
+   "text": "Eu quero o peixe mais bonito da loja!",
+   "audio": "audio/short/l08.mp3",
+   "audioStart": 17.558,
+   "fileDur": 2.208,
+   "start": 17.604,
+   "end": 19.456,
+   "words": [
+    {
+     "text": "Eu",
+     "start": 17.604,
+     "end": 17.771
+    },
+    {
+     "text": "quero",
+     "start": 17.771,
+     "end": 17.994
+    },
+    {
+     "text": "o",
+     "start": 17.994,
+     "end": 18.016
+    },
+    {
+     "text": "peixe",
+     "start": 18.016,
+     "end": 18.318
+    },
+    {
+     "text": "mais",
+     "start": 18.318,
+     "end": 18.653
+    },
+    {
+     "text": "bonito",
+     "start": 18.653,
+     "end": 19.043
+    },
+    {
+     "text": "da",
+     "start": 19.043,
+     "end": 19.121
+    },
+    {
+     "text": "loja",
+     "start": 19.121,
+     "end": 19.456
+    }
+   ]
+  },
+  {
+   "id": 9,
+   "who": "narrador",
+   "text": "Mas o peixe mais bonito custava trinta reais.",
+   "audio": "audio/short/l09.mp3",
+   "audioStart": 19.54,
+   "fileDur": 3.408,
+   "start": 19.636,
+   "end": 22.136,
+   "words": [
+    {
+     "text": "Mas",
+     "start": 19.636,
+     "end": 19.821
+    },
+    {
+     "text": "o",
+     "start": 19.833,
+     "end": 19.972
+    },
+    {
+     "text": "peixe",
+     "start": 19.983,
+     "end": 20.308
+    },
+    {
+     "text": "mais",
+     "start": 20.319,
+     "end": 20.47
+    },
+    {
+     "text": "bonito",
+     "start": 20.481,
+     "end": 20.898
+    },
+    {
+     "text": "custava",
+     "start": 20.909,
+     "end": 21.326
+    },
+    {
+     "text": "trinta",
+     "start": 21.338,
+     "end": 21.662
+    },
+    {
+     "text": "reais",
+     "start": 21.673,
+     "end": 22.136
+    }
+   ]
+  },
+  {
+   "id": 10,
+   "who": "narrador",
+   "text": "O sorriso dele sumiu.",
+   "audio": "audio/short/l10.mp3",
+   "audioStart": 22.22,
+   "fileDur": 2.232,
+   "start": 22.316,
+   "end": 23.636,
+   "words": [
+    {
+     "text": "O",
+     "start": 22.316,
+     "end": 22.409
+    },
+    {
+     "text": "sorriso",
+     "start": 22.42,
+     "end": 22.93
+    },
+    {
+     "text": "dele",
+     "start": 22.941,
+     "end": 23.207
+    },
+    {
+     "text": "sumiu",
+     "start": 23.219,
+     "end": 23.636
+    }
+   ]
+  },
+  {
+   "id": 11,
+   "who": "narrador",
+   "text": "Até que, num aquário pequeno no canto, um peixinho laranja nadou direto até ele.",
+   "audio": "audio/short/l11.mp3",
+   "audioStart": 23.719,
+   "fileDur": 5.424,
+   "start": 23.816,
+   "end": 28.33,
+   "words": [
+    {
+     "text": "Até",
+     "start": 23.816,
+     "end": 24.14
+    },
+    {
+     "text": "que",
+     "start": 24.151,
+     "end": 24.429
+    },
+    {
+     "text": "num",
+     "start": 24.695,
+     "end": 24.846
+    },
+    {
+     "text": "aquário",
+     "start": 24.857,
+     "end": 25.158
+    },
+    {
+     "text": "pequeno",
+     "start": 25.17,
+     "end": 25.506
+    },
+    {
+     "text": "no",
+     "start": 25.517,
+     "end": 25.633
+    },
+    {
+     "text": "canto",
+     "start": 25.644,
+     "end": 26.015
+    },
+    {
+     "text": "um",
+     "start": 26.293,
+     "end": 26.408
+    },
+    {
+     "text": "peixinho",
+     "start": 26.42,
+     "end": 26.79
+    },
+    {
+     "text": "laranja",
+     "start": 26.802,
+     "end": 27.161
+    },
+    {
+     "text": "nadou",
+     "start": 27.172,
+     "end": 27.462
+    },
+    {
+     "text": "direto",
+     "start": 27.473,
+     "end": 27.82
+    },
+    {
+     "text": "até",
+     "start": 27.832,
+     "end": 28.017
+    },
+    {
+     "text": "ele",
+     "start": 28.029,
+     "end": 28.33
+    }
+   ]
+  },
+  {
+   "id": 12,
+   "who": "narrador",
+   "text": "A plaquinha dizia: doze reais.",
+   "audio": "audio/short/l12.mp3",
+   "audioStart": 28.413,
+   "fileDur": 3.048,
+   "start": 28.51,
+   "end": 30.651,
+   "words": [
+    {
+     "text": "A",
+     "start": 28.51,
+     "end": 28.614
+    },
+    {
+     "text": "plaquinha",
+     "start": 28.625,
+     "end": 29.054
+    },
+    {
+     "text": "dizia",
+     "start": 29.065,
+     "end": 29.482
+    },
+    {
+     "text": "doze",
+     "start": 29.76,
+     "end": 30.142
+    },
+    {
+     "text": "reais",
+     "start": 30.153,
+     "end": 30.651
+    }
+   ]
+  },
+  {
+   "id": 13,
+   "who": "leo",
+   "text": "É esse! É ele!",
+   "audio": "audio/short/l13.mp3",
+   "audioStart": 30.764,
+   "fileDur": 1.704,
+   "start": 30.831,
+   "end": 32.148,
+   "words": [
+    {
+     "text": "É",
+     "start": 30.831,
+     "end": 30.976
+    },
+    {
+     "text": "esse",
+     "start": 30.976,
+     "end": 31.355
+    },
+    {
+     "text": "É",
+     "start": 31.679,
+     "end": 31.824
+    },
+    {
+     "text": "ele",
+     "start": 31.824,
+     "end": 32.148
+    }
+   ]
+  },
+  {
+   "id": 14,
+   "who": "narrador",
+   "text": "Ele contou as moedas no balcão, uma por uma.",
+   "audio": "audio/short/l14.mp3",
+   "audioStart": 32.231,
+   "fileDur": 3.36,
+   "start": 32.328,
+   "end": 34.781,
+   "words": [
+    {
+     "text": "Ele",
+     "start": 32.328,
+     "end": 32.501
+    },
+    {
+     "text": "contou",
+     "start": 32.513,
+     "end": 32.895
+    },
+    {
+     "text": "as",
+     "start": 32.906,
+     "end": 32.999
+    },
+    {
+     "text": "moedas",
+     "start": 33.011,
+     "end": 33.427
+    },
+    {
+     "text": "no",
+     "start": 33.439,
+     "end": 33.52
+    },
+    {
+     "text": "balcão",
+     "start": 33.531,
+     "end": 33.948
+    },
+    {
+     "text": "uma",
+     "start": 34.168,
+     "end": 34.376
+    },
+    {
+     "text": "por",
+     "start": 34.388,
+     "end": 34.55
+    },
+    {
+     "text": "uma",
+     "start": 34.562,
+     "end": 34.781
+    }
+   ]
+  },
+  {
+   "id": 15,
+   "who": "narrador",
+   "text": "Sobraram cinquenta centavos. E a Bia ainda deu um potinho de ração de presente.",
+   "audio": "audio/short/l15.mp3",
+   "audioStart": 34.865,
+   "fileDur": 6.096,
+   "start": 34.961,
+   "end": 40.143,
+   "words": [
+    {
+     "text": "Sobraram",
+     "start": 34.961,
+     "end": 35.494
+    },
+    {
+     "text": "cinquenta",
+     "start": 35.505,
+     "end": 36.038
+    },
+    {
+     "text": "centavos",
+     "start": 36.049,
+     "end": 36.709
+    },
+    {
+     "text": "E",
+     "start": 37.504,
+     "end": 37.62
+    },
+    {
+     "text": "a",
+     "start": 37.631,
+     "end": 37.712
+    },
+    {
+     "text": "Bia",
+     "start": 37.724,
+     "end": 37.99
+    },
+    {
+     "text": "ainda",
+     "start": 38.002,
+     "end": 38.256
+    },
+    {
+     "text": "deu",
+     "start": 38.268,
+     "end": 38.442
+    },
+    {
+     "text": "um",
+     "start": 38.453,
+     "end": 38.557
+    },
+    {
+     "text": "potinho",
+     "start": 38.569,
+     "end": 39.009
+    },
+    {
+     "text": "de",
+     "start": 39.02,
+     "end": 39.101
+    },
+    {
+     "text": "ração",
+     "start": 39.113,
+     "end": 39.506
+    },
+    {
+     "text": "de",
+     "start": 39.518,
+     "end": 39.599
+    },
+    {
+     "text": "presente",
+     "start": 39.611,
+     "end": 40.143
+    }
+   ]
+  },
+  {
+   "id": 16,
+   "who": "narrador",
+   "text": "Ele voltou pra casa sem tirar os olhos do saquinho.",
+   "audio": "audio/short/l16.mp3",
+   "audioStart": 40.227,
+   "fileDur": 3.432,
+   "start": 40.323,
+   "end": 42.858,
+   "words": [
+    {
+     "text": "Ele",
+     "start": 40.323,
+     "end": 40.485
+    },
+    {
+     "text": "voltou",
+     "start": 40.497,
+     "end": 40.855
+    },
+    {
+     "text": "pra",
+     "start": 40.867,
+     "end": 41.029
+    },
+    {
+     "text": "casa",
+     "start": 41.041,
+     "end": 41.388
+    },
+    {
+     "text": "sem",
+     "start": 41.399,
+     "end": 41.596
+    },
+    {
+     "text": "tirar",
+     "start": 41.608,
+     "end": 41.862
+    },
+    {
+     "text": "os",
+     "start": 41.874,
+     "end": 41.909
+    },
+    {
+     "text": "olhos",
+     "start": 41.92,
+     "end": 42.267
+    },
+    {
+     "text": "do",
+     "start": 42.279,
+     "end": 42.372
+    },
+    {
+     "text": "saquinho",
+     "start": 42.383,
+     "end": 42.858
+    }
+   ]
+  },
+  {
+   "id": 17,
+   "who": "narrador",
+   "text": "E deu ao peixe o nome mais justo do mundo:",
+   "audio": "audio/short/l17.mp3",
+   "audioStart": 42.941,
+   "fileDur": 3.096,
+   "start": 43.038,
+   "end": 45.237,
+   "words": [
+    {
+     "text": "E",
+     "start": 43.038,
+     "end": 43.142
+    },
+    {
+     "text": "deu",
+     "start": 43.153,
+     "end": 43.373
+    },
+    {
+     "text": "ao",
+     "start": 43.385,
+     "end": 43.524
+    },
+    {
+     "text": "peixe",
+     "start": 43.535,
+     "end": 43.836
+    },
+    {
+     "text": "o",
+     "start": 43.848,
+     "end": 43.859
+    },
+    {
+     "text": "nome",
+     "start": 43.871,
+     "end": 44.114
+    },
+    {
+     "text": "mais",
+     "start": 44.126,
+     "end": 44.369
+    },
+    {
+     "text": "justo",
+     "start": 44.38,
+     "end": 44.751
+    },
+    {
+     "text": "do",
+     "start": 44.762,
+     "end": 44.866
+    },
+    {
+     "text": "mundo",
+     "start": 44.878,
+     "end": 45.237
+    }
+   ]
+  },
+  {
+   "id": 18,
+   "who": "leo",
+   "text": "Moedinha!",
+   "audio": "audio/short/l18.mp3",
+   "audioStart": 45.35,
+   "fileDur": 1.872,
+   "start": 45.417,
+   "end": 46.165,
+   "words": [
+    {
+     "text": "Moedinha",
+     "start": 45.417,
+     "end": 46.165
+    }
+   ]
+  }
+ ]
+}

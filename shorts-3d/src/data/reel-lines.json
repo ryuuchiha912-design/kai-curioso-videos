@@ -1,0 +1,14 @@
+[
+ {"id": 1, "who": "narrador", "text": "Dá pra narrar um vídeo inteiro com voz de inteligência artificial, sem pagar nada."},
+ {"id": 2, "who": "leo", "text": "Mas voz boa custa caro todo mês!"},
+ {"id": 3, "who": "narrador", "text": "Só que tem o Voice Studio, de código aberto no GitHub: você baixa e roda no seu computador."},
+ {"id": 4, "who": "eco", "text": "Oi, Leo! Agora eu falo igualzinho a você."},
+ {"id": 5, "who": "leo", "text": "Ei! Essa voz é minha!"},
+ {"id": 6, "who": "narrador", "text": "E dá pra inventar uma voz nova, só escrevendo como ela é."},
+ {"id": 7, "who": "leo", "text": "Voz de contador de terror, bem grossa, com cem anos de idade!"},
+ {"id": 8, "who": "ecoGrave", "text": "Era uma noite escura... e tempestuosa."},
+ {"id": 9, "who": "leo", "text": "Ficou melhor que a minha!"},
+ {"id": 10, "who": "narrador", "text": "Com isso, o Leo abriu canal de histórias em três lugares."},
+ {"id": 11, "who": "eco", "text": "Só uma regra: clone só a sua voz, ou de quem deixou."},
+ {"id": 12, "who": "leo", "text": "Comenta Voice Studio que eu te mando o projeto!"}
+]

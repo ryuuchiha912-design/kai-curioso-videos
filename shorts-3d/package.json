@@ -1,0 +1,29 @@
+{
+  "name": "viral-video-shorts-3d",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render",
+    "vozes": "python scripts/tts_reel.py"
+  },
+  "dependencies": {
+    "@react-three/fiber": "9.8.2",
+    "@remotion/bundler": "4.0.541",
+    "@remotion/cli": "4.0.541",
+    "@remotion/google-fonts": "4.0.541",
+    "@remotion/media-utils": "4.0.541",
+    "@remotion/renderer": "4.0.541",
+    "@remotion/three": "4.0.541",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "remotion": "4.0.541",
+    "three": "0.187.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/three": "0.187.0",
+    "typescript": "7.0.2"
+  },
+  "description": "Shorts verticais em 3D cartoon feitos 100% em código (Remotion + Three.js) com vozes neurais grátis"
+}

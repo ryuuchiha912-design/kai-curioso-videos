@@ -1,0 +1,755 @@
+{
+ "total": 47.813,
+ "lines": [
+  {
+   "id": 1,
+   "who": "narrador",
+   "text": "Mil novecentos e noventa e oito.",
+   "audio": "audio/ocarina/l01.mp3",
+   "audioStart": 0.203,
+   "fileDur": 2.52,
+   "start": 0.3,
+   "end": 1.904,
+   "words": [
+    {
+     "text": "Mil",
+     "start": 0.3,
+     "end": 0.5
+    },
+    {
+     "text": "novecentos",
+     "start": 0.512,
+     "end": 1.114
+    },
+    {
+     "text": "e",
+     "start": 1.125,
+     "end": 1.208
+    },
+    {
+     "text": "noventa",
+     "start": 1.22,
+     "end": 1.562
+    },
+    {
+     "text": "e",
+     "start": 1.574,
+     "end": 1.609
+    },
+    {
+     "text": "oito",
+     "start": 1.621,
+     "end": 1.904
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "who": "narrador",
+   "text": "Esse menino tinha uma missão: salvar um reino inteiro.",
+   "audio": "audio/ocarina/l02.mp3",
+   "audioStart": 1.987,
+   "fileDur": 3.696,
+   "start": 2.084,
+   "end": 4.855,
+   "words": [
+    {
+     "text": "Esse",
+     "start": 2.084,
+     "end": 2.343
+    },
+    {
+     "text": "menino",
+     "start": 2.355,
+     "end": 2.685
+    },
+    {
+     "text": "tinha",
+     "start": 2.697,
+     "end": 2.874
+    },
+    {
+     "text": "uma",
+     "start": 2.886,
+     "end": 2.992
+    },
+    {
+     "text": "missão",
+     "start": 3.004,
+     "end": 3.369
+    },
+    {
+     "text": "salvar",
+     "start": 3.64,
+     "end": 4.041
+    },
+    {
+     "text": "um",
+     "start": 4.053,
+     "end": 4.136
+    },
+    {
+     "text": "reino",
+     "start": 4.147,
+     "end": 4.407
+    },
+    {
+     "text": "inteiro",
+     "start": 4.419,
+     "end": 4.855
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "who": "narrador",
+   "text": "Do lado, um pacote de bala e um refri.",
+   "audio": "audio/ocarina/l03.mp3",
+   "audioStart": 4.938,
+   "fileDur": 3.36,
+   "start": 5.035,
+   "end": 7.476,
+   "words": [
+    {
+     "text": "Do",
+     "start": 5.035,
+     "end": 5.212
+    },
+    {
+     "text": "lado",
+     "start": 5.224,
+     "end": 5.589
+    },
+    {
+     "text": "um",
+     "start": 5.872,
+     "end": 5.99
+    },
+    {
+     "text": "pacote",
+     "start": 6.002,
+     "end": 6.438
+    },
+    {
+     "text": "de",
+     "start": 6.45,
+     "end": 6.521
+    },
+    {
+     "text": "bala",
+     "start": 6.533,
+     "end": 6.851
+    },
+    {
+     "text": "e",
+     "start": 6.863,
+     "end": 6.922
+    },
+    {
+     "text": "um",
+     "start": 6.934,
+     "end": 7.04
+    },
+    {
+     "text": "refri",
+     "start": 7.052,
+     "end": 7.476
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "who": "caio",
+   "text": "Só mais uma fase, mãe!",
+   "audio": "audio/ocarina/l04.mp3",
+   "audioStart": 7.611,
+   "fileDur": 1.968,
+   "start": 7.656,
+   "end": 9.263,
+   "words": [
+    {
+     "text": "Só",
+     "start": 7.656,
+     "end": 7.902
+    },
+    {
+     "text": "mais",
+     "start": 7.902,
+     "end": 8.125
+    },
+    {
+     "text": "uma",
+     "start": 8.125,
+     "end": 8.337
+    },
+    {
+     "text": "fase",
+     "start": 8.337,
+     "end": 8.705
+    },
+    {
+     "text": "mãe",
+     "start": 8.928,
+     "end": 9.263
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "who": "narrador",
+   "text": "No jogo, tinha uma flauta mágica. Três notas, e uma ponte de luz aparecia.",
+   "audio": "audio/ocarina/l05.mp3",
+   "audioStart": 9.346,
+   "fileDur": 6.408,
+   "start": 9.443,
+   "end": 14.936,
+   "words": [
+    {
+     "text": "No",
+     "start": 9.443,
+     "end": 9.62
+    },
+    {
+     "text": "jogo",
+     "start": 9.632,
+     "end": 10.021
+    },
+    {
+     "text": "tinha",
+     "start": 10.198,
+     "end": 10.351
+    },
+    {
+     "text": "uma",
+     "start": 10.363,
+     "end": 10.516
+    },
+    {
+     "text": "flauta",
+     "start": 10.528,
+     "end": 10.905
+    },
+    {
+     "text": "mágica",
+     "start": 10.917,
+     "end": 11.377
+    },
+    {
+     "text": "Três",
+     "start": 12.188,
+     "end": 12.483
+    },
+    {
+     "text": "notas",
+     "start": 12.495,
+     "end": 12.955
+    },
+    {
+     "text": "e",
+     "start": 13.261,
+     "end": 13.355
+    },
+    {
+     "text": "uma",
+     "start": 13.367,
+     "end": 13.579
+    },
+    {
+     "text": "ponte",
+     "start": 13.591,
+     "end": 13.945
+    },
+    {
+     "text": "de",
+     "start": 13.957,
+     "end": 14.039
+    },
+    {
+     "text": "luz",
+     "start": 14.051,
+     "end": 14.205
+    },
+    {
+     "text": "aparecia",
+     "start": 14.216,
+     "end": 14.936
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "who": "narrador",
+   "text": "Aí os anos passaram.",
+   "audio": "audio/ocarina/l06.mp3",
+   "audioStart": 15.018,
+   "fileDur": 2.304,
+   "start": 15.116,
+   "end": 16.495,
+   "words": [
+    {
+     "text": "Aí",
+     "start": 15.116,
+     "end": 15.469
+    },
+    {
+     "text": "os",
+     "start": 15.481,
+     "end": 15.54
+    },
+    {
+     "text": "anos",
+     "start": 15.552,
+     "end": 15.929
+    },
+    {
+     "text": "passaram",
+     "start": 15.941,
+     "end": 16.495
+    }
+   ]
+  },
+  {
+   "id": 7,
+   "who": "narrador",
+   "text": "Escola. Faculdade. Trabalho. Boleto.",
+   "audio": "audio/ocarina/l07.mp3",
+   "audioStart": 16.578,
+   "fileDur": 5.808,
+   "start": 16.675,
+   "end": 21.555,
+   "words": [
+    {
+     "text": "Escola",
+     "start": 16.675,
+     "end": 17.289
+    },
+    {
+     "text": "Faculdade",
+     "start": 18.099,
+     "end": 18.866
+    },
+    {
+     "text": "Trabalho",
+     "start": 19.68,
+     "end": 20.198
+    },
+    {
+     "text": "Boleto",
+     "start": 21.012,
+     "end": 21.555
+    }
+   ]
+  },
+  {
+   "id": 8,
+   "who": "narrador",
+   "text": "Vinte e oito anos depois,",
+   "audio": "audio/ocarina/l08.mp3",
+   "audioStart": 21.637,
+   "fileDur": 2.376,
+   "start": 21.735,
+   "end": 23.185,
+   "words": [
+    {
+     "text": "Vinte",
+     "start": 21.735,
+     "end": 22.065
+    },
+    {
+     "text": "e",
+     "start": 22.077,
+     "end": 22.1
+    },
+    {
+     "text": "oito",
+     "start": 22.112,
+     "end": 22.371
+    },
+    {
+     "text": "anos",
+     "start": 22.383,
+     "end": 22.607
+    },
+    {
+     "text": "depois",
+     "start": 22.619,
+     "end": 23.185
+    }
+   ]
+  },
+  {
+   "id": 9,
+   "who": "narrador",
+   "text": "saiu a versão nova daquele jogo de aventura.",
+   "audio": "audio/ocarina/l09.mp3",
+   "audioStart": 23.268,
+   "fileDur": 3.36,
+   "start": 23.365,
+   "end": 25.794,
+   "words": [
+    {
+     "text": "saiu",
+     "start": 23.365,
+     "end": 23.79
+    },
+    {
+     "text": "a",
+     "start": 23.801,
+     "end": 23.849
+    },
+    {
+     "text": "versão",
+     "start": 23.86,
+     "end": 24.202
+    },
+    {
+     "text": "nova",
+     "start": 24.214,
+     "end": 24.485
+    },
+    {
+     "text": "daquele",
+     "start": 24.497,
+     "end": 24.827
+    },
+    {
+     "text": "jogo",
+     "start": 24.839,
+     "end": 25.158
+    },
+    {
+     "text": "de",
+     "start": 25.169,
+     "end": 25.24
+    },
+    {
+     "text": "aventura",
+     "start": 25.252,
+     "end": 25.794
+    }
+   ]
+  },
+  {
+   "id": 10,
+   "who": "adulto",
+   "text": "Não acredito.",
+   "audio": "audio/ocarina/l10.mp3",
+   "audioStart": 25.896,
+   "fileDur": 1.872,
+   "start": 25.974,
+   "end": 26.886,
+   "words": [
+    {
+     "text": "Não",
+     "start": 25.974,
+     "end": 26.235
+    },
+    {
+     "text": "acredito",
+     "start": 26.235,
+     "end": 26.886
+    }
+   ]
+  },
+  {
+   "id": 11,
+   "who": "narrador",
+   "text": "Ele sentou no chão. Pegou uma bala. Abriu um refri.",
+   "audio": "audio/ocarina/l11.mp3",
+   "audioStart": 26.969,
+   "fileDur": 5.568,
+   "start": 27.066,
+   "end": 31.721,
+   "words": [
+    {
+     "text": "Ele",
+     "start": 27.066,
+     "end": 27.29
+    },
+    {
+     "text": "sentou",
+     "start": 27.302,
+     "end": 27.738
+    },
+    {
+     "text": "no",
+     "start": 27.75,
+     "end": 27.844
+    },
+    {
+     "text": "chão",
+     "start": 27.856,
+     "end": 28.221
+    },
+    {
+     "text": "Pegou",
+     "start": 29.032,
+     "end": 29.374
+    },
+    {
+     "text": "uma",
+     "start": 29.386,
+     "end": 29.563
+    },
+    {
+     "text": "bala",
+     "start": 29.575,
+     "end": 29.917
+    },
+    {
+     "text": "Abriu",
+     "start": 30.73,
+     "end": 31.12
+    },
+    {
+     "text": "um",
+     "start": 31.131,
+     "end": 31.261
+    },
+    {
+     "text": "refri",
+     "start": 31.273,
+     "end": 31.721
+    }
+   ]
+  },
+  {
+   "id": 12,
+   "who": "narrador",
+   "text": "E quando a flauta tocou as mesmas três notas,",
+   "rate": "+0%",
+   "audio": "audio/ocarina/l12.mp3",
+   "audioStart": 31.801,
+   "fileDur": 3.552,
+   "start": 31.901,
+   "end": 34.488,
+   "words": [
+    {
+     "text": "E",
+     "start": 31.901,
+     "end": 32.013
+    },
+    {
+     "text": "quando",
+     "start": 32.026,
+     "end": 32.251
+    },
+    {
+     "text": "a",
+     "start": 32.263,
+     "end": 32.326
+    },
+    {
+     "text": "flauta",
+     "start": 32.338,
+     "end": 32.713
+    },
+    {
+     "text": "tocou",
+     "start": 32.726,
+     "end": 33.051
+    },
+    {
+     "text": "as",
+     "start": 33.063,
+     "end": 33.201
+    },
+    {
+     "text": "mesmas",
+     "start": 33.213,
+     "end": 33.638
+    },
+    {
+     "text": "três",
+     "start": 33.651,
+     "end": 33.938
+    },
+    {
+     "text": "notas",
+     "start": 33.951,
+     "end": 34.488
+    }
+   ]
+  },
+  {
+   "id": 14,
+   "who": "narrador",
+   "text": "por um segundo, ele tinha oito anos de novo.",
+   "rate": "-4%",
+   "audio": "audio/ocarina/l14.mp3",
+   "audioStart": 36.166,
+   "fileDur": 3.696,
+   "start": 36.268,
+   "end": 38.951,
+   "words": [
+    {
+     "text": "por",
+     "start": 36.268,
+     "end": 36.425
+    },
+    {
+     "text": "um",
+     "start": 36.438,
+     "end": 36.503
+    },
+    {
+     "text": "segundo",
+     "start": 36.516,
+     "end": 37.05
+    },
+    {
+     "text": "ele",
+     "start": 37.323,
+     "end": 37.492
+    },
+    {
+     "text": "tinha",
+     "start": 37.505,
+     "end": 37.831
+    },
+    {
+     "text": "oito",
+     "start": 37.844,
+     "end": 38.183
+    },
+    {
+     "text": "anos",
+     "start": 38.196,
+     "end": 38.469
+    },
+    {
+     "text": "de",
+     "start": 38.482,
+     "end": 38.573
+    },
+    {
+     "text": "novo",
+     "start": 38.586,
+     "end": 38.951
+    }
+   ]
+  },
+  {
+   "id": 15,
+   "who": "adulto",
+   "text": "Valeu, moleque.",
+   "audio": "audio/ocarina/l15.mp3",
+   "audioStart": 39.027,
+   "fileDur": 1.872,
+   "start": 39.131,
+   "end": 40.003,
+   "words": [
+    {
+     "text": "Valeu",
+     "start": 39.131,
+     "end": 39.456
+    },
+    {
+     "text": "moleque",
+     "start": 39.469,
+     "end": 40.003
+    }
+   ]
+  },
+  {
+   "id": 16,
+   "who": "narrador",
+   "text": "Tem jogo que a gente zera. E tem jogo que fica com a gente pra sempre.",
+   "rate": "-4%",
+   "audio": "audio/ocarina/l16.mp3",
+   "audioStart": 40.081,
+   "fileDur": 5.952,
+   "start": 40.183,
+   "end": 45.133,
+   "words": [
+    {
+     "text": "Tem",
+     "start": 40.183,
+     "end": 40.365
+    },
+    {
+     "text": "jogo",
+     "start": 40.379,
+     "end": 40.795
+    },
+    {
+     "text": "que",
+     "start": 40.808,
+     "end": 40.899
+    },
+    {
+     "text": "a",
+     "start": 40.912,
+     "end": 40.977
+    },
+    {
+     "text": "gente",
+     "start": 40.99,
+     "end": 41.329
+    },
+    {
+     "text": "zera",
+     "start": 41.342,
+     "end": 41.72
+    },
+    {
+     "text": "E",
+     "start": 42.62,
+     "end": 42.75
+    },
+    {
+     "text": "tem",
+     "start": 42.763,
+     "end": 42.959
+    },
+    {
+     "text": "jogo",
+     "start": 42.972,
+     "end": 43.362
+    },
+    {
+     "text": "que",
+     "start": 43.375,
+     "end": 43.493
+    },
+    {
+     "text": "fica",
+     "start": 43.506,
+     "end": 43.844
+    },
+    {
+     "text": "com",
+     "start": 43.857,
+     "end": 44.039
+    },
+    {
+     "text": "a",
+     "start": 44.052,
+     "end": 44.092
+    },
+    {
+     "text": "gente",
+     "start": 44.105,
+     "end": 44.443
+    },
+    {
+     "text": "pra",
+     "start": 44.456,
+     "end": 44.612
+    },
+    {
+     "text": "sempre",
+     "start": 44.625,
+     "end": 45.133
+    }
+   ]
+  }
+ ],
+ "pauses": [
+  {
+   "id": 13,
+   "start": 34.668,
+   "end": 36.268
+  }
+ ]
+}

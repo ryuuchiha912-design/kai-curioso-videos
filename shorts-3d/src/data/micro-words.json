@@ -1,0 +1,442 @@
+{
+"words": [
+{
+"text": "Um",
+"start": 0.15,
+"end": 0.295
+},
+{
+"text": "engenheiro",
+"start": 0.368,
+"end": 0.805
+},
+{
+"text": "inventou",
+"start": 0.877,
+"end": 1.241
+},
+{
+"text": "o",
+"start": 1.265,
+"end": 1.289
+},
+{
+"text": "micro-ondas",
+"start": 1.314,
+"end": 1.968
+},
+{
+"text": "sem",
+"start": 2.041,
+"end": 2.114
+},
+{
+"text": "querer.",
+"start": 2.186,
+"end": 2.732
+},
+{
+"text": "Com",
+"start": 2.914,
+"end": 3.059
+},
+{
+"text": "um",
+"start": 3.095,
+"end": 3.132
+},
+{
+"text": "doce",
+"start": 3.205,
+"end": 3.495
+},
+{
+"text": "no",
+"start": 3.532,
+"end": 3.568
+},
+{
+"text": "bolso.",
+"start": 3.641,
+"end": 4.077
+},
+{
+"text": "Era",
+"start": 4.441,
+"end": 4.586
+},
+{
+"text": "mil",
+"start": 4.732,
+"end": 4.877
+},
+{
+"text": "novecentos",
+"start": 4.914,
+"end": 5.459
+},
+{
+"text": "e",
+"start": 5.532,
+"end": 5.605
+},
+{
+"text": "quarenta",
+"start": 5.677,
+"end": 5.859
+},
+{
+"text": "e",
+"start": 5.895,
+"end": 5.968
+},
+{
+"text": "cinco.",
+"start": 6.041,
+"end": 6.332
+},
+{
+"text": "Ele",
+"start": 6.695,
+"end": 6.841
+},
+{
+"text": "testava",
+"start": 6.914,
+"end": 7.277
+},
+{
+"text": "uma",
+"start": 7.386,
+"end": 7.495
+},
+{
+"text": "peça",
+"start": 7.532,
+"end": 7.714
+},
+{
+"text": "de",
+"start": 7.786,
+"end": 7.823
+},
+{
+"text": "radar",
+"start": 7.859,
+"end": 8.223
+},
+{
+"text": "chamada",
+"start": 8.295,
+"end": 8.659
+},
+{
+"text": "magnetron.",
+"start": 8.805,
+"end": 9.459
+},
+{
+"text": "De",
+"start": 9.823,
+"end": 9.895
+},
+{
+"text": "repente,",
+"start": 9.968,
+"end": 10.623
+},
+{
+"text": "sentiu",
+"start": 10.732,
+"end": 10.914
+},
+{
+"text": "a",
+"start": 10.986,
+"end": 11.059
+},
+{
+"text": "calça",
+"start": 11.132,
+"end": 11.35
+},
+{
+"text": "esquentar.",
+"start": 11.423,
+"end": 11.932
+},
+{
+"text": "O",
+"start": 12.295,
+"end": 12.368
+},
+{
+"text": "doce",
+"start": 12.441,
+"end": 12.659
+},
+{
+"text": "no",
+"start": 12.732,
+"end": 12.805
+},
+{
+"text": "bolso",
+"start": 12.877,
+"end": 13.168
+},
+{
+"text": "tinha",
+"start": 13.241,
+"end": 13.386
+},
+{
+"text": "derretido.",
+"start": 13.459,
+"end": 14.041
+},
+{
+"text": "Qualquer",
+"start": 14.332,
+"end": 14.768
+},
+{
+"text": "um",
+"start": 14.841,
+"end": 14.914
+},
+{
+"text": "ia",
+"start": 14.986,
+"end": 15.059
+},
+{
+"text": "reclamar",
+"start": 15.132,
+"end": 15.423
+},
+{
+"text": "da",
+"start": 15.495,
+"end": 15.568
+},
+{
+"text": "roupa.",
+"start": 15.641,
+"end": 16.114
+},
+{
+"text": "Ele",
+"start": 16.295,
+"end": 16.441
+},
+{
+"text": "foi",
+"start": 16.477,
+"end": 16.55
+},
+{
+"text": "buscar",
+"start": 16.586,
+"end": 16.877
+},
+{
+"text": "milho",
+"start": 16.95,
+"end": 17.168
+},
+{
+"text": "de",
+"start": 17.205,
+"end": 17.241
+},
+{
+"text": "pipoca.",
+"start": 17.314,
+"end": 17.895
+},
+{
+"text": "A",
+"start": 18.041,
+"end": 18.114
+},
+{
+"text": "pipoca",
+"start": 18.186,
+"end": 18.55
+},
+{
+"text": "estourou",
+"start": 18.623,
+"end": 18.986
+},
+{
+"text": "na",
+"start": 19.059,
+"end": 19.132
+},
+{
+"text": "hora.",
+"start": 19.205,
+"end": 19.677
+},
+{
+"text": "Depois,",
+"start": 19.859,
+"end": 20.368
+},
+{
+"text": "testaram",
+"start": 20.477,
+"end": 20.805
+},
+{
+"text": "um",
+"start": 20.841,
+"end": 20.877
+},
+{
+"text": "ovo.",
+"start": 20.95,
+"end": 21.423
+},
+{
+"text": "Dizem",
+"start": 21.605,
+"end": 21.895
+},
+{
+"text": "que",
+"start": 21.968,
+"end": 22.041
+},
+{
+"text": "o",
+"start": 22.077,
+"end": 22.114
+},
+{
+"text": "ovo",
+"start": 22.186,
+"end": 22.259
+},
+{
+"text": "explodiu",
+"start": 22.332,
+"end": 22.841
+},
+{
+"text": "na",
+"start": 22.914,
+"end": 22.986
+},
+{
+"text": "cara",
+"start": 23.059,
+"end": 23.205
+},
+{
+"text": "de",
+"start": 23.241,
+"end": 23.277
+},
+{
+"text": "um",
+"start": 23.314,
+"end": 23.35
+},
+{
+"text": "colega.",
+"start": 23.423,
+"end": 23.968
+},
+{
+"text": "Assim",
+"start": 24.15,
+"end": 24.441
+},
+{
+"text": "nasceu",
+"start": 24.514,
+"end": 24.877
+},
+{
+"text": "o",
+"start": 24.95,
+"end": 25.023
+},
+{
+"text": "forno",
+"start": 25.059,
+"end": 25.314
+},
+{
+"text": "de",
+"start": 25.35,
+"end": 25.386
+},
+{
+"text": "micro-ondas.",
+"start": 25.495,
+"end": 26.186
+},
+{
+"text": "Só",
+"start": 26.332,
+"end": 26.477
+},
+{
+"text": "tinha",
+"start": 26.514,
+"end": 26.768
+},
+{
+"text": "um",
+"start": 26.841,
+"end": 26.914
+},
+{
+"text": "problema:",
+"start": 26.986,
+"end": 27.641
+},
+{
+"text": "o",
+"start": 27.714,
+"end": 27.786
+},
+{
+"text": "primeiro",
+"start": 27.932,
+"end": 28.223
+},
+{
+"text": "pesava",
+"start": 28.332,
+"end": 28.659
+},
+{
+"text": "trezentos",
+"start": 28.732,
+"end": 29.241
+},
+{
+"text": "e",
+"start": 29.314,
+"end": 29.386
+},
+{
+"text": "quarenta",
+"start": 29.423,
+"end": 29.786
+},
+{
+"text": "quilos.",
+"start": 29.895,
+"end": 30.55
+}
+],
+"total": 31.223,
+"speed": 1.1,
+"lead": 0.15
+}

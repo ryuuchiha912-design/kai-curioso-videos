@@ -1,0 +1,38 @@
+# dependências e builds
+node_modules/
+build/
+dist/
+.remotion/
+
+# renders, folhas de contato e temporários
+out/
+tmp/
+entregas/
+versions/
+*.mp4
+*.mov
+*.webm
+
+# áudio gerado pelos scripts (regenere com scripts/tts_*.py)
+*.wav
+**/public/audio/**/*.mp3
+!shorts-3d/public/audio/capivara/pfff.mp3
+
+# gravações pessoais de narração
+narracao/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# sistema / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# segredos
+.env
+.env.*

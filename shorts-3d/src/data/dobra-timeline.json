@@ -1,0 +1,718 @@
+{
+ "total": 38.629,
+ "lines": [
+  {
+   "id": 1,
+   "who": "narrador",
+   "text": "E se o seu dinheiro dobrasse a cada hora?",
+   "audio": "audio/dobra/l01.mp3",
+   "audioStart": 0.203,
+   "fileDur": 3.024,
+   "start": 0.3,
+   "end": 2.399,
+   "words": [
+    {
+     "text": "E",
+     "start": 0.3,
+     "end": 0.43
+    },
+    {
+     "text": "se",
+     "start": 0.442,
+     "end": 0.548
+    },
+    {
+     "text": "o",
+     "start": 0.559,
+     "end": 0.607
+    },
+    {
+     "text": "seu",
+     "start": 0.618,
+     "end": 0.819
+    },
+    {
+     "text": "dinheiro",
+     "start": 0.831,
+     "end": 1.232
+    },
+    {
+     "text": "dobrasse",
+     "start": 1.243,
+     "end": 1.727
+    },
+    {
+     "text": "a",
+     "start": 1.739,
+     "end": 1.798
+    },
+    {
+     "text": "cada",
+     "start": 1.809,
+     "end": 2.092
+    },
+    {
+     "text": "hora",
+     "start": 2.104,
+     "end": 2.399
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "who": "kai",
+   "text": "Eu só tenho um real.",
+   "audio": "audio/dobra/l02.mp3",
+   "audioStart": 2.484,
+   "fileDur": 1.92,
+   "start": 2.579,
+   "end": 3.628,
+   "words": [
+    {
+     "text": "Eu",
+     "start": 2.579,
+     "end": 2.713
+    },
+    {
+     "text": "só",
+     "start": 2.724,
+     "end": 2.88
+    },
+    {
+     "text": "tenho",
+     "start": 2.892,
+     "end": 3.115
+    },
+    {
+     "text": "um",
+     "start": 3.126,
+     "end": 3.238
+    },
+    {
+     "text": "real.",
+     "start": 3.249,
+     "end": 3.628
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "who": "narrador",
+   "text": "Hora dez: mil e vinte e quatro reais.",
+   "audio": "audio/dobra/l03.mp3",
+   "audioStart": 3.711,
+   "fileDur": 3.192,
+   "start": 3.808,
+   "end": 6.084,
+   "words": [
+    {
+     "text": "Hora",
+     "start": 3.808,
+     "end": 4.079
+    },
+    {
+     "text": "dez",
+     "start": 4.091,
+     "end": 4.492
+    },
+    {
+     "text": "mil",
+     "start": 4.657,
+     "end": 4.905
+    },
+    {
+     "text": "e",
+     "start": 4.917,
+     "end": 4.976
+    },
+    {
+     "text": "vinte",
+     "start": 4.987,
+     "end": 5.247
+    },
+    {
+     "text": "e",
+     "start": 5.259,
+     "end": 5.27
+    },
+    {
+     "text": "quatro",
+     "start": 5.282,
+     "end": 5.577
+    },
+    {
+     "text": "reais",
+     "start": 5.589,
+     "end": 6.084
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "who": "kai",
+   "text": "Bia! Pastel pra escola inteira!",
+   "audio": "audio/dobra/l04.mp3",
+   "audioStart": 6.169,
+   "fileDur": 3.528,
+   "start": 6.264,
+   "end": 8.904,
+   "words": [
+    {
+     "text": "Bia",
+     "start": 6.264,
+     "end": 6.688
+    },
+    {
+     "text": "Pastel",
+     "start": 7.453,
+     "end": 7.899
+    },
+    {
+     "text": "pra",
+     "start": 7.911,
+     "end": 8.056
+    },
+    {
+     "text": "escola",
+     "start": 8.067,
+     "end": 8.435
+    },
+    {
+     "text": "inteira",
+     "start": 8.446,
+     "end": 8.904
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "who": "narrador",
+   "text": "Hora vinte: mais de um milhão.",
+   "audio": "audio/dobra/l05.mp3",
+   "audioStart": 8.987,
+   "fileDur": 2.76,
+   "start": 9.084,
+   "end": 10.923,
+   "words": [
+    {
+     "text": "Hora",
+     "start": 9.084,
+     "end": 9.379
+    },
+    {
+     "text": "vinte",
+     "start": 9.39,
+     "end": 9.744
+    },
+    {
+     "text": "mais",
+     "start": 9.98,
+     "end": 10.24
+    },
+    {
+     "text": "de",
+     "start": 10.251,
+     "end": 10.369
+    },
+    {
+     "text": "um",
+     "start": 10.381,
+     "end": 10.546
+    },
+    {
+     "text": "milhão",
+     "start": 10.558,
+     "end": 10.923
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "who": "bia",
+   "text": "Kai... por que tem três motos na sua garagem?",
+   "audio": "audio/dobra/l06.mp3",
+   "audioStart": 11.008,
+   "fileDur": 3.504,
+   "start": 11.103,
+   "end": 13.706,
+   "words": [
+    {
+     "text": "Kai",
+     "start": 11.103,
+     "end": 11.388
+    },
+    {
+     "text": "por",
+     "start": 11.728,
+     "end": 11.853
+    },
+    {
+     "text": "que",
+     "start": 11.876,
+     "end": 12.013
+    },
+    {
+     "text": "tem",
+     "start": 12.024,
+     "end": 12.183
+    },
+    {
+     "text": "três",
+     "start": 12.194,
+     "end": 12.478
+    },
+    {
+     "text": "motos",
+     "start": 12.49,
+     "end": 12.853
+    },
+    {
+     "text": "na",
+     "start": 12.865,
+     "end": 12.978
+    },
+    {
+     "text": "sua",
+     "start": 12.99,
+     "end": 13.172
+    },
+    {
+     "text": "garagem",
+     "start": 13.183,
+     "end": 13.706
+    }
+   ]
+  },
+  {
+   "id": 7,
+   "who": "kai",
+   "text": "Uma pra cada dia que eu lembro de usar.",
+   "audio": "audio/dobra/l07.mp3",
+   "audioStart": 13.791,
+   "fileDur": 2.784,
+   "start": 13.886,
+   "end": 15.794,
+   "words": [
+    {
+     "text": "Uma",
+     "start": 13.886,
+     "end": 14.142
+    },
+    {
+     "text": "pra",
+     "start": 14.154,
+     "end": 14.321
+    },
+    {
+     "text": "cada",
+     "start": 14.332,
+     "end": 14.567
+    },
+    {
+     "text": "dia",
+     "start": 14.578,
+     "end": 14.846
+    },
+    {
+     "text": "que",
+     "start": 14.857,
+     "end": 14.957
+    },
+    {
+     "text": "eu",
+     "start": 14.968,
+     "end": 15.069
+    },
+    {
+     "text": "lembro",
+     "start": 15.08,
+     "end": 15.415
+    },
+    {
+     "text": "de",
+     "start": 15.426,
+     "end": 15.493
+    },
+    {
+     "text": "usar",
+     "start": 15.504,
+     "end": 15.794
+    }
+   ]
+  },
+  {
+   "id": 8,
+   "who": "narrador",
+   "text": "Hora trinta: mais de um bilhão.",
+   "audio": "audio/dobra/l08.mp3",
+   "audioStart": 15.877,
+   "fileDur": 2.64,
+   "start": 15.974,
+   "end": 17.696,
+   "words": [
+    {
+     "text": "Hora",
+     "start": 15.974,
+     "end": 16.245
+    },
+    {
+     "text": "trinta",
+     "start": 16.257,
+     "end": 16.635
+    },
+    {
+     "text": "mais",
+     "start": 16.859,
+     "end": 17.094
+    },
+    {
+     "text": "de",
+     "start": 17.106,
+     "end": 17.212
+    },
+    {
+     "text": "um",
+     "start": 17.224,
+     "end": 17.319
+    },
+    {
+     "text": "bilhão",
+     "start": 17.33,
+     "end": 17.696
+    }
+   ]
+  },
+  {
+   "id": 9,
+   "who": "kai",
+   "text": "Comprei a escola. Agora o recreio dura duas horas.",
+   "audio": "audio/dobra/l09.mp3",
+   "audioStart": 17.781,
+   "fileDur": 4.44,
+   "start": 17.876,
+   "end": 21.442,
+   "words": [
+    {
+     "text": "Comprei",
+     "start": 17.876,
+     "end": 18.278
+    },
+    {
+     "text": "a",
+     "start": 18.289,
+     "end": 18.334
+    },
+    {
+     "text": "escola",
+     "start": 18.345,
+     "end": 18.825
+    },
+    {
+     "text": "Agora",
+     "start": 19.589,
+     "end": 19.935
+    },
+    {
+     "text": "o",
+     "start": 19.946,
+     "end": 19.969
+    },
+    {
+     "text": "recreio",
+     "start": 19.98,
+     "end": 20.382
+    },
+    {
+     "text": "dura",
+     "start": 20.393,
+     "end": 20.694
+    },
+    {
+     "text": "duas",
+     "start": 20.705,
+     "end": 20.984
+    },
+    {
+     "text": "horas",
+     "start": 20.996,
+     "end": 21.442
+    }
+   ]
+  },
+  {
+   "id": 10,
+   "who": "narrador",
+   "text": "Hora quarenta: mais de um trilhão.",
+   "audio": "audio/dobra/l10.mp3",
+   "audioStart": 21.525,
+   "fileDur": 2.856,
+   "start": 21.622,
+   "end": 23.568,
+   "words": [
+    {
+     "text": "Hora",
+     "start": 21.622,
+     "end": 21.893
+    },
+    {
+     "text": "quarenta",
+     "start": 21.905,
+     "end": 22.436
+    },
+    {
+     "text": "mais",
+     "start": 22.636,
+     "end": 22.896
+    },
+    {
+     "text": "de",
+     "start": 22.907,
+     "end": 23.014
+    },
+    {
+     "text": "um",
+     "start": 23.025,
+     "end": 23.131
+    },
+    {
+     "text": "trilhão",
+     "start": 23.143,
+     "end": 23.568
+    }
+   ]
+  },
+  {
+   "id": 11,
+   "who": "bia",
+   "text": "Kai... e aquela dívida de cinquenta reais no cartão?",
+   "audio": "audio/dobra/l11.mp3",
+   "audioStart": 23.652,
+   "fileDur": 3.72,
+   "start": 23.748,
+   "end": 26.577,
+   "words": [
+    {
+     "text": "Kai",
+     "start": 23.748,
+     "end": 24.021
+    },
+    {
+     "text": "e",
+     "start": 24.282,
+     "end": 24.373
+    },
+    {
+     "text": "aquela",
+     "start": 24.384,
+     "end": 24.714
+    },
+    {
+     "text": "dívida",
+     "start": 24.725,
+     "end": 25.134
+    },
+    {
+     "text": "de",
+     "start": 25.146,
+     "end": 25.236
+    },
+    {
+     "text": "cinquenta",
+     "start": 25.248,
+     "end": 25.702
+    },
+    {
+     "text": "reais",
+     "start": 25.714,
+     "end": 26.055
+    },
+    {
+     "text": "no",
+     "start": 26.066,
+     "end": 26.146
+    },
+    {
+     "text": "cartão",
+     "start": 26.157,
+     "end": 26.577
+    }
+   ]
+  },
+  {
+   "id": 12,
+   "who": "kai",
+   "text": "Que dívida?",
+   "audio": "audio/dobra/l12.mp3",
+   "audioStart": 26.663,
+   "fileDur": 1.872,
+   "start": 26.757,
+   "end": 27.36,
+   "words": [
+    {
+     "text": "Que",
+     "start": 26.757,
+     "end": 26.891
+    },
+    {
+     "text": "dívida",
+     "start": 26.902,
+     "end": 27.36
+    }
+   ]
+  },
+  {
+   "id": 13,
+   "who": "narrador",
+   "text": "O problema: tudo que é seu dobra. Inclusive a dívida.",
+   "audio": "audio/dobra/l13.mp3",
+   "audioStart": 27.443,
+   "fileDur": 4.92,
+   "start": 27.54,
+   "end": 31.547,
+   "words": [
+    {
+     "text": "O",
+     "start": 27.54,
+     "end": 27.646
+    },
+    {
+     "text": "problema",
+     "start": 27.658,
+     "end": 28.165
+    },
+    {
+     "text": "tudo",
+     "start": 28.448,
+     "end": 28.719
+    },
+    {
+     "text": "que",
+     "start": 28.731,
+     "end": 28.837
+    },
+    {
+     "text": "é",
+     "start": 28.849,
+     "end": 28.908
+    },
+    {
+     "text": "seu",
+     "start": 28.92,
+     "end": 29.12
+    },
+    {
+     "text": "dobra",
+     "start": 29.132,
+     "end": 29.521
+    },
+    {
+     "text": "Inclusive",
+     "start": 30.332,
+     "end": 31.004
+    },
+    {
+     "text": "a",
+     "start": 31.016,
+     "end": 31.087
+    },
+    {
+     "text": "dívida",
+     "start": 31.099,
+     "end": 31.547
+    }
+   ]
+  },
+  {
+   "id": 15,
+   "who": "kai",
+   "text": "Bia... me empresta um real?",
+   "audio": "audio/dobra/l15.mp3",
+   "audioStart": 32.232,
+   "fileDur": 2.496,
+   "start": 32.327,
+   "end": 33.945,
+   "words": [
+    {
+     "text": "Bia",
+     "start": 32.327,
+     "end": 32.673
+    },
+    {
+     "text": "me",
+     "start": 32.929,
+     "end": 32.985
+    },
+    {
+     "text": "empresta",
+     "start": 32.996,
+     "end": 33.443
+    },
+    {
+     "text": "um",
+     "start": 33.454,
+     "end": 33.543
+    },
+    {
+     "text": "real",
+     "start": 33.554,
+     "end": 33.945
+    }
+   ]
+  },
+  {
+   "id": 16,
+   "who": "narrador",
+   "text": "Comenta DOBRA se você aceitaria esse poder!",
+   "audio": "audio/dobra/l16.mp3",
+   "audioStart": 34.028,
+   "fileDur": 3.432,
+   "start": 34.125,
+   "end": 36.649,
+   "words": [
+    {
+     "text": "Comenta",
+     "start": 34.125,
+     "end": 34.609
+    },
+    {
+     "text": "DOBRA",
+     "start": 34.62,
+     "end": 34.962
+    },
+    {
+     "text": "se",
+     "start": 34.974,
+     "end": 35.092
+    },
+    {
+     "text": "você",
+     "start": 35.104,
+     "end": 35.351
+    },
+    {
+     "text": "aceitaria",
+     "start": 35.363,
+     "end": 35.953
+    },
+    {
+     "text": "esse",
+     "start": 35.965,
+     "end": 36.248
+    },
+    {
+     "text": "poder",
+     "start": 36.259,
+     "end": 36.649
+    }
+   ]
+  }
+ ],
+ "pauses": [
+  {
+   "id": 14,
+   "sfx": null,
+   "start": 31.727,
+   "end": 32.327
+  }
+ ]
+}
