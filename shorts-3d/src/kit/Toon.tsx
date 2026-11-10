@@ -9,8 +9,8 @@ import type { Pose } from "./Character";
  * moletom arredondado, pernas e braços finos. Tudo em formas simples.
  */
 export type ToonExpr = "neutral" | "smile" | "happy" | "surprised" | "worried" | "smug" | "sad";
-export type ToonFace = { expr: ToonExpr; blink?: number; look?: [number, number]; mouthOpen?: number; blush?: boolean; sweat?: boolean; eyes?: "dot" | "big" };
-export type ToonKind = "kai" | "bia";
+export type ToonFace = { expr: ToonExpr; blink?: number; look?: [number, number]; mouthOpen?: number; blush?: boolean; sweat?: boolean; eyes?: "dot" | "big"; iris?: string; lid?: number };
+export type ToonKind = "kai" | "bia" | "ren";
 
 const INK = "#1d1512";
 const q = (v: number, s = 6) => Math.round(v * s) / s;
@@ -18,7 +18,7 @@ const q = (v: number, s = 6) => Math.round(v * s) / s;
 /** Textura do rosto: olhos ovais pretos com brilho, sobrancelha fina, boca pequena. */
 export function toonFaceTexture(st: ToonFace) {
   const look = st.look ?? [0, 0];
-  const key = ["toon", st.expr, q(st.blink ?? 0, 4), q(look[0]), q(look[1]), q(st.mouthOpen ?? -1, 5), st.blush, st.sweat, st.eyes ?? "dot"].join("|");
+  const key = ["toon", st.expr, q(st.blink ?? 0, 4), q(look[0]), q(look[1]), q(st.mouthOpen ?? -1, 5), st.blush, st.sweat, st.eyes ?? "dot", st.iris ?? "", q(st.lid ?? 0, 10)].join("|");
   return canvasTexture(key, 512, 512, (ctx, S) => {
     ctx.clearRect(0, 0, S, S);
     const cx = S / 2, cy = S * 0.5, dx = S * 0.15;
@@ -36,7 +36,7 @@ export function toonFaceTexture(st: ToonFace) {
         const W2 = big ? 60 : 54, H2 = big ? 68 : 60;
         const ex = cx + side * S * 0.128;
         const base: Record<ToonExpr, number> = { neutral: 0.22, smile: 0.2, happy: 0, surprised: 0, worried: 0.2, smug: 0.52, sad: 0.36 };
-        const L = Math.max(base[e], blink);
+        const L = Math.min(0.9, Math.max(base[e] + (st.lid ?? 0) * (e === "surprised" ? 0.3 : 1), blink));
         const tiltL = e === "worried" || e === "sad" ? -0.32 * side : e === "smug" ? 0.06 * side : 0;
         const lidY = y - H2 + 2 * H2 * L;
         ctx.save();
@@ -46,8 +46,17 @@ export function toonFaceTexture(st: ToonFace) {
         ctx.restore();
         const pr = big ? 11 : 15;
         const px = ex + look[0] * W2 * 0.55, py = Math.max(lidY + pr * 0.6, y + 4 + look[1] * H2 * 0.45);
-        ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(px, py, pr, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(px - pr * 0.35, py - pr * 0.35, pr * 0.3, 0, Math.PI * 2); ctx.fill();
+        if (st.iris) {
+          // íris colorida (cinza, vermelha...) com anel escuro e pupila
+          const ir = big ? 26 : 30;
+          ctx.fillStyle = st.iris; ctx.beginPath(); ctx.arc(px, py, ir, 0, Math.PI * 2); ctx.fill();
+          ctx.strokeStyle = INK; ctx.lineWidth = 5; ctx.stroke();
+          ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(px, py + 2, ir * 0.42, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(px - ir * 0.38, py - ir * 0.38, ir * 0.22, 0, Math.PI * 2); ctx.fill();
+        } else {
+          ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(px, py, pr, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(px - pr * 0.35, py - pr * 0.35, pr * 0.3, 0, Math.PI * 2); ctx.fill();
+        }
         ctx.restore();
         ctx.strokeStyle = INK; ctx.lineWidth = 8; ctx.beginPath(); ctx.ellipse(ex, y, W2, H2, 0, 0, Math.PI * 2); ctx.stroke();
         if (L > 0.05) {
@@ -98,6 +107,7 @@ export function toonFaceTexture(st: ToonFace) {
 const LOOK: Record<ToonKind, { skin: string; hoodie: string; hoodie2: string; pants: string; shoe: string; sole: string; hair: string }> = {
   kai: { skin: "#f7dcc6", hoodie: "#24356a", hoodie2: "#1a2650", pants: "#262a36", shoe: "#2b2b33", sole: "#f07a1a", hair: "#16161c" },
   bia: { skin: "#f1c7a0", hoodie: "#2fa59a", hoodie2: "#23857c", pants: "#3a3f6b", shoe: "#f4f1ea", sole: "#e04b3c", hair: "#4a2a1a" },
+  ren: { skin: "#f6e2d4", hoodie: "#1b1b21", hoodie2: "#232329", pants: "#2a2d38", shoe: "#1c1c22", sole: "#ececf0", hair: "#121216" },
 };
 const mat = (c: string, r = 0.6) => <meshStandardMaterial color={c} roughness={r} />;
 
@@ -159,6 +169,58 @@ const KaiHair: React.FC<{ c: string }> = ({ c }) => (
     ))}
   </group>
 );
+
+/** Espeto de cabelo saindo da cabeça (cone), apontando para fora com inclinação. */
+const Spike: React.FC<{ az: number; el: number; len: number; w: number; tilt?: [number, number]; c: string; R?: number }> = ({ az, el, len, w, tilt = [0, 0], c, R = HEAD_R * 1.0 }) => (
+  <group rotation={[0, az, 0]}>
+    <group rotation={[-el, 0, 0]}>
+      <group position={[0, 0, R]} rotation={[Math.PI / 2 + tilt[0], 0, tilt[1]]}>
+        <mesh position={[0, len / 2 - 0.02, 0]} scale={[1, 1, 0.55]} castShadow>
+          <coneGeometry args={[w, len, 12]} />
+          {mat(c, 0.55)}
+        </mesh>
+      </group>
+    </group>
+  </group>
+);
+
+/** Ren: cabelo preto bagunçado, espetado, franja pesada caindo nos olhos. */
+const RenHair: React.FC<{ c: string }> = ({ c }) => {
+  const spikes: [number, number, number, number, number, number][] = [];
+  // coroa e nuca: anéis de espetos com inclinações variadas (determinístico)
+  const rings: [number, number, number, number][] = [[1.3, 6, 0.13, 0.12], [1.0, 10, 0.14, 0.125], [0.7, 13, 0.14, 0.12], [0.4, 14, 0.13, 0.115], [0.1, 14, 0.12, 0.11], [-0.2, 12, 0.11, 0.1]];
+  rings.forEach(([el, n, len, w], r) => {
+    for (let i = 0; i < n; i++) {
+      const az = (i / n) * Math.PI * 2 + r * 0.37;
+      const front = Math.cos(az) > 0.55 && el < 1.0; // a frente fica para a franja
+      if (front) continue;
+      const k = Math.sin(i * 12.9898 + r * 78.233) * 43758.5453; const rnd = k - Math.floor(k);
+      spikes.push([az, el, len * (0.75 + rnd * 0.6), w, (rnd - 0.5) * 0.7 - 0.75, (rnd - 0.5) * 0.9]);
+    }
+  });
+  return (
+    <group>
+      <mesh position={[0, 0.03, -0.02]} rotation={[-0.45, 0, 0]} castShadow>
+        <sphereGeometry args={[HEAD_R * 1.08, 48, 28, 0, Math.PI * 2, 0, Math.PI * 0.52]} />
+        {mat(c, 0.55)}
+      </mesh>
+      <mesh position={[0, -0.02, -0.06]} rotation={[-1.05, 0, 0]}>
+        <sphereGeometry args={[HEAD_R * 1.06, 48, 28, 0, Math.PI * 2, 0, Math.PI * 0.55]} />
+        {mat(c, 0.55)}
+      </mesh>
+      {spikes.map(([az, el, len, w, tx, tz], i) => <Spike key={i} az={az} el={el} len={len} w={w} tilt={[tx, tz]} c={c} R={HEAD_R * 1.02} />)}
+      {/* franja pesada e bagunçada, caindo até os olhos */}
+      {([
+        [-0.5, 0.62, 0.11, 0.3, -0.35], [-0.25, 0.66, 0.12, 0.33, -0.1], [0.0, 0.68, 0.12, 0.34, 0.12], [0.24, 0.66, 0.12, 0.32, 0.3], [0.5, 0.62, 0.11, 0.3, 0.45],
+        [-0.78, 0.55, 0.1, 0.32, -0.5], [0.78, 0.55, 0.1, 0.32, 0.55], [-1.05, 0.42, 0.09, 0.34, -0.3], [1.05, 0.42, 0.09, 0.34, 0.3],
+      ] as const).map(([az, el, w, h, roll], i) => (
+        <Strand key={i} az={az} el={el} w={w} h={h} roll={roll} c={c} R={HEAD_R * 1.04} t={0.024} hug={0.75} />
+      ))}
+      {/* mechas laterais sobre as orelhas */}
+      {[-1, 1].map((sd) => <Strand key={sd} az={sd * 1.35} el={0.35} w={0.09} h={0.3} t={0.03} roll={sd * 0.25} c={c} R={HEAD_R * 1.05} hug={0.6} />)}
+    </group>
+  );
+};
 
 const BiaHair: React.FC<{ c: string }> = ({ c }) => (
   <group>
@@ -241,11 +303,21 @@ export const Toon: React.FC<ToonProps> = ({ kind, pose = {}, face, holdR, holdL,
               {mat(L.hoodie2, 0.75)}
             </mesh>
             {/* bolso canguru */}
-            <mesh position={[0, 0.86, 0.17]} scale={[1, 0.5, 0.25]}>
-              <sphereGeometry args={[0.13, 20, 12]} />
-              {mat(L.hoodie2, 0.75)}
-            </mesh>
-            {kind === "kai" ? (
+            {kind !== "ren" && (
+              <mesh position={[0, 0.86, 0.17]} scale={[1, 0.5, 0.25]}>
+                <sphereGeometry args={[0.13, 20, 12]} />
+                {mat(L.hoodie2, 0.75)}
+              </mesh>
+            )}
+            {kind === "ren" ? (
+              <group>
+                {/* gola da camiseta (preta) */}
+                <mesh position={[0, 1.27, 0.0]} rotation={[Math.PI / 2 - 0.15, 0, 0]}>
+                  <torusGeometry args={[0.12, 0.022, 10, 28]} />
+                  {mat("#111114", 0.7)}
+                </mesh>
+              </group>
+            ) : kind === "kai" ? (
               <group>
                 {/* cachecol preto com ponta laranja */}
                 <mesh position={[0, 1.3, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
@@ -282,10 +354,19 @@ export const Toon: React.FC<ToonProps> = ({ kind, pose = {}, face, holdR, holdL,
               return (
                 <group key={s} position={[s * 0.25, SHOULDER_Y, 0]} rotation={r}>
                   <mesh castShadow><sphereGeometry args={[0.075, 16, 12]} />{mat(L.hoodie, 0.75)}</mesh>
-                  <mesh position={[0, -0.2, 0]} castShadow>
-                    <capsuleGeometry args={[0.06, 0.32, 6, 12]} />
-                    {mat(L.hoodie, 0.75)}
-                  </mesh>
+                  {kind === "ren" ? (
+                    <group>
+                      {/* manga curta preta, braço de fora e munhequeira preta */}
+                      <mesh position={[0, -0.07, 0]} castShadow><capsuleGeometry args={[0.072, 0.1, 6, 12]} />{mat(L.hoodie, 0.75)}</mesh>
+                      <mesh position={[0, -0.22, 0]} castShadow><capsuleGeometry args={[0.05, 0.3, 6, 12]} />{mat(L.skin, 0.5)}</mesh>
+                      {s < 0 && <mesh position={[0, -0.35, 0]} rotation={[Math.PI / 2, 0, 0]}><torusGeometry args={[0.055, 0.024, 8, 20]} />{mat("#111114", 0.7)}</mesh>}
+                    </group>
+                  ) : (
+                    <mesh position={[0, -0.2, 0]} castShadow>
+                      <capsuleGeometry args={[0.06, 0.32, 6, 12]} />
+                      {mat(L.hoodie, 0.75)}
+                    </mesh>
+                  )}
                   <group position={[0, -0.43, 0]}>
                     <mesh castShadow><sphereGeometry args={[0.07, 20, 16]} />{mat(L.skin, 0.5)}</mesh>
                     {s < 0 ? holdL : holdR}
@@ -304,7 +385,7 @@ export const Toon: React.FC<ToonProps> = ({ kind, pose = {}, face, holdR, holdL,
                     {mat(L.skin, 0.5)}
                   </mesh>
                 ))}
-                {kind === "kai" ? <KaiHair c={L.hair} /> : <BiaHair c={L.hair} />}
+                {kind === "kai" ? <KaiHair c={L.hair} /> : kind === "ren" ? <RenHair c={L.hair} /> : <BiaHair c={L.hair} />}
               </group>
             </group>
           </group>

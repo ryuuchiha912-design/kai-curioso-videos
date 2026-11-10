@@ -16,6 +16,9 @@ import { ToonSheet } from "./short5/ToonSheet";
 import { Dobra } from "./short5/Dobra";
 import { CelTest } from "./short6/CelTest";
 import { Microondas } from "./short6/Microondas";
+import { RenSheet } from "./short7/RenSheet";
+import { Ultimo } from "./short7/Ultimo";
+import { TOTAL as ULTIMO_SEC } from "./short7/shots";
 import { TOTAL as MICRO_SEC } from "./short6/shots";
 import { TOTAL_SEC as DOBRA_SEC } from "./short5/timeline";
 
@@ -32,11 +35,14 @@ export const Root = () => (
     <Composition id="Capivara" component={Capivara} durationInFrames={Math.ceil(CAPIVARA_SEC * FPS)} {...V} defaultProps={{ captions: true }} />
     <Composition id="Dobra" component={Dobra} durationInFrames={Math.ceil(DOBRA_SEC * FPS)} {...V} defaultProps={{ captions: true }} />
     <Composition id="Microondas" component={Microondas} durationInFrames={Math.ceil(MICRO_SEC * FPS)} {...V} defaultProps={{ captions: true }} />
+    {/* Vídeo longo 16:9 (canal do Ren) */}
+    <Composition id="Ultimo" component={Ultimo} durationInFrames={Math.ceil(ULTIMO_SEC * FPS)} fps={FPS} width={1920} height={1080} defaultProps={{ captions: true, audio: true }} />
     <Composition id="Reel3D" component={Reel} durationInFrames={Math.ceil(REEL_SEC * FPS)} {...V} defaultProps={{ captions: true }} />
     {/* Folhas de personagem (para conferir modelos) */}
     <Composition id="CharacterSheet" component={CharacterSheet} durationInFrames={100} fps={30} width={1080} height={1080} />
     <Composition id="ToonSheet" component={ToonSheet} durationInFrames={100} fps={30} width={1080} height={1080} defaultProps={{ view: "front" as const, expr: "smile" as const }} />
     <Composition id="CelTest" component={CelTest} durationInFrames={90} {...V} defaultProps={{ cel: true }} />
+    <Composition id="RenSheet" component={RenSheet} durationInFrames={30} fps={30} width={1080} height={1080} defaultProps={{ view: "front" as const, expr: "neutral" as const }} />
     <Composition id="CapivaraSheet" component={CapySheet} durationInFrames={100} fps={30} width={1080} height={1080} defaultProps={{ view: "front" as const }} />
   </>
 );

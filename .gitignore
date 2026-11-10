@@ -36,3 +36,6 @@ desktop.ini
 # segredos
 .env
 .env.*
+
+# trilha final do vídeo longo (necessária para renderizar)
+!shorts-3d/public/audio/ultimo/mix.mp3
