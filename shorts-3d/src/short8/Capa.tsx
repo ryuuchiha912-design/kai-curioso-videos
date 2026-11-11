@@ -14,7 +14,8 @@ const T: React.FC<{ children: React.ReactNode; size: number; color?: string; rot
   }}>{children}</div>
 );
 
-export const Capa: React.FC = () => {
+export const Capa: React.FC<{ lang?: "pt" | "en" }> = ({ lang = "pt" }) => {
+  const en = lang === "en";
   const f = 40;
   return (
     <AbsoluteFill style={{ background: "#000" }}>
@@ -33,13 +34,13 @@ export const Capa: React.FC = () => {
       </Lav>
       <Vignette />
       <AbsoluteFill style={{ alignItems: "center", paddingTop: 120, gap: 6 }}>
-        <T size={118}>Por que tem</T>
-        <T size={190} color="#ffd23f" rot={-3}>cinzeiro</T>
-        <T size={128}>no avião?!</T>
+        <T size={118}>{en ? "Why is there an" : "Por que tem"}</T>
+        <T size={190} color="#ffd23f" rot={-3}>{en ? "ashtray" : "cinzeiro"}</T>
+        <T size={128}>{en ? "on planes?!" : "no avião?!"}</T>
       </AbsoluteFill>
       <AbsoluteFill style={{ justifyContent: "flex-end", alignItems: "center", paddingBottom: 170 }}>
         <div style={{ background: "#d62a1e", padding: "14px 40px", borderRadius: 28, border: "10px solid #1b0f08", transform: "rotate(-4deg)" }}>
-          <T size={92}>É proibido fumar!</T>
+          <T size={92}>{en ? "Smoking is banned!" : "É proibido fumar!"}</T>
         </div>
       </AbsoluteFill>
     </AbsoluteFill>

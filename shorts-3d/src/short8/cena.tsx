@@ -201,8 +201,10 @@ export const Fire: React.FC<{ p?: V3; frame: number; k?: number; w?: number }> =
 );
 
 /** Prancheta com a regra. */
-export const Clipboard: React.FC<{ p?: V3; rot?: V3; s?: number }> = ({ p = [0, 0, 0], rot = [0, 0, 0], s = 1 }) => {
-  const tex = textTex("regra", [["REGRA DE", 64, "#2a1a10"], ["SEGURANÇA", 64, "#2a1a10"], ["", 30, "#000"], ["CINZEIRO NO", 54, "#c0392b"], ["BANHEIRO:", 54, "#c0392b"], ["OBRIGATÓRIO ✔", 56, "#1e8a4a"]], "#fffaf0");
+export const Clipboard: React.FC<{ p?: V3; rot?: V3; s?: number; en?: boolean }> = ({ p = [0, 0, 0], rot = [0, 0, 0], s = 1, en = false }) => {
+  const tex = en
+    ? textTex("rule-en", [["SAFETY", 64, "#2a1a10"], ["RULE", 64, "#2a1a10"], ["", 30, "#000"], ["LAVATORY", 54, "#c0392b"], ["ASHTRAY:", 54, "#c0392b"], ["REQUIRED ✔", 56, "#1e8a4a"]], "#fffaf0")
+    : textTex("regra", [["REGRA DE", 64, "#2a1a10"], ["SEGURANÇA", 64, "#2a1a10"], ["", 30, "#000"], ["CINZEIRO NO", 54, "#c0392b"], ["BANHEIRO:", 54, "#c0392b"], ["OBRIGATÓRIO ✔", 56, "#1e8a4a"]], "#fffaf0");
   return (
     <group position={p} rotation={rot} scale={s}>
       <Box s={[0.42, 0.54, 0.02]} c="#a8683a" />

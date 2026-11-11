@@ -19,7 +19,7 @@ import { Microondas } from "./short6/Microondas";
 import { RenSheet } from "./short7/RenSheet";
 import { Aviao } from "./short8/Aviao";
 import { Capa as AviaoCapa } from "./short8/Capa";
-import { TOTAL as AVIAO_SEC } from "./short8/shots";
+import { TOTAL as AVIAO_SEC, timing as aviaoTiming } from "./short8/shots";
 import { Ultimo } from "./short7/Ultimo";
 import { TOTAL as ULTIMO_SEC } from "./short7/shots";
 import { TOTAL as MICRO_SEC } from "./short6/shots";
@@ -40,7 +40,9 @@ export const Root = () => (
     <Composition id="Microondas" component={Microondas} durationInFrames={Math.ceil(MICRO_SEC * FPS)} {...V} defaultProps={{ captions: true }} />
     {/* Canal do Nico (curiosidades em 3D) */}
     <Composition id="Aviao" component={Aviao} durationInFrames={Math.ceil(AVIAO_SEC * FPS)} {...V} defaultProps={{ captions: true, audio: true }} />
-    <Composition id="AviaoCapa" component={AviaoCapa} durationInFrames={1} {...V} />
+    <Composition id="AviaoEN" component={Aviao} durationInFrames={Math.ceil(aviaoTiming("en").total * FPS)} {...V} defaultProps={{ captions: true, audio: true, lang: "en" as const }} />
+    <Composition id="AviaoCapa" component={AviaoCapa} durationInFrames={1} {...V} defaultProps={{ lang: "pt" as const }} />
+    <Composition id="AviaoCapaEN" component={AviaoCapa} durationInFrames={1} {...V} defaultProps={{ lang: "en" as const }} />
     {/* Vídeo longo 16:9 (canal do Ren) */}
     <Composition id="Ultimo" component={Ultimo} durationInFrames={Math.ceil(ULTIMO_SEC * FPS)} fps={FPS} width={1920} height={1080} defaultProps={{ captions: true, audio: true }} />
     <Composition id="UltimoHD" component={Ultimo} durationInFrames={Math.ceil(ULTIMO_SEC * FPS)} fps={FPS} width={1280} height={720} defaultProps={{ captions: true, audio: false }} />

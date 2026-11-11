@@ -1,6 +1,8 @@
 import React from "react";
 import { AbsoluteFill, interpolate } from "remotion";
-import data from "../data/aviao-timeline.json";
+import dataPt from "../data/aviao-timeline.json";
+import dataEn from "../data/aviao-en-timeline.json";
+import mapEn from "../data/aviao-en-map.json";
 import { Cam, Stage } from "../kit/Stage";
 import { Cel } from "../kit/cel";
 import { Pose } from "../kit/Character";
@@ -17,13 +19,20 @@ import {
 export type Shot = { name: string; from: number; to: number; render: (f: number, s: number, e: number) => React.ReactNode; overlay?: (f: number) => React.ReactNode };
 type V3 = [number, number, number];
 
-const LINES = data.lines as { cap: string; start: number; end: number; words: { text: string; start: number; end: number }[] }[];
-export const WORDS = LINES.flatMap((l) => l.words);
-export const TOTAL = data.total;
-/** Quadro em que a palavra i começa. */
-export const W = (i: number) => Math.round(WORDS[i].start * FPS);
-/** Corte (s) um pouco antes da palavra i. */
-const C = (i: number) => Math.max(0, WORDS[i].start - 0.08);
+export type Lang = "pt" | "en";
+type TL = { total: number; lines: { words: { text: string; start: number; end: number }[] }[] };
+/** Tempos por idioma. Os planos usam os índices de palavra do roteiro em português; no inglês, `aviao-en-map.json` traduz o índice para a palavra equivalente. */
+export const timing = (lang: Lang) => {
+  const data = (lang === "en" ? dataEn : dataPt) as TL;
+  const words = data.lines.flatMap((l) => l.words);
+  const map = (i: number) => (lang === "en" ? (mapEn as Record<string, number>)[String(i)] : i);
+  const W = (i: number) => Math.round(words[map(i)].start * FPS);
+  const C = (i: number) => Math.max(0, words[map(i)].start - 0.08);
+  return { words, total: data.total, W, C };
+};
+const PT = timing("pt");
+export const WORDS = PT.words;
+export const TOTAL = PT.total;
 
 const glide = (f: number, s: number, e: number, a: Cam, b: Cam): Cam => ({
   pos: kf3(f, [[s, a.pos], [e, b.pos]]),
@@ -91,7 +100,10 @@ export const Stamp: React.FC<{ f: number; at: number; text: string; color?: stri
 };
 
 // ================================================================= PLANOS
-export const SHOTS: Shot[] = [
+export const buildShots = (lang: Lang): Shot[] => {
+  const { W, C, total: TOTAL } = timing(lang);
+  const en = lang === "en";
+  return [
   // "Se fumar no avião é proibido…"
   {
     name: "01a cinzeiro e placa", from: 0, to: C(6),
@@ -130,7 +142,7 @@ export const SHOTS: Shot[] = [
     render: (f, s, e) => (
       <Lav ash={{ glow: 0.6 }} cam={glide(f, s, e, ashCam(1.0, -0.3, 0.15, 34), ashCam(0.85, -0.2, 0.1, 33, f >= W(17) ? 0.03 : 0))} />
     ),
-    overlay: (f) => <Stamp f={f} at={W(17) - 2} text="OBRIGATÓRIO" size={104} y={0.22} />,
+    overlay: (f) => <Stamp f={f} at={W(17) - 2} text={en ? "REQUIRED" : "OBRIGATÓRIO"} size={104} y={0.22} />,
   },
   // "As regras de segurança da aviação exigem…"
   {
@@ -141,7 +153,7 @@ export const SHOTS: Shot[] = [
         <Lav cam={glide(f, s, e, faceCam(1.6, -0.35, -0.2, 36), faceCam(1.35, -0.2, -0.25, 35))}>
           <Nico f={f} face={nicoFace(f, [[s, "neutral"], [W(24) - 2, "smile"]], { look: [-0.2, 0.7] })}
             pose={{ ...idle(f), armL: arm, head: [0.3, -0.1, 0] }}
-            holdL={held(arm, <group scale={Math.max(0.001, pop(f, W(19) - 3, 7))}><Clipboard p={[0.05, 0.05, 0.14]} rot={[-0.35, 0.3, 0]} s={1.1} /></group>)} />
+            holdL={held(arm, <group scale={Math.max(0.001, pop(f, W(19) - 3, 7))}><Clipboard p={[0.05, 0.05, 0.14]} rot={[-0.35, 0.3, 0]} s={1.1} en={en} /></group>)} />
         </Lav>
       );
     },
@@ -295,3 +307,6 @@ export const SHOTS: Shot[] = [
     },
   },
 ];
+};
+
+export const SHOTS = buildShots("pt");

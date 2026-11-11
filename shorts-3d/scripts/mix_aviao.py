@@ -8,8 +8,16 @@ import wave
 import numpy as np
 
 SR = 44100
-tl = json.load(open("src/data/aviao-timeline.json"))
-W = [w["start"] for l in tl["lines"] for w in l["words"]]
+import os
+LANG = os.environ.get("LANG_VIDEO", "pt")  # pt (padrão) ou en
+SUF = "" if LANG == "pt" else "-" + LANG
+tl = json.load(open(f"src/data/aviao{SUF}-timeline.json"))
+_W = [w["start"] for l in tl["lines"] for w in l["words"]]
+# os efeitos usam os índices de palavra do roteiro em português; em outro idioma, traduz pelo mapa
+_MAP = {int(k): v for k, v in json.load(open(f"src/data/aviao{SUF}-map.json")).items()} if SUF else {}
+class _Words:
+    def __getitem__(self, i): return _W[_MAP.get(i, i)] if SUF else _W[i]
+W = _Words()
 LS = [l["start"] for l in tl["lines"]]
 TOTAL = tl["total"]
 N = int(TOTAL * SR) + SR // 2
@@ -134,7 +142,7 @@ for i, f0 in enumerate((1318, 1661, 1976, 2637)):                               
 put(sfx, popf(), W[106] - 0.08, 0.7)              # comenta aí
 
 # ------------------------------------------------------------------ mixagem com níveis travados
-voice = read_wav("public/audio/aviao/narr.wav")
+voice = read_wav(f"public/audio/aviao{SUF}/narr.wav")
 voice = np.pad(voice, (0, max(0, N - len(voice))))[:N]
 
 
@@ -157,15 +165,15 @@ print(f"trilha vs voz: {db(music, voice):+.1f} dB | efeitos vs voz: {db(sfx, voi
 mix = voice + music + sfx
 mix /= max(1.0, np.abs(mix).max() / 0.98)
 out = (np.clip(mix, -1, 1) * 32767).astype(np.int16)
-with wave.open("out/aviao_mix_raw.wav", "w") as f:
+with wave.open(f"out/aviao{SUF}_mix_raw.wav", "w") as f:
     f.setnchannels(1); f.setsampwidth(2); f.setframerate(SR); f.writeframes(out.tobytes())
 
 # loudness: um ganho linear até ~-14 LUFS + limitador de pico -1 dBFS
-m = subprocess.run(["ffmpeg", "-hide_banner", "-i", "out/aviao_mix_raw.wav", "-af", "loudnorm=print_format=json", "-f", "null", "-"], capture_output=True, text=True).stderr
+m = subprocess.run(["ffmpeg", "-hide_banner", "-i", f"out/aviao{SUF}_mix_raw.wav", "-af", "loudnorm=print_format=json", "-f", "null", "-"], capture_output=True, text=True).stderr
 info = json.loads(m[m.rindex("{"): m.rindex("}") + 1])
 gain = -14 - float(info["input_i"])
-subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", "out/aviao_mix_raw.wav", "-af", f"volume={gain:.2f}dB,alimiter=limit=0.891:level=false", "-ar", "48000", "-ac", "2", "out/aviao_mix.wav"], check=True)
-print(f"loudness de entrada {info['input_i']} LUFS, ganho aplicado {gain:+.2f} dB -> out/aviao_mix.wav")
+subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", f"out/aviao{SUF}_mix_raw.wav", "-af", f"volume={gain:.2f}dB,alimiter=limit=0.891:level=false", "-ar", "48000", "-ac", "2", f"out/aviao{SUF}_mix.wav"], check=True)
+print(f"loudness de entrada {info['input_i']} LUFS, ganho aplicado {gain:+.2f} dB -> out/aviao{SUF}_mix.wav")
 
-subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", "out/aviao_mix.wav", "-c:a", "libmp3lame", "-b:a", "192k", "public/audio/aviao/mix.mp3"], check=True)
-print("-> public/audio/aviao/mix.mp3")
+subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", f"out/aviao{SUF}_mix.wav", "-c:a", "libmp3lame", "-b:a", "192k", f"public/audio/aviao{SUF}/mix.mp3"], check=True)
+print(f"-> public/audio/aviao{SUF}/mix.mp3")
