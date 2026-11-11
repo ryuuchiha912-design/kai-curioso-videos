@@ -144,6 +144,39 @@ export const Lab: React.FC = () => (
     <Box s={[2.55, 1.45, 0.05]} p={[-1.6, 2.1, -2.55]} c="#8a6a48" />
     {/* desenhos de giz: pombo + seta + navio */}
     <mesh position={[-1.6, 2.1, -2.48]}><planeGeometry args={[2.3, 1.2]} /><meshBasicMaterial transparent map={chalkTex()} /></mesh>
+    {/* janela com luz entrando */}
+    <group position={[2.3, 2.2, -2.5]}>
+      <Box s={[1.5, 1.3, 0.06]} c="#6b4426" />
+      <mesh position={[0, 0, 0.04]}><planeGeometry args={[1.36, 1.16]} /><meshBasicMaterial color="#fff3c4" /></mesh>
+      <Box s={[0.06, 1.16, 0.08]} p={[0, 0, 0.05]} c="#6b4426" /><Box s={[1.36, 0.06, 0.08]} p={[0, 0, 0.05]} c="#6b4426" />
+    </group>
+    <mesh position={[1.6, 1.2, -0.9]} rotation={[-0.55, -0.35, 0]}><planeGeometry args={[1.4, 3.2]} /><meshBasicMaterial color="#fff6d0" transparent opacity={0.08} depthWrite={false} /></mesh>
+    {/* prateleira com frascos e livros */}
+    <group position={[-2.6, 0, -2.3]}>
+      {[0.9, 1.6, 2.3].map((y, i) => <Box key={i} s={[1.4, 0.06, 0.4]} p={[0, y, 0]} c="#7a4a2a" />)}
+      <Box s={[0.06, 2.5, 0.4]} p={[-0.7, 1.25, 0]} c="#6b4426" /><Box s={[0.06, 2.5, 0.4]} p={[0.7, 1.25, 0]} c="#6b4426" />
+      {Array.from({ length: 12 }, (_, i) => {
+        const row = Math.floor(i / 4), x = -0.5 + (i % 4) * 0.33, y = 0.93 + row * 0.7;
+        return i % 3 === 0
+          ? <Box key={i} s={[0.09, 0.32, 0.26]} p={[x, y + 0.16, 0]} c={["#c0392b", "#2c6fb6", "#3e9b4a", "#e0b13a"][i % 4]} />
+          : <mesh key={i} position={[x, y + 0.13, 0]}><cylinderGeometry args={[0.07, 0.07, 0.26, 12]} /><M c={["#9fd8c8", "#f2c94c", "#d7a6e8"][i % 3]} r={0.3} /></mesh>;
+      })}
+    </group>
+    {/* gaiolas de pombo empilhadas */}
+    {[[-0.2, 0, -2.15], [0.35, 0, -2.15], [0.07, 0.55, -2.15]].map(([x, y, z], i) => (
+      <group key={i} position={[x, y, z]}>
+        <Box s={[0.5, 0.04, 0.4]} p={[0, 0.02, 0]} c="#6b4426" /><Box s={[0.5, 0.04, 0.4]} p={[0, 0.52, 0]} c="#6b4426" />
+        {Array.from({ length: 6 }, (_, k) => <Box key={k} s={[0.015, 0.5, 0.015]} p={[-0.22 + k * 0.088, 0.27, 0.19]} c="#c9b98f" shadow={false} />)}
+      </group>
+    ))}
+    {/* luminária pendurada */}
+    <group position={[0.6, 3.3, -0.4]}>
+      <mesh position={[0, 0.4, 0]}><cylinderGeometry args={[0.01, 0.01, 0.8, 6]} /><M c="#2a2a30" /></mesh>
+      <mesh rotation={[Math.PI, 0, 0]}><coneGeometry args={[0.32, 0.3, 24, 1, true]} /><meshStandardMaterial color="#3e6a4a" side={THREE.DoubleSide} /></mesh>
+      <mesh position={[0, -0.1, 0]}><sphereGeometry args={[0.09, 12, 10]} /><M c="#fff6d0" e="#ffe9a0" ei={1.5} /></mesh>
+    </group>
+    {/* caixotes */}
+    <Box s={[0.6, 0.5, 0.6]} p={[2.6, 0.25, -1.6]} c="#a8783a" /><Box s={[0.45, 0.4, 0.45]} p={[2.5, 0.7, -1.6]} c="#b98848" />
     <Box s={[2.2, 0.08, 0.9]} p={[0.6, 0.95, -0.4]} c="#a8683a" />
     {[-1, 1].map((k) => [-1, 1].map((j) => <Box key={`${k}${j}`} s={[0.08, 0.95, 0.08]} p={[0.6 + k * 1.0, 0.47, -0.4 + j * 0.38]} c="#7a4a2a" />))}
   </group>

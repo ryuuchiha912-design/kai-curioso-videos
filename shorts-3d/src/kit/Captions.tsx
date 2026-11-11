@@ -7,8 +7,8 @@ export type Word = { text: string; start: number; end: number };
  * Legenda grande, palavra por palavra, comandada pelo arquivo de tempos.
  * Agrupa em blocos curtos (até 3 palavras) e acende a palavra falada.
  */
-export const Captions: React.FC<{ lines: Word[][]; offsetSec?: number; y?: number; size?: number; maxWords?: number; highlight?: string }> = ({
-  lines, offsetSec = 0, y = 0.64, size = 92, maxWords = 3, highlight = "#ffd23f",
+export const Captions: React.FC<{ lines: Word[][]; offsetSec?: number; y?: number; size?: number; maxWords?: number; highlight?: string; lower?: boolean }> = ({
+  lines, offsetSec = 0, y = 0.64, size = 92, maxWords = 3, highlight = "#ffd23f", lower = false,
 }) => {
   const frame = useCurrentFrame();
   const { fps, height } = useVideoConfig();
@@ -58,7 +58,7 @@ export const Captions: React.FC<{ lines: Word[][]; offsetSec?: number; y?: numbe
                 WebkitTextStroke: `${size * 0.12}px #1b0f08`,
                 paintOrder: "stroke fill",
                 textShadow: `0 ${size * 0.08}px 0 rgba(0,0,0,0.55)`,
-                textTransform: "uppercase",
+                textTransform: lower ? "lowercase" : "uppercase",
                 transform: `scale(${s}) rotate(${now ? (i % 2 ? 2 : -2) : 0}deg)`,
                 display: "inline-block",
               }}

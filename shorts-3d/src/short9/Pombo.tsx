@@ -16,7 +16,7 @@ export const Pombo: React.FC<{ captions?: boolean; audio?: boolean }> = ({ capti
       {shot.render(f, sec(shot.from), sec(shot.to))}
       <Vignette />
       {shot.overlay?.(f)}
-      {captions && <Captions lines={[WORDS]} maxWords={1} size={104} y={0.62} highlight="#ffffff" />}
+      {captions && <Captions lines={[WORDS]} maxWords={1} size={78} y={0.6} highlight="#ffffff" lower />}
       <AbsoluteFill style={{ background: "#0d0d12", opacity: endFade }} />
       {audio && <Audio src={staticFile("audio/pombo/mix.mp3")} />}
     </AbsoluteFill>

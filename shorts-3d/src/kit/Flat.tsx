@@ -79,7 +79,7 @@ function limb(ctx: CanvasRenderingContext2D, x: number, y: number, ang: number, 
     ctx.strokeStyle = c; ctx.lineWidth = lw; ctx.lineCap = "round"; ctx.lineJoin = "round";
     ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
   }
-  if (hand) { ctx.fillStyle = hand; ctx.strokeStyle = INK; ctx.lineWidth = 7; ctx.beginPath(); ctx.arc(x2, y2, w * 1.25, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); }
+  if (hand) { ctx.fillStyle = hand; ctx.strokeStyle = INK; ctx.lineWidth = 7; ctx.beginPath(); ctx.arc(x2, y2, w * 0.85, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); }
   return [x2, y2];
 }
 
@@ -100,24 +100,27 @@ function drawPerson(ctx: CanvasRenderingContext2D, kind: "nico" | "general", p: 
     ctx.fillStyle = kind === "nico" ? "#f4f4f6" : "#4a3020"; ctx.strokeStyle = INK; ctx.lineWidth = 8;
     ctx.beginPath(); ctx.ellipse(fx + s * 10, fy + 4, 30, 15, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
   }
-  // tronco: jaqueta/farda curtinha
-  const shY = 520;
-  ctx.fillStyle = top; ctx.strokeStyle = INK; ctx.lineWidth = 10; ctx.lineJoin = "round";
-  ctx.beginPath(); ctx.moveTo(cx - 40, shY); ctx.lineTo(cx + 40, shY); ctx.lineTo(cx + 48, hipY + 6); ctx.lineTo(cx - 48, hipY + 6); ctx.closePath(); ctx.fill(); ctx.stroke();
+  // tronco: jaqueta/farda com volume (sombra chapada do lado direito)
+  const shY = 505;
+  const torso = () => { ctx.beginPath(); ctx.moveTo(cx - 58, shY + 6); ctx.quadraticCurveTo(cx, shY - 14, cx + 58, shY + 6); ctx.lineTo(cx + 64, hipY + 30); ctx.quadraticCurveTo(cx, hipY + 44, cx - 64, hipY + 30); ctx.closePath(); };
+  ctx.fillStyle = top; ctx.strokeStyle = INK; ctx.lineWidth = 11; ctx.lineJoin = "round";
+  torso(); ctx.fill();
+  ctx.save(); torso(); ctx.clip(); ctx.fillStyle = "rgba(20,20,40,0.16)"; ctx.fillRect(cx + 8, shY - 20, 80, 300); ctx.restore();
+  torso(); ctx.stroke();
   if (kind === "nico") {
-    ctx.fillStyle = "#17171b"; ctx.fillRect(cx - 34, shY - 6, 68, 26);
-    ctx.strokeStyle = "#17171b"; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(cx, shY + 20); ctx.lineTo(cx, hipY); ctx.stroke();
+    ctx.fillStyle = "#17171b"; ctx.beginPath(); ctx.moveTo(cx - 40, shY - 4); ctx.lineTo(cx + 40, shY - 4); ctx.lineTo(cx + 34, shY + 30); ctx.lineTo(cx - 34, shY + 30); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = "#17171b"; ctx.lineWidth = 7; ctx.beginPath(); ctx.moveTo(cx, shY + 30); ctx.lineTo(cx, hipY + 36); ctx.stroke();
+    ctx.fillStyle = "#c9ccd6"; ctx.fillRect(cx - 60, hipY + 14, 120, 14);
   } else {
-    ctx.fillStyle = "#2e2a20"; ctx.fillRect(cx - 6, shY + 6, 12, 70);
-    ctx.fillStyle = "#3a2a1e"; ctx.fillRect(cx - 46, hipY - 30, 92, 18);
-    ["#c62a2a", "#2c6fb6", "#e0b13a"].forEach((c, i) => { ctx.fillStyle = c; ctx.fillRect(cx - 34 + i * 14, shY + 30, 11, 9); });
+    ctx.fillStyle = "#2e2a20"; ctx.fillRect(cx - 7, shY + 10, 14, 90);
+    ctx.fillStyle = "#3a2a1e"; ctx.fillRect(cx - 62, hipY - 10, 124, 22);
+    ["#c62a2a", "#2c6fb6", "#e0b13a"].forEach((c, i) => { ctx.fillStyle = c; ctx.fillRect(cx - 50 + i * 16, shY + 40, 13, 10); });
+    ctx.fillStyle = "#e0b13a"; for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.arc(cx + 22, shY + 60 + i * 50, 6, 0, Math.PI * 2); ctx.fill(); }
   }
-  // braços
-  const armCol = kind === "nico" ? "#17171b" : top;
-  limb(ctx, cx - 36, shY + 14, -(p.armL ?? 0.15), 250, -(p.elbowL ?? 0), kind === "nico" ? top : top, 16, skin);
-  limb(ctx, cx + 36, shY + 14, (p.armR ?? 0.15), 250, (p.elbowR ?? 0), top, 16, skin);
-  ctx.fillStyle = armCol; ctx.strokeStyle = INK; ctx.lineWidth = 7;
-  if (kind === "nico") for (const s of [-1, 1]) { ctx.beginPath(); ctx.arc(cx + s * 38, shY + 10, 15, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); }
+  // braços (mangas grossas, mão redonda)
+  limb(ctx, cx - 56, shY + 22, -(p.armL ?? 0.15), 240, -(p.elbowL ?? 0), top, 26, skin);
+  limb(ctx, cx + 56, shY + 22, (p.armR ?? 0.15), 240, (p.elbowR ?? 0), top, 26, skin);
+  if (kind === "nico") { ctx.fillStyle = "#17171b"; ctx.strokeStyle = INK; ctx.lineWidth = 7; for (const s of [-1, 1]) { ctx.beginPath(); ctx.arc(cx + s * 56, shY + 18, 19, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); } }
   // cabeça grande
   const hx = cx, hy = 300;
   ctx.save(); ctx.translate(hx, hy + 170); ctx.rotate(p.headTilt ?? 0); ctx.translate(-hx, -(hy + 170));
@@ -129,7 +132,9 @@ function drawPerson(ctx: CanvasRenderingContext2D, kind: "nico" | "general", p: 
     ctx.closePath(); ctx.fill(); ctx.stroke();
   }
   ctx.fillStyle = skin; ctx.strokeStyle = INK; ctx.lineWidth = 11;
-  ctx.beginPath(); ctx.ellipse(hx, hy, 190, 178, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(hx, hy, 190, 178, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.save(); ctx.beginPath(); ctx.ellipse(hx, hy, 190, 178, 0, 0, Math.PI * 2); ctx.clip(); ctx.fillStyle = "rgba(150,70,40,0.14)"; ctx.beginPath(); ctx.ellipse(hx + 120, hy + 40, 150, 200, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+  ctx.beginPath(); ctx.ellipse(hx, hy, 190, 178, 0, 0, Math.PI * 2); ctx.stroke();
   // orelhas
   for (const s of [-1, 1]) { ctx.beginPath(); ctx.ellipse(hx + s * 188, hy + 20, 24, 34, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); }
   if (f.blush || f.expr === "happy") { ctx.fillStyle = "rgba(255,120,120,.4)"; for (const s of [-1, 1]) { ctx.beginPath(); ctx.ellipse(hx + s * 112, hy + 70, 34, 18, 0, 0, Math.PI * 2); ctx.fill(); } }

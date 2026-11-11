@@ -34,7 +34,7 @@ const laugh = (f: number, seed = 0): Pose => ({ bob: Math.abs(Math.sin(f * 0.8 +
 const genFace = (f: number, expr: ToonExpr, seed: number): ToonFace => ({ expr, blink: blinkAt(f, seed, 80), eyes: "big" });
 
 // ---------------------------------------------------------------- posições do laboratório
-const NICO: V3 = [-0.75, 0, 0.2];
+const NICO: V3 = [-0.45, 0, 0.25];
 const TABLE_Y = 0.99;
 const PIG: V3 = [0.75, TABLE_Y, -0.3];
 const SCR: V3 = [1.2, TABLE_Y + 0.45, -0.45];
@@ -86,7 +86,7 @@ export const SHOTS: Shot[] = [
       const scr = Math.max(0.001, pop(f, W(22) - 3, 7));
       const hits = f > W(20) ? Math.min(6, Math.floor((f - W(20)) / 9)) : 0;
       return (
-        <LabStage cam={glide(f, s, e, { pos: [-0.2, 1.9, 3.4], target: [0.3, 1.2, -0.3], fov: 40 }, { pos: [0.9, 1.6, 1.6], target: [0.95, 1.2, -0.35], fov: 36 })}>
+        <LabStage cam={glide(f, s, e, { pos: [-0.1, 1.45, 2.3], target: [0.0, 1.25, -0.1], fov: 40 }, { pos: [0.5, 1.45, 1.9], target: [0.35, 1.2, -0.2], fov: 38 })}>
           <Nico f={f} face={nicoFace(f, [[s, "smile"], [W(20), "happy"]], { look: [0.7, 0.1] })} pose={{ ...idle(f), armR: [-0.6, 0, 0.5] }} />
           <FlatChar kind="pigeon" position={PIG} h={0.55} pose={{ headTilt: f > W(20) ? peckAt(f) * 0.7 : 0 }} face={{ expr: "neutral" }} />
           <group scale={scr}><Screen p={SCR} ry={-0.5} s={1} hits={hits} /></group>
