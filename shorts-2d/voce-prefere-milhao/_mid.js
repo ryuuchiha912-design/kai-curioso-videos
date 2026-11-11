@@ -19,7 +19,7 @@ function moneyBag(x, y, s, label = '') {
 }
 function cash(x, y, s, n = 5) { let g = ''; for (let i = 0; i < n; i++) g += R(-110, -i * 26 - 30, 220, 30, 6, i % 2 ? MONEY : '#6AB75A', 6); return G(`translate(${x},${y}) scale(${s})`, g); }
 function calendar(x, y, s, head = 'MÊS', big = '30', col = RED) {
-  return G(`translate(${x},${y}) scale(${s})`, R(-130, -150, 260, 300, 24, '#FFFFFF', 9) + R(-130, -150, 260, 80, 20, col, 9) + T(0, -108, head, 42, '#FFFFFF') + T(0, 40, big, big.length > 3 ? 66 : 120, '#1A1210') + C(-70, -160, 14, '#5A6070', 6) + C(70, -160, 14, '#5A6070', 6));
+  return G(`translate(${x},${y}) scale(${s})`, R(-130, -150, 260, 300, 24, '#FFFFFF', 9) + R(-130, -150, 260, 80, 20, col, 9) + T(0, -108, head, 42, '#FFFFFF') + T(0, 40, big, big.length > 3 ? 58 : 120, '#1A1210') + C(-70, -160, 14, '#5A6070', 6) + C(70, -160, 14, '#5A6070', 6));
 }
 function counter(x, y, s, val, col = '#1A1210', fg = '#7BE07B') {
   const txt = 'R$ ' + fmt(val);
