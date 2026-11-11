@@ -10,7 +10,7 @@ import type { Pose } from "./Character";
  */
 export type ToonExpr = "neutral" | "smile" | "happy" | "surprised" | "worried" | "smug" | "sad";
 export type ToonFace = { expr: ToonExpr; blink?: number; look?: [number, number]; mouthOpen?: number; blush?: boolean; sweat?: boolean; eyes?: "dot" | "big"; iris?: string; lid?: number };
-export type ToonKind = "kai" | "bia" | "ren";
+export type ToonKind = "kai" | "bia" | "ren" | "nico";
 
 const INK = "#1d1512";
 const q = (v: number, s = 6) => Math.round(v * s) / s;
@@ -108,6 +108,7 @@ const LOOK: Record<ToonKind, { skin: string; hoodie: string; hoodie2: string; pa
   kai: { skin: "#f7dcc6", hoodie: "#24356a", hoodie2: "#1a2650", pants: "#262a36", shoe: "#2b2b33", sole: "#f07a1a", hair: "#16161c" },
   bia: { skin: "#f1c7a0", hoodie: "#2fa59a", hoodie2: "#23857c", pants: "#3a3f6b", shoe: "#f4f1ea", sole: "#e04b3c", hair: "#4a2a1a" },
   ren: { skin: "#f6e2d4", hoodie: "#1b1b21", hoodie2: "#232329", pants: "#2a2d38", shoe: "#1c1c22", sole: "#ececf0", hair: "#121216" },
+  nico: { skin: "#f8e4d6", hoodie: "#f1f1f4", hoodie2: "#dedee6", pants: "#2b2e3a", shoe: "#f4f4f6", sole: "#16161a", hair: "#141418" },
 };
 const mat = (c: string, r = 0.6) => <meshStandardMaterial color={c} roughness={r} />;
 
@@ -222,6 +223,50 @@ const RenHair: React.FC<{ c: string }> = ({ c }) => {
   );
 };
 
+/** Nico: cabelo preto curto em "chanel" bagunçado, franja reta na testa e pontas viradas para fora. */
+const NicoHair: React.FC<{ c: string }> = ({ c }) => {
+  const OPEN = 1.05; // abertura do rosto
+  return (
+    <group>
+      <mesh position={[0, 0.03, -0.02]} rotation={[-0.4, 0, 0]} castShadow>
+        <sphereGeometry args={[HEAD_R * 1.08, 48, 28, 0, Math.PI * 2, 0, Math.PI * 0.52]} />
+        {mat(c, 0.55)}
+      </mesh>
+      {/* volume do chanel: casca que desce até o queixo nos lados e atrás, aberta na frente */}
+      <mesh position={[0, 0.0, -0.01]} scale={[1.04, 1, 1]} castShadow>
+        <sphereGeometry args={[HEAD_R * 1.1, 48, 28, Math.PI / 2 + OPEN, Math.PI * 2 - 2 * OPEN, 0, Math.PI * 0.74]} />
+        {mat(c, 0.55)}
+      </mesh>
+      {/* mechas dos lados e de trás, terminando em pontas viradas para fora */}
+      {Array.from({ length: 13 }, (_, i) => {
+        const az = (i / 12 - 0.5) * 2 * (Math.PI - OPEN) + Math.PI; // de um lado ao outro, por trás
+        const k = Math.sin(i * 12.9898) * 43758.5453; const rnd = k - Math.floor(k);
+        return <Strand key={i} az={az} el={0.05 + rnd * 0.08} w={0.11} h={0.36 + rnd * 0.08} t={0.03} roll={(rnd - 0.5) * 0.5} c={c} R={HEAD_R * 1.1} hug={0.35} />;
+      })}
+      {[-1, 1].map((sd) => (
+        <group key={sd}>
+          <Strand az={sd * 0.98} el={0.32} w={0.1} h={0.4} t={0.024} roll={sd * 0.18} c={c} R={HEAD_R * 1.05} hug={0.6} />
+          <Strand az={sd * 1.15} el={0.25} w={0.11} h={0.44} t={0.026} roll={sd * 0.05} c={c} R={HEAD_R * 1.07} hug={0.5} />
+          <Strand az={sd * 1.4} el={0.2} w={0.11} h={0.44} t={0.03} roll={sd * -0.12} c={c} R={HEAD_R * 1.08} hug={0.45} />
+          {/* pontas viradas para fora na altura do queixo */}
+          {[1.3, 1.75, 2.25].map((a, j) => (
+            <Spike key={j} az={sd * a} el={-0.42 - j * 0.05} len={0.12 + j * 0.02} w={0.06} tilt={[0.5, sd * (0.5 + j * 0.15)]} c={c} R={HEAD_R * 1.08} />
+          ))}
+        </group>
+      ))}
+      {/* franja reta e cheia, logo acima dos olhos */}
+      {Array.from({ length: 11 }, (_, i) => {
+        const az = (i / 10 - 0.5) * 1.8;
+        const k = Math.sin(i * 7.31 + 1.7) * 43758.5453; const rnd = k - Math.floor(k);
+        return <Strand key={i} az={az} el={0.66} w={0.1} h={0.21 + rnd * 0.04} t={0.024} roll={az * 0.12 + (rnd - 0.5) * 0.12} c={c} R={HEAD_R * 1.04} hug={0.8} />;
+      })}
+      {/* dois fios rebeldes no topo */}
+      <Spike az={0.3} el={1.35} len={0.14} w={0.03} tilt={[-0.9, 0.5]} c={c} R={HEAD_R * 1.05} />
+      <Spike az={-0.6} el={1.25} len={0.1} w={0.025} tilt={[-0.7, -0.6]} c={c} R={HEAD_R * 1.05} />
+    </group>
+  );
+};
+
 const BiaHair: React.FC<{ c: string }> = ({ c }) => (
   <group>
     <mesh position={[0, 0.02, -0.015]} rotation={[-0.5, 0, 0]} castShadow>
@@ -303,7 +348,7 @@ export const Toon: React.FC<ToonProps> = ({ kind, pose = {}, face, holdR, holdL,
               {mat(L.hoodie2, 0.75)}
             </mesh>
             {/* bolso canguru */}
-            {kind !== "ren" && (
+            {kind !== "ren" && kind !== "nico" && (
               <mesh position={[0, 0.86, 0.17]} scale={[1, 0.5, 0.25]}>
                 <sphereGeometry args={[0.13, 20, 12]} />
                 {mat(L.hoodie2, 0.75)}
@@ -316,6 +361,19 @@ export const Toon: React.FC<ToonProps> = ({ kind, pose = {}, face, holdR, holdL,
                   <torusGeometry args={[0.12, 0.022, 10, 28]} />
                   {mat("#111114", 0.7)}
                 </mesh>
+              </group>
+            ) : kind === "nico" ? (
+              <group>
+                {/* jaqueta esportiva branca: gola alta preta e zíper */}
+                <mesh position={[0, 1.31, 0]} castShadow>
+                  <cylinderGeometry args={[0.135, 0.17, 0.13, 28]} />
+                  {mat("#17171b", 0.7)}
+                </mesh>
+                <mesh position={[0, 0.98, 0.205]} rotation={[0.04, 0, 0]}>
+                  <boxGeometry args={[0.022, 0.5, 0.02]} />
+                  {mat("#17171b", 0.6)}
+                </mesh>
+                
               </group>
             ) : kind === "kai" ? (
               <group>
@@ -353,7 +411,7 @@ export const Toon: React.FC<ToonProps> = ({ kind, pose = {}, face, holdR, holdL,
               const r = s < 0 ? armL : armR;
               return (
                 <group key={s} position={[s * 0.25, SHOULDER_Y, 0]} rotation={r}>
-                  <mesh castShadow><sphereGeometry args={[0.075, 16, 12]} />{mat(L.hoodie, 0.75)}</mesh>
+                  <mesh castShadow><sphereGeometry args={[0.075, 16, 12]} />{mat(kind === "nico" ? "#17171b" : L.hoodie, 0.75)}</mesh>
                   {kind === "ren" ? (
                     <group>
                       {/* manga curta preta, braço de fora e munhequeira preta */}
@@ -385,7 +443,7 @@ export const Toon: React.FC<ToonProps> = ({ kind, pose = {}, face, holdR, holdL,
                     {mat(L.skin, 0.5)}
                   </mesh>
                 ))}
-                {kind === "kai" ? <KaiHair c={L.hair} /> : kind === "ren" ? <RenHair c={L.hair} /> : <BiaHair c={L.hair} />}
+                {kind === "kai" ? <KaiHair c={L.hair} /> : kind === "ren" ? <RenHair c={L.hair} /> : kind === "nico" ? <NicoHair c={L.hair} /> : <BiaHair c={L.hair} />}
               </group>
             </group>
           </group>

@@ -17,6 +17,8 @@ import { Dobra } from "./short5/Dobra";
 import { CelTest } from "./short6/CelTest";
 import { Microondas } from "./short6/Microondas";
 import { RenSheet } from "./short7/RenSheet";
+import { Aviao } from "./short8/Aviao";
+import { TOTAL as AVIAO_SEC } from "./short8/shots";
 import { Ultimo } from "./short7/Ultimo";
 import { TOTAL as ULTIMO_SEC } from "./short7/shots";
 import { TOTAL as MICRO_SEC } from "./short6/shots";
@@ -35,6 +37,8 @@ export const Root = () => (
     <Composition id="Capivara" component={Capivara} durationInFrames={Math.ceil(CAPIVARA_SEC * FPS)} {...V} defaultProps={{ captions: true }} />
     <Composition id="Dobra" component={Dobra} durationInFrames={Math.ceil(DOBRA_SEC * FPS)} {...V} defaultProps={{ captions: true }} />
     <Composition id="Microondas" component={Microondas} durationInFrames={Math.ceil(MICRO_SEC * FPS)} {...V} defaultProps={{ captions: true }} />
+    {/* Canal do Nico (curiosidades em 3D) */}
+    <Composition id="Aviao" component={Aviao} durationInFrames={Math.ceil(AVIAO_SEC * FPS)} {...V} defaultProps={{ captions: true, audio: true }} />
     {/* Vídeo longo 16:9 (canal do Ren) */}
     <Composition id="Ultimo" component={Ultimo} durationInFrames={Math.ceil(ULTIMO_SEC * FPS)} fps={FPS} width={1920} height={1080} defaultProps={{ captions: true, audio: true }} />
     <Composition id="UltimoHD" component={Ultimo} durationInFrames={Math.ceil(ULTIMO_SEC * FPS)} fps={FPS} width={1280} height={720} defaultProps={{ captions: true, audio: false }} />
