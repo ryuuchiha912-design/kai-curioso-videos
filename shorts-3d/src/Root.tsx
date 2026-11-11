@@ -44,6 +44,7 @@ export const Root = () => (
     <Composition id="Aviao" component={Aviao} durationInFrames={Math.ceil(AVIAO_SEC * FPS)} {...V} defaultProps={{ captions: true, audio: true }} />
     <Composition id="AviaoEN" component={Aviao} durationInFrames={Math.ceil(aviaoTiming("en").total * FPS)} {...V} defaultProps={{ captions: true, audio: true, lang: "en" as const }} />
     <Composition id="Pombo" component={Pombo} durationInFrames={Math.ceil(POMBO_SEC * FPS)} {...V} defaultProps={{ captions: true, audio: true }} />
+    <Composition id="PomboTeste" component={Pombo} durationInFrames={210} {...V} defaultProps={{ captions: true, audio: true }} />
     <Composition id="AviaoCapa" component={AviaoCapa} durationInFrames={1} {...V} defaultProps={{ lang: "pt" as const }} />
     <Composition id="AviaoCapaEN" component={AviaoCapa} durationInFrames={1} {...V} defaultProps={{ lang: "en" as const }} />
     {/* Vídeo longo 16:9 (canal do Ren) */}

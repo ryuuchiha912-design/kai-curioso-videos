@@ -4,6 +4,7 @@ import { Box } from "../kit/props";
 import { Lights } from "../kit/Stage";
 import { canvasTexture, FONT, fontReady } from "../kit/textures";
 import { rand } from "../kit/anim";
+import { FlatChar } from "../kit/Flat";
 
 /** Cenários e objetos do short "Os pombos que quase pilotaram bombas" (canal do Nico). */
 type V3 = [number, number, number];
@@ -109,7 +110,7 @@ export const Bomb: React.FC<{ p?: V3; rot?: V3; s?: number; frame: number; tilt?
     {Array.from({ length: pigeons }, (_, i) => {
       const z = pigeons === 1 ? 0 : (i - 1) * 0.22;
       const v = votes ? votes[i] : 0;
-      return <Pigeon key={i} p={[0.32, -0.16, z]} ry={Math.PI / 2 + v * 0.5} s={0.85} frame={frame + i * 7} peck={Math.max(0, Math.sin(frame * 0.5 + i * 2)) * 0.6} goggles={goggles} happy={happy} />;
+      return <FlatChar key={i} kind="pigeon" position={[0.32, -0.16, z]} h={0.5} flip={v < 0} shadow={false} pose={{ headTilt: Math.max(0, Math.sin(frame * 0.5 + i * 2)) * 0.5, armL: v !== 0 ? Math.abs(Math.sin(frame * 0.6)) : 0 }} face={{ expr: happy ? "happy" : "neutral" }} goggles={goggles} />;
     })}
   </group>
 );

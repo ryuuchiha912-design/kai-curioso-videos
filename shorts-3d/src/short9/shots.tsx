@@ -5,6 +5,7 @@ import { Cam, Stage } from "../kit/Stage";
 import { Cel } from "../kit/cel";
 import { Pose } from "../kit/Character";
 import { Toon, ToonExpr, ToonFace } from "../kit/Toon";
+import { FlatChar, FlatExpr, FlatPose } from "../kit/Flat";
 import { blinkAt, FPS, kf, kf3, pop } from "../kit/anim";
 import { Stamp, nicoFace } from "../short8/shots";
 import { BigComputer, Bomb, Clouds, Folder, Lab, LIGHT_DARK, LIGHT_LAB, LIGHT_SKY, LIGHT_WARM, Pigeon, Screen, Sea, Ship } from "./cena";
@@ -44,9 +45,13 @@ const LabStage: React.FC<{ cam: Cam; light?: React.ReactNode; bg?: string; child
 const SkyStage: React.FC<{ cam: Cam; bg?: string; light?: React.ReactNode; children?: React.ReactNode }> = ({ cam, bg = "#9fd3ff", light = LIGHT_SKY, children }) => (
   <Stage flat cam={cam} background={bg} lights={light} fg={<Cel>{children}</Cel>} />
 );
-const Nico: React.FC<{ f: number; face: ToonFace; pose?: Pose; p?: V3; ry?: number; holdR?: React.ReactNode; holdL?: React.ReactNode }> = ({ f, face, pose, p = NICO, ry = 0.5, holdR, holdL }) => (
-  <Toon kind="nico" position={p} rotationY={ry} face={face} pose={pose ?? idle(f)} holdR={holdR} holdL={holdL} />
-);
+/** Nico em 2D (palito, cabeção) dentro do cenário 3D. Converte a pose 3D antiga para a pose 2D. */
+const Nico: React.FC<{ f: number; face: ToonFace; pose?: Pose; p?: V3; ry?: number; holdR?: React.ReactNode; holdL?: React.ReactNode; flat?: FlatPose }> = ({ f, face, pose, p = NICO, flat }) => {
+  const ps = pose ?? idle(f);
+  const ang = (a?: V3) => (a ? Math.max(Math.abs(a[2]), Math.abs(a[0]) * 0.9) : 0.15);
+  const fp: FlatPose = flat ?? { armL: ang(ps.armL as V3), armR: ang(ps.armR as V3), elbowR: ps.armR && Math.abs((ps.armR as V3)[0]) > 0.5 ? -0.8 : 0, headTilt: (ps.head?.[2] ?? 0) * 0.8, bob: ps.bob ? ps.bob * 2 : 0, lean: ps.lean ?? 0 };
+  return <FlatChar kind="nico" position={p} h={2.15} pose={fp} face={{ expr: face.expr as FlatExpr, look: face.look, blink: face.blink, mouth: face.mouthOpen, sweat: face.sweat, blush: face.blush }} />;
+};
 const held = (arm: V3, node: React.ReactNode) => <group rotation={[-arm[0], 0, -arm[2]]}>{node}</group>;
 const peckAt = (f: number, every = 9) => { const k = (f % every) / every; return k < 0.35 ? Math.sin((k / 0.35) * Math.PI) : 0; };
 
@@ -69,8 +74,8 @@ export const SHOTS: Shot[] = [
   {
     name: "02 serio", from: C(12), to: C(13),
     render: (f, s, e) => (
-      <LabStage cam={glide(f, s, e, { pos: add(NICO, [0.15, 1.62, 1.25]), target: add(NICO, [0, 1.55, 0]), fov: 33 }, { pos: add(NICO, [0.1, 1.6, 1.05]), target: add(NICO, [0, 1.56, 0]), fov: 32 })}>
-        <Nico f={f} ry={0} face={nicoFace(f, [[s, "neutral"]], { lid: 0.25 })} pose={{ ...idle(f), head: [kf(f, [[s + 3, 0], [s + 8, 0.25], [s + 13, 0]]), 0, 0] }} />
+      <LabStage cam={glide(f, s, e, { pos: add(NICO, [0.2, 1.4, 2.1]), target: add(NICO, [0, 1.3, 0]), fov: 34 }, { pos: add(NICO, [0.12, 1.42, 1.8]), target: add(NICO, [0, 1.32, 0]), fov: 33 })}>
+        <Nico f={f} ry={0} face={nicoFace(f, [[s, "smug"]])} pose={{ ...idle(f), head: [kf(f, [[s + 3, 0], [s + 8, 0.25], [s + 13, 0]]), 0, 0] }} />
       </LabStage>
     ),
   },
@@ -83,7 +88,7 @@ export const SHOTS: Shot[] = [
       return (
         <LabStage cam={glide(f, s, e, { pos: [-0.2, 1.9, 3.4], target: [0.3, 1.2, -0.3], fov: 40 }, { pos: [0.9, 1.6, 1.6], target: [0.95, 1.2, -0.35], fov: 36 })}>
           <Nico f={f} face={nicoFace(f, [[s, "smile"], [W(20), "happy"]], { look: [0.7, 0.1] })} pose={{ ...idle(f), armR: [-0.6, 0, 0.5] }} />
-          <Pigeon p={PIG} ry={0.4} frame={f} peck={f > W(20) ? peckAt(f) : 0} />
+          <FlatChar kind="pigeon" position={PIG} h={0.55} pose={{ headTilt: f > W(20) ? peckAt(f) * 0.7 : 0 }} face={{ expr: "neutral" }} />
           <group scale={scr}><Screen p={SCR} ry={-0.5} s={1} hits={hits} /></group>
         </LabStage>
       );
