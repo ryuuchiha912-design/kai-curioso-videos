@@ -66,7 +66,7 @@ arps(ASK, TOTAL, SHOW, 124, vel=0.9, pat=(0, 2, 1, 2, 0, 2, 1, 2), dec=0.22)
 sfx = np.zeros(N)
 pop = lambda f=700: tone(f, 0.16, r=0.05, harm=(1, 0.3))
 whoosh = lambda: noise(0.5, a=0.2, r=0.2)
-ching = lambda: tone(NOTE(88), 0.5, r=0.25, harm=(1, 0.5, 0.3)) + tone(NOTE(95), 0.5, r=0.2, harm=(1, 0.4))
+ching = lambda: tone(NOTE(88), 0.5, r=0.25, harm=(1, 0.5, 0.3)) + tone(NOTE(95), 0.5, r=0.2, harm=(1, 0.4))  # mesma duração
 coin = lambda f=1800: tone(f, 0.12, r=0.05, harm=(1, 0.6))
 for li in range(1, len(L)):
     put(sfx, whoosh(), L[li]["start"] - 0.35, 0.35)
@@ -83,12 +83,12 @@ for k in range(8): put(sfx, coin(1200 + k * 150), wstart(7, "investir") + k * 0.
 for k in range(6): put(sfx, noise(0.12, a=0.01, r=0.05), L[8]["start"] + 1.1 + k * 0.45, 0.5)  # páginas do calendário
 put(sfx, tone(NOTE(84), 1.0, r=0.5), wstart(8, "fim") - 0.1, 0.4)
 put(sfx, tone(110, 0.4, r=0.15, harm=(1, 0.5)), wstart(9, "mansão") - 0.08, 0.9)           # X
-put(sfx, tone(NOTE(79), 0.4, r=0.2) + tone(NOTE(84), 0.4, r=0.2) * 0, wstart(10, "medo") - 0.05, 0.6)
+put(sfx, tone(NOTE(79), 0.4, r=0.2), wstart(10, "medo") - 0.05, 0.6)
 for k in range(30): put(sfx, tone(2600, 0.02, r=0.008, harm=(1,)), L[11]["start"] + 0.2 + k * 0.1, 0.25)  # contador subindo
 put(sfx, ching(), wstart(11, "milhão") - 0.05, 0.8)
 for k in range(28): put(sfx, tone(2600, 0.02, r=0.008, harm=(1,)), L[12]["start"] + 0.1 + k * 0.1, 0.25)
 put(sfx, ching(), wstart(12, "quatro") + 0.4, 0.8)
-put(sfx, tone(NOTE(36), 1.8, r=1.0, harm=(1, 0.5)) + noise(0.6, a=0.01, r=0.3) * 0.3, L[13]["start"] - 0.05, 1.0)  # "detalhe"
+put(sfx, tone(NOTE(36), 1.8, r=1.0, harm=(1, 0.5)), L[13]["start"] - 0.05, 1.0); put(sfx, noise(0.6, a=0.01, r=0.3), L[13]["start"] - 0.05, 0.3)  # "detalhe"
 put(sfx, tone(90, 0.5, r=0.2, harm=(1, 0.5)), wstart(14, "para") - 0.08, 0.9)              # carimbo
 for k in range(3): put(sfx, tone(NOTE(84 + k * 4), 0.8, r=0.4), wstart(15, "ama") + k * 0.12, 0.4)
 put(sfx, pop(800), wstart(17, "a") - 0.05, 0.7); put(sfx, pop(1000), wstart(17, "b") - 0.05, 0.7)
@@ -128,5 +128,5 @@ print(f"ganho {gain:+.2f} dB -> mix.wav")
 if os.path.isdir("frames") and len(os.listdir("frames")) > 10:
     subprocess.run(["ffmpeg", "-y", "-v", "error", "-framerate", "24", "-i", "frames/%04d.jpg", "-i", "mix.wav", "-map", "0:v", "-map", "1:a",
                     "-c:v", "libx264", "-crf", "18", "-preset", "medium", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-shortest",
-                    "-movflags", "+faststart", "/home/user/ouvir_pensamentos.mp4"], check=True)
-    print("video -> /home/user/ouvir_pensamentos.mp4")
+                    "-movflags", "+faststart", "/home/user/voce_prefere_milhao.mp4"], check=True)
+    print("video -> /home/user/voce_prefere_milhao.mp4")
