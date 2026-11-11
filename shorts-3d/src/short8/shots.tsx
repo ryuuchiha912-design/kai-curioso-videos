@@ -34,7 +34,7 @@ const glide = (f: number, s: number, e: number, a: Cam, b: Cam): Cam => ({
 const add = (a: V3, b: V3): V3 => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
 const held = (arm: V3, node: React.ReactNode) => <group rotation={[-arm[0], 0, -arm[2]]}>{node}</group>;
 
-const nicoFace = (f: number, keys: [number, ToonExpr][], extra: Partial<ToonFace> = {}): ToonFace => {
+export const nicoFace = (f: number, keys: [number, ToonExpr][], extra: Partial<ToonFace> = {}): ToonFace => {
   let expr = keys[0][1], blink = 0;
   for (const [at, ex] of keys) {
     if (f >= at) expr = ex;
@@ -55,7 +55,7 @@ const NICO: V3 = [-0.15, 0, 0.45];
 const NICO_RY = 0.25;
 const HEAD: V3 = add(NICO, [0, 1.64, 0]);
 
-const Lav: React.FC<{ cam: Cam; light?: React.ReactNode; bg?: string; sign?: number; dark?: number; children?: React.ReactNode; ash?: { open?: number; glow?: number } }> = ({ cam, light = LIGHT_LAV, bg = "#d8d2c6", sign = 1, dark = 0, children, ash }) => (
+export const Lav: React.FC<{ cam: Cam; light?: React.ReactNode; bg?: string; sign?: number; dark?: number; children?: React.ReactNode; ash?: { open?: number; glow?: number } }> = ({ cam, light = LIGHT_LAV, bg = "#d8d2c6", sign = 1, dark = 0, children, ash }) => (
   <Stage flat cam={cam} background={bg} lights={light} fg={
     <Cel>
       <Lavatory signLit={sign} dark={dark} />
@@ -65,7 +65,7 @@ const Lav: React.FC<{ cam: Cam; light?: React.ReactNode; bg?: string; sign?: num
   } />
 );
 
-const Nico: React.FC<{ f: number; face: ToonFace; pose?: Pose; p?: V3; ry?: number; holdL?: React.ReactNode; holdR?: React.ReactNode }> = ({ f, face, pose, p = NICO, ry = NICO_RY, holdL, holdR }) => (
+export const Nico: React.FC<{ f: number; face: ToonFace; pose?: Pose; p?: V3; ry?: number; holdL?: React.ReactNode; holdR?: React.ReactNode }> = ({ f, face, pose, p = NICO, ry = NICO_RY, holdL, holdR }) => (
   <Toon kind="nico" position={p} rotationY={ry} face={face} pose={pose ?? idle(f)} holdL={holdL} holdR={holdR} />
 );
 
@@ -74,7 +74,7 @@ const ashCam = (d: number, side: number, up: number, fov = 34, roll = 0): Cam =>
 const faceCam = (d: number, side: number, up: number, fov = 34, roll = 0): Cam => ({ pos: add(HEAD, [side, up, d]), target: add(HEAD, [0, -0.08, 0]), fov, roll });
 
 /** Texto grande por cima (carimbo, data, interrogação). */
-const Stamp: React.FC<{ f: number; at: number; text: string; color?: string; y?: number; rot?: number; size?: number; box?: boolean }> = ({ f, at, text, color = "#d62a1e", y = 0.3, rot = -8, size = 130, box = true }) => {
+export const Stamp: React.FC<{ f: number; at: number; text: string; color?: string; y?: number; rot?: number; size?: number; box?: boolean }> = ({ f, at, text, color = "#d62a1e", y = 0.3, rot = -8, size = 130, box = true }) => {
   const k = pop(f, at, 6);
   if (k <= 0) return null;
   const sc = interpolate(k, [0, 1], [2.2, 1]);
