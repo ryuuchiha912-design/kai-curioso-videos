@@ -19,6 +19,8 @@ import { Microondas } from "./short6/Microondas";
 import { RenSheet } from "./short7/RenSheet";
 import { Aviao } from "./short8/Aviao";
 import { Capa as AviaoCapa } from "./short8/Capa";
+import { Pombo } from "./short9/Pombo";
+import { TOTAL as POMBO_SEC } from "./short9/shots";
 import { TOTAL as AVIAO_SEC, timing as aviaoTiming } from "./short8/shots";
 import { Ultimo } from "./short7/Ultimo";
 import { TOTAL as ULTIMO_SEC } from "./short7/shots";
@@ -41,6 +43,7 @@ export const Root = () => (
     {/* Canal do Nico (curiosidades em 3D) */}
     <Composition id="Aviao" component={Aviao} durationInFrames={Math.ceil(AVIAO_SEC * FPS)} {...V} defaultProps={{ captions: true, audio: true }} />
     <Composition id="AviaoEN" component={Aviao} durationInFrames={Math.ceil(aviaoTiming("en").total * FPS)} {...V} defaultProps={{ captions: true, audio: true, lang: "en" as const }} />
+    <Composition id="Pombo" component={Pombo} durationInFrames={Math.ceil(POMBO_SEC * FPS)} {...V} defaultProps={{ captions: true, audio: true }} />
     <Composition id="AviaoCapa" component={AviaoCapa} durationInFrames={1} {...V} defaultProps={{ lang: "pt" as const }} />
     <Composition id="AviaoCapaEN" component={AviaoCapa} durationInFrames={1} {...V} defaultProps={{ lang: "en" as const }} />
     {/* Vídeo longo 16:9 (canal do Ren) */}
