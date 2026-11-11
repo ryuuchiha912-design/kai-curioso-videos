@@ -6,7 +6,7 @@ Projeto de vídeos animados do usuário (brasileiro, fala português, não é pr
 - **Kai Curioso** (@kaicurioso-f4n): Shorts verticais 1080x1920. Formato "E se…?" e histórias emocionais curtas (regra impossível + família + bordão + virada + pergunta para comentar). Personagem Kai (cabelo preto liso, franja repartida, cachecol preto com ponta laranja, moletom azul-marinho). 2D (SVG) ou 3D estilo cel.
   - Voz fixa: Microsoft Edge TTS `pt-BR-AntonioNeural` (rate +3% a +7%, pitch -2Hz).
 - **Canal do Ren** (novo): vídeos longos horizontais 16:9 (8–10 min) estilo "Quanto tempo você duraria…?" / sobrevivência dia a dia, com contador de tempo na tela, humor seco e final emocionante. Personagem Ren (kind `"ren"` em `shorts-3d/src/kit/Toon.tsx`: cabelo preto bagunçado, íris cinza, roupa toda preta, munhequeira). Episódio 1: `Ultimo` ("E se você fosse a última pessoa na Terra?").
-  - Voz fixa: `it-IT-GiuseppeMultilingualNeural` falando português (rate -6% a +5%).
+  - Voz fixa: `pt-BR-AntonioNeural` (rate +0%, pitch -2Hz). NÃO usar vozes "Multilingual" (ex.: Giuseppe): elas trocam de idioma sozinhas e saem frases em espanhol.
 - Regras: personagens e roteiros originais (nunca copiar personagens, marcas, logos, músicas de outros canais); fatos científicos/históricos conferidos e, quando variam, ditos como estimativa; música e efeitos gerados em código (trilha e efeitos a 50% do volume da voz, ~-14 LUFS).
 
 ## Onde está cada coisa
@@ -19,6 +19,8 @@ Projeto de vídeos animados do usuário (brasileiro, fala português, não é pr
 - `shorts-2d/VOZ_FIXA.md` — escolha de voz.
 
 ## Neste PC (Windows, com placa de vídeo) — use a GPU
+
+**O disco C: está cheio.** Trabalhe sempre no D: — o projeto fica em `D:\Voiceover\Projetos` (a raiz `D:\` não aceita gravar; use pastas dentro de `D:\Voiceover`). Antes de renderizar, aponte a pasta temporária para o D: (`$env:TEMP="D:\Voiceover\tmp"; $env:TMP="D:\Voiceover\tmp"`) e salve o MP4 em `D:\Voiceover\`.
 Renderizar um vídeo 3D (exemplo do vídeo longo):
 ```powershell
 cd shorts-3d

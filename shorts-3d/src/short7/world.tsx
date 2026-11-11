@@ -152,7 +152,7 @@ export const City: React.FC<CityState & { span?: number }> = ({ frame, green = 0
       {Array.from({ length: 6 }).map((_, i) => <Lamp key={i} p={[-span + 6 + i * 12, 0, 3.4]} lit={night && power} vine={green} />)}
       {forest < 0.7 && <TrafficLight p={[5, 0, 3.2]} frame={frame} power={power} />}
       {/* carros parados */}
-      {cars && [[-6, -1.4, 0.3, "#c0392b"], [-1, 1.3, -0.2, "#2c6fb6"], [3.5, -1.0, 0.6, "#f2b636"], [9, 1.2, -0.4, "#ececec"], [-12, 0.8, 0.1, "#3e9b4a"]].map(([x, z, ry, c], i) => (
+      {cars && [[-6, -1.4, 0.3, "#c0392b"], [-8.5, 1.2, -0.2, "#2c6fb6"], [3.5, -1.0, 0.6, "#f2b636"], [9, 1.2, -0.4, "#ececec"], [-12, 0.8, 0.1, "#3e9b4a"]].map(([x, z, ry, c], i) => (
         <Car key={i} p={[x as number, 0, z as number]} ry={ry as number} c={c as string} rust={decay} sink={forest} />
       ))}
       {/* mato no asfalto */}

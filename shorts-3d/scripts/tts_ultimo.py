@@ -1,6 +1,6 @@
 import asyncio, json, os, subprocess, edge_tts
 PROXY = os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy")
-VOICE, RATE, PITCH = "it-IT-GiuseppeMultilingualNeural", "-6%", "+0Hz"
+VOICE, RATE, PITCH = "pt-BR-AntonioNeural", "+0%", "-2Hz"
 L = json.load(open("src/data/ultimo-lines.json"))
 os.makedirs("public/audio/ultimo", exist_ok=True)
 async def one(i, text):
