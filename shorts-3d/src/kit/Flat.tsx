@@ -23,10 +23,10 @@ export type FlatKind = "nico" | "general" | "pigeon";
 const INK = "#1b1b1f";
 const q = (v: number | undefined, s = 8) => Math.round((v ?? 0) * s) / s;
 
-function eyes(ctx: CanvasRenderingContext2D, cx: number, cy: number, f: FlatFace, iris: string, r = 44) {
+function eyes(ctx: CanvasRenderingContext2D, cx: number, cy: number, f: FlatFace, iris: string, r = 44, gap = 72) {
   const e = f.expr, [lx, ly] = f.look ?? [0, 0], blink = f.blink ?? 0;
   for (const s of [-1, 1]) {
-    const x = cx + s * 72, y = cy;
+    const x = cx + s * gap, y = cy;
     if (e === "happy" || blink > 0.6) {
       ctx.strokeStyle = INK; ctx.lineWidth = 12; ctx.lineCap = "round"; ctx.beginPath();
       if (e === "happy") ctx.arc(x, y + 14, r * 0.7, Math.PI * 1.15, Math.PI * 1.85); else { ctx.moveTo(x - r * 0.8, y); ctx.lineTo(x + r * 0.8, y); }
@@ -44,7 +44,7 @@ function eyes(ctx: CanvasRenderingContext2D, cx: number, cy: number, f: FlatFace
     const lid = e === "smug" ? 0.5 : e === "sad" ? 0.35 : e === "angry" ? 0.3 : 0;
     if (lid > 0) {
       ctx.save(); ctx.beginPath(); ctx.ellipse(x, y, r * big, r * 1.15 * big, 0, 0, Math.PI * 2); ctx.clip();
-      ctx.fillStyle = "#f8e4d6"; const tilt = e === "angry" ? s * 0.35 : e === "sad" ? -s * 0.3 : 0;
+      ctx.fillStyle = "#f5cfb4"; const tilt = e === "angry" ? s * 0.35 : e === "sad" ? -s * 0.3 : 0;
       ctx.translate(x, y - r * 1.15 + lid * 2.3 * r); ctx.rotate(tilt); ctx.fillRect(-r * 2, -r * 3, r * 4, r * 3);
       ctx.strokeStyle = INK; ctx.lineWidth = 9; ctx.beginPath(); ctx.moveTo(-r * 2, 0); ctx.lineTo(r * 2, 0); ctx.stroke(); ctx.restore();
       ctx.strokeStyle = INK; ctx.lineWidth = 9; ctx.beginPath(); ctx.ellipse(x, y, r * big, r * 1.15 * big, 0, 0, Math.PI * 2); ctx.stroke();
@@ -83,12 +83,12 @@ function limb(ctx: CanvasRenderingContext2D, x: number, y: number, ang: number, 
   return [x2, y2];
 }
 
-/** Desenha um humano palito (Nico ou general) num canvas 512x1024; pés em (256, 1000). */
+/** Desenha um humano palito (Nico ou general) num canvas 640x1024; pés em (320, 1000). */
 function drawPerson(ctx: CanvasRenderingContext2D, kind: "nico" | "general", p: FlatPose, f: FlatFace) {
-  const W = 512, cx = W / 2;
+  const W = 640, cx = W / 2;
   const bob = (p.bob ?? 0) * -30;
   const walk = p.walk;
-  const skin = kind === "nico" ? "#f8e4d6" : "#f1c7a0";
+  const skin = kind === "nico" ? "#f5cfb4" : "#e8b48e";
   const top = kind === "nico" ? "#f1f1f4" : "#5d6b3a";
   const pants = kind === "nico" ? "#2b2e3a" : "#4a5530";
   ctx.save(); ctx.translate(cx, 1000 + bob); ctx.rotate(p.lean ?? 0); ctx.translate(-cx, -1000);
@@ -121,41 +121,55 @@ function drawPerson(ctx: CanvasRenderingContext2D, kind: "nico" | "general", p: 
   limb(ctx, cx - 56, shY + 22, -(p.armL ?? 0.15), 240, -(p.elbowL ?? 0), top, 26, skin);
   limb(ctx, cx + 56, shY + 22, (p.armR ?? 0.15), 240, (p.elbowR ?? 0), top, 26, skin);
   if (kind === "nico") { ctx.fillStyle = "#17171b"; ctx.strokeStyle = INK; ctx.lineWidth = 7; for (const s of [-1, 1]) { ctx.beginPath(); ctx.arc(cx + s * 56, shY + 18, 19, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); } }
-  // cabeça grande
-  const hx = cx, hy = 300;
-  ctx.save(); ctx.translate(hx, hy + 170); ctx.rotate(p.headTilt ?? 0); ctx.translate(-hx, -(hy + 170));
+  // cabeça grande, encaixada em cima do tronco (cobre o pescoço)
+  const hx = cx, hy = 292, RX = 236, RY = 222;
+  ctx.save(); ctx.translate(hx, hy + RY); ctx.rotate(p.headTilt ?? 0); ctx.translate(-hx, -(hy + RY));
   if (kind === "nico") {
-    // cabelo de trás (chanel)
-    ctx.fillStyle = "#141418"; ctx.strokeStyle = INK; ctx.lineWidth = 10;
-    ctx.beginPath(); ctx.moveTo(hx - 205, hy + 150); ctx.bezierCurveTo(hx - 250, hy - 250, hx + 250, hy - 250, hx + 205, hy + 150);
-    for (let i = 0; i <= 8; i++) { const x = hx + 205 - i * 51; ctx.lineTo(x - 25, hy + 120 + (i % 2) * 40); }
+    // cabelo de trás: capacete redondo até o queixo, pontas arredondadas
+    ctx.fillStyle = "#141418"; ctx.strokeStyle = INK; ctx.lineWidth = 11;
+    ctx.beginPath(); ctx.moveTo(hx - 262, hy + 130);
+    ctx.bezierCurveTo(hx - 300, hy - 300, hx + 300, hy - 300, hx + 262, hy + 130);
+    ctx.quadraticCurveTo(hx + 258, hy + 215, hx + 196, hy + 205);
+    ctx.lineTo(hx - 196, hy + 205);
+    ctx.quadraticCurveTo(hx - 258, hy + 215, hx - 262, hy + 130);
     ctx.closePath(); ctx.fill(); ctx.stroke();
   }
-  ctx.fillStyle = skin; ctx.strokeStyle = INK; ctx.lineWidth = 11;
-  ctx.beginPath(); ctx.ellipse(hx, hy, 190, 178, 0, 0, Math.PI * 2); ctx.fill();
-  ctx.save(); ctx.beginPath(); ctx.ellipse(hx, hy, 190, 178, 0, 0, Math.PI * 2); ctx.clip(); ctx.fillStyle = "rgba(150,70,40,0.14)"; ctx.beginPath(); ctx.ellipse(hx + 120, hy + 40, 150, 200, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
-  ctx.beginPath(); ctx.ellipse(hx, hy, 190, 178, 0, 0, Math.PI * 2); ctx.stroke();
-  // orelhas
-  for (const s of [-1, 1]) { ctx.beginPath(); ctx.ellipse(hx + s * 188, hy + 20, 24, 34, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); }
-  if (f.blush || f.expr === "happy") { ctx.fillStyle = "rgba(255,120,120,.4)"; for (const s of [-1, 1]) { ctx.beginPath(); ctx.ellipse(hx + s * 112, hy + 70, 34, 18, 0, 0, Math.PI * 2); ctx.fill(); } }
-  eyes(ctx, hx, hy + 6, f, kind === "nico" ? "#e2a236" : "#5a3a22");
-  mouth(ctx, hx, hy + 112, f);
+  ctx.fillStyle = skin; ctx.strokeStyle = INK; ctx.lineWidth = 12;
+  // orelhas (atrás do rosto)
+  for (const s of [-1, 1]) { ctx.beginPath(); ctx.ellipse(hx + s * 232, hy + 26, 28, 40, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); }
+  ctx.beginPath(); ctx.ellipse(hx, hy, RX, RY, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(hx, hy, RX, RY, 0, 0, Math.PI * 2); ctx.stroke();
+  if (f.blush || f.expr === "happy") { ctx.fillStyle = "rgba(255,120,120,.4)"; for (const s of [-1, 1]) { ctx.beginPath(); ctx.ellipse(hx + s * 140, hy + 88, 40, 20, 0, 0, Math.PI * 2); ctx.fill(); } }
+  eyes(ctx, hx, hy + 14, f, kind === "nico" ? "#e2a236" : "#5a3a22", 54, 92);
+  mouth(ctx, hx, hy + 140, f);
   if (kind === "nico") {
-    // franja reta e pontas
-    ctx.fillStyle = "#141418"; ctx.strokeStyle = INK; ctx.lineWidth = 10;
-    ctx.beginPath(); ctx.moveTo(hx - 200, hy - 20); ctx.bezierCurveTo(hx - 210, hy - 230, hx + 210, hy - 230, hx + 200, hy - 20);
-    const n = 9; for (let i = 0; i <= n; i++) { const x = hx + 180 - (360 * i) / n; ctx.lineTo(x, hy - 60 + (i % 2 ? -26 : 12)); }
+    // franja arredondada (ondinhas suaves) e mechas laterais redondas
+    ctx.fillStyle = "#141418"; ctx.strokeStyle = INK; ctx.lineWidth = 11;
+    ctx.beginPath(); ctx.moveTo(hx - 250, hy + 10);
+    ctx.bezierCurveTo(hx - 268, hy - 290, hx + 268, hy - 290, hx + 250, hy + 10);
+    ctx.quadraticCurveTo(hx + 236, hy - 50, hx + 200, hy - 70);
+    const xs = [200, 100, 0, -100, -200];
+    for (let i = 0; i < xs.length - 1; i++) { const a = xs[i], b2 = xs[i + 1]; ctx.quadraticCurveTo(hx + (a + b2) / 2, hy - 18, hx + b2, hy - 70); }
+    ctx.quadraticCurveTo(hx - 236, hy - 50, hx - 250, hy + 10);
     ctx.closePath(); ctx.fill(); ctx.stroke();
-    for (const s of [-1, 1]) { ctx.beginPath(); ctx.moveTo(hx + s * 196, hy - 60); ctx.quadraticCurveTo(hx + s * 230, hy + 60, hx + s * 210, hy + 160); ctx.lineTo(hx + s * 170, hy + 60); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+    for (const s of [-1, 1]) {
+      ctx.beginPath(); ctx.moveTo(hx + s * 250, hy - 20);
+      ctx.bezierCurveTo(hx + s * 272, hy + 80, hx + s * 262, hy + 190, hx + s * 205, hy + 200);
+      ctx.bezierCurveTo(hx + s * 215, hy + 120, hx + s * 205, hy + 40, hx + s * 215, hy - 30);
+      ctx.closePath(); ctx.fill(); ctx.stroke();
+    }
+    // brilho no cabelo
+    ctx.strokeStyle = "rgba(255,255,255,.35)"; ctx.lineWidth = 12; ctx.lineCap = "round";
+    ctx.beginPath(); ctx.arc(hx - 40, hy - 70, 170, Math.PI * 1.18, Math.PI * 1.42); ctx.stroke();
   } else {
     // quepe + bigode
-    ctx.fillStyle = "#4e5a30"; ctx.strokeStyle = INK; ctx.lineWidth = 10;
-    ctx.beginPath(); ctx.moveTo(hx - 190, hy - 70); ctx.bezierCurveTo(hx - 200, hy - 250, hx + 200, hy - 250, hx + 190, hy - 70); ctx.closePath(); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = "#1d1a14"; ctx.beginPath(); ctx.ellipse(hx, hy - 70, 210, 30, 0, 0, Math.PI); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = "#e0b13a"; ctx.beginPath(); ctx.arc(hx, hy - 140, 22, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = "#3a2a1e"; ctx.beginPath(); ctx.moveTo(hx - 70, hy + 92); ctx.quadraticCurveTo(hx - 30, hy + 60, hx, hy + 80); ctx.quadraticCurveTo(hx + 30, hy + 60, hx + 70, hy + 92); ctx.quadraticCurveTo(hx, hy + 104, hx - 70, hy + 92); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#4e5a30"; ctx.strokeStyle = INK; ctx.lineWidth = 11;
+    ctx.beginPath(); ctx.moveTo(hx - 236, hy - 80); ctx.bezierCurveTo(hx - 250, hy - 310, hx + 250, hy - 310, hx + 236, hy - 80); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#1d1a14"; ctx.beginPath(); ctx.ellipse(hx, hy - 80, 260, 36, 0, 0, Math.PI); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#e0b13a"; ctx.beginPath(); ctx.arc(hx, hy - 170, 26, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#3a2a1e"; ctx.beginPath(); ctx.moveTo(hx - 86, hy + 116); ctx.quadraticCurveTo(hx - 36, hy + 76, hx, hy + 100); ctx.quadraticCurveTo(hx + 36, hy + 76, hx + 86, hy + 116); ctx.quadraticCurveTo(hx, hy + 130, hx - 86, hy + 116); ctx.fill(); ctx.stroke();
   }
-  if (f.sweat) { ctx.fillStyle = "#9fe0ff"; ctx.strokeStyle = "#2a7fb8"; ctx.lineWidth = 6; const tx = hx + 160, ty = hy - 120; ctx.beginPath(); ctx.moveTo(tx, ty); ctx.quadraticCurveTo(tx + 28, ty + 50, tx, ty + 64); ctx.quadraticCurveTo(tx - 28, ty + 50, tx, ty); ctx.fill(); ctx.stroke(); }
+  if (f.sweat) { ctx.fillStyle = "#9fe0ff"; ctx.strokeStyle = "#2a7fb8"; ctx.lineWidth = 6; const tx = hx + 200, ty = hy - 130; ctx.beginPath(); ctx.moveTo(tx, ty); ctx.quadraticCurveTo(tx + 28, ty + 50, tx, ty + 64); ctx.quadraticCurveTo(tx - 28, ty + 50, tx, ty); ctx.fill(); ctx.stroke(); }
   ctx.restore();
   ctx.restore();
 }
@@ -212,7 +226,7 @@ export const FlatChar: React.FC<{
   pose?: FlatPose; face?: FlatFace; goggles?: boolean; shadow?: boolean; children?: React.ReactNode;
 }> = ({ kind, position = [0, 0, 0], h = 2.1, flip = false, pose = {}, face = { expr: "neutral" }, goggles = false, shadow = true, children }) => {
   const pigeon = kind === "pigeon";
-  const [cw, ch] = pigeon ? [512, 512] : [512, 1024];
+  const [cw, ch] = pigeon ? [512, 512] : [640, 1024];
   const key = ["flat", kind, q(pose.armL), q(pose.armR), q(pose.elbowL), q(pose.elbowR), q(pose.walk, 4), q(pose.lean, 20), q(pose.headTilt, 20), q(pose.bob, 10),
     face.expr, q(face.look?.[0], 4), q(face.look?.[1], 4), q(face.blink, 2), q(face.mouth, 5), face.sweat, face.blush, goggles].join("|");
   const tex = canvasTexture(key, cw, ch, (ctx) => { ctx.clearRect(0, 0, cw, ch); if (pigeon) drawPigeon(ctx, pose, face, goggles); else drawPerson(ctx, kind as "nico" | "general", pose, face); });

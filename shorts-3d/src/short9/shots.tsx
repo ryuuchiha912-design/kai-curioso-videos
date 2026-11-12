@@ -86,7 +86,7 @@ export const SHOTS: Shot[] = [
       const scr = Math.max(0.001, pop(f, W(22) - 3, 7));
       const hits = f > W(20) ? Math.min(6, Math.floor((f - W(20)) / 9)) : 0;
       return (
-        <LabStage cam={glide(f, s, e, { pos: [-0.1, 1.45, 2.3], target: [0.0, 1.25, -0.1], fov: 40 }, { pos: [0.5, 1.45, 1.9], target: [0.35, 1.2, -0.2], fov: 38 })}>
+        <LabStage cam={glide(f, s, e, { pos: [-0.1, 1.4, 2.5], target: [0.05, 1.15, -0.1], fov: 42 }, { pos: [0.3, 1.4, 2.2], target: [0.2, 1.15, -0.15], fov: 40 })}>
           <Nico f={f} face={nicoFace(f, [[s, "smile"], [W(20), "happy"]], { look: [0.7, 0.1] })} pose={{ ...idle(f), armR: [-0.6, 0, 0.5] }} />
           <FlatChar kind="pigeon" position={PIG} h={0.55} pose={{ headTilt: f > W(20) ? peckAt(f) * 0.7 : 0 }} face={{ expr: "neutral" }} />
           <group scale={scr}><Screen p={SCR} ry={-0.5} s={1} hits={hits} /></group>
