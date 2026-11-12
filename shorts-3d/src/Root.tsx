@@ -20,6 +20,8 @@ import { RenSheet } from "./short7/RenSheet";
 import { Aviao } from "./short8/Aviao";
 import { Capa as AviaoCapa } from "./short8/Capa";
 import { Pombo } from "./short9/Pombo";
+import { Torre } from "./short10/Torre";
+import { TOTAL as TORRE_SEC } from "./short10/shots";
 import { TOTAL as POMBO_SEC } from "./short9/shots";
 import { TOTAL as AVIAO_SEC, timing as aviaoTiming } from "./short8/shots";
 import { Ultimo } from "./short7/Ultimo";
@@ -45,6 +47,7 @@ export const Root = () => (
     <Composition id="AviaoEN" component={Aviao} durationInFrames={Math.ceil(aviaoTiming("en").total * FPS)} {...V} defaultProps={{ captions: true, audio: true, lang: "en" as const }} />
     <Composition id="Pombo" component={Pombo} durationInFrames={Math.ceil(POMBO_SEC * FPS)} {...V} defaultProps={{ captions: true, audio: true }} />
     <Composition id="PomboTeste" component={Pombo} durationInFrames={210} {...V} defaultProps={{ captions: true, audio: true }} />
+    <Composition id="TorreEN" component={Torre} durationInFrames={Math.ceil(TORRE_SEC * FPS)} {...V} defaultProps={{ captions: true, audio: true }} />
     <Composition id="AviaoCapa" component={AviaoCapa} durationInFrames={1} {...V} defaultProps={{ lang: "pt" as const }} />
     <Composition id="AviaoCapaEN" component={AviaoCapa} durationInFrames={1} {...V} defaultProps={{ lang: "en" as const }} />
     {/* Vídeo longo 16:9 (canal do Ren) */}
