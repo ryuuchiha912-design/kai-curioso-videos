@@ -299,29 +299,37 @@ const GeneralCap: React.FC = () => (
 );
 
 /** Cabelos/acessórios de figurante. */
+const ShortHair: React.FC<{ c: string }> = ({ c }) => (
+  <group>
+    <mesh position={[0, 0.02, -0.03]} rotation={[-0.55, 0, 0]} castShadow>
+      <sphereGeometry args={[HEAD_R * 1.05, 40, 24, 0, Math.PI * 2, 0, Math.PI * 0.47]} />
+      {mat(c, 0.6)}
+    </mesh>
+    {/* franja curta e costeletas */}
+    {[-0.55, -0.28, 0, 0.28, 0.55].map((az, i) => <Strand key={i} az={az} el={0.72} w={0.11} h={0.14} t={0.02} roll={az * 0.4} c={c} R={HEAD_R * 1.03} hug={0.8} />)}
+    {[-1, 1].map((k) => <Strand key={k} az={k * 1.3} el={0.22} w={0.07} h={0.2} t={0.02} c={c} R={HEAD_R * 1.03} hug={0.6} />)}
+  </group>
+);
 const ExtraHair: React.FC<{ c: string; st: ToonStyle }> = ({ c, st }) => (
   <group>
-    {st.hair !== "bald" && st.hair !== "curly" && (
-      <mesh position={[0, 0.03, -0.02]} rotation={[-0.45, 0, 0]} castShadow>
-        <sphereGeometry args={[HEAD_R * 1.06, 40, 24, 0, Math.PI * 2, 0, Math.PI * 0.42]} />
-        {mat(c, 0.6)}
-      </mesh>
-    )}
+    {(st.hair === "short" || st.hair === "cap" || st.hair === "bun" || !st.hair) && <ShortHair c={c} />}
     {st.hair === "bald" && [-1, 1].map((k) => (
-      <mesh key={k} position={[k * HEAD_R * 0.86, 0.02, -0.12]} scale={[0.5, 0.8, 1]}><sphereGeometry args={[0.14, 14, 10]} />{mat(c, 0.6)}</mesh>
+      <mesh key={k} position={[k * HEAD_R * 0.9, 0.0, -0.1]} scale={[0.45, 0.75, 1]}><sphereGeometry args={[0.14, 14, 10]} />{mat(c, 0.6)}</mesh>
     ))}
-    {st.hair === "curly" && Array.from({ length: 12 }, (_, i) => {
-      const a = (i / 12) * Math.PI * 2;
-      return <mesh key={i} position={[Math.cos(a) * 0.24, 0.28 + Math.sin(i * 1.7) * 0.03, Math.sin(a) * 0.24 - 0.04]}><sphereGeometry args={[0.12, 14, 10]} />{mat(c, 0.7)}</mesh>;
+    {st.hair === "curly" && Array.from({ length: 14 }, (_, i) => {
+      const a = (i / 14) * Math.PI * 2;
+      return <mesh key={i} position={[Math.cos(a) * 0.26, 0.24 + Math.sin(i * 1.7) * 0.03, Math.sin(a) * 0.24 - 0.06]}><sphereGeometry args={[0.12, 14, 10]} />{mat(c, 0.7)}</mesh>;
     })}
+    {st.hair === "curly" && <mesh position={[0, 0.3, -0.06]}><sphereGeometry args={[0.24, 18, 14]} />{mat(c, 0.7)}</mesh>}
     {st.hair === "bun" && <mesh position={[0, HEAD_R + 0.06, -0.12]}><sphereGeometry args={[0.12, 20, 16]} />{mat(c, 0.6)}</mesh>}
     {st.hair === "cap" && (
-      <group>
-        <mesh position={[0, 0.06, -0.02]} rotation={[-0.35, 0, 0]}><sphereGeometry args={[HEAD_R * 1.08, 32, 20, 0, Math.PI * 2, 0, Math.PI * 0.42]} />{mat(st.cap ?? "#f2f2f2", 0.6)}</mesh>
-        <mesh position={[0, 0.2, 0.3]} rotation={[0.4, 0, 0]} scale={[1, 0.15, 0.55]}><sphereGeometry args={[0.2, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2]} />{mat(st.cap ?? "#f2f2f2", 0.5)}</mesh>
+      /* boné de ciclista dos anos 30: copa baixa e aba curta, por cima do cabelo */
+      <group position={[0, 0.27, 0.02]} rotation={[-0.25, 0, 0]}>
+        <mesh scale={[1, 0.42, 1]}><sphereGeometry args={[0.27, 28, 16, 0, Math.PI * 2, 0, Math.PI / 2]} />{mat(st.cap ?? "#f2f2f2", 0.6)}</mesh>
+        <mesh position={[0, 0.0, 0.25]} rotation={[0.15, 0, 0]} scale={[1, 0.12, 0.55]}><sphereGeometry args={[0.2, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2]} />{mat(st.cap ?? "#f2f2f2", 0.5)}</mesh>
       </group>
     )}
-    {st.mustache && <mesh position={[0, -0.09, HEAD_R * 0.97]} scale={[1.6, 0.45, 0.5]}><sphereGeometry args={[0.06, 14, 10]} />{mat(c, 0.6)}</mesh>}
+    {st.mustache && <mesh position={[0, -0.085, HEAD_R * 0.98]} scale={[1.5, 0.4, 0.45]}><sphereGeometry args={[0.06, 14, 10]} />{mat(c === "#d9b45a" ? "#8a6a3a" : c, 0.6)}</mesh>}
     {st.glasses && [-1, 1].map((k) => (
       <mesh key={k} position={[k * 0.12, 0.0, HEAD_R * 0.95]}><torusGeometry args={[0.075, 0.012, 8, 24]} />{mat("#2a2a30", 0.4)}</mesh>
     ))}

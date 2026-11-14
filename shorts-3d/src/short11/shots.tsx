@@ -87,15 +87,25 @@ export const SHOTS: Shot[] = [
       {f >= W(39) - 2 && <Stamp f={f} at={W(39) - 2} text="ON HIS BACK" size={80} y={0.36} rot={-3} />}
     </>,
   },
-  // "The crowd laughed."
+  // "The crowd laughed."  — 3 espectadores diferentes rindo e apontando, plateia atrás
   {
     name: "04 plateia ri", from: C(42), to: C(45),
-    render: (f, s, e) => (
-      <Velo f={f} laugh cam={glide(f, s, e, { pos: [-1.5, 2.6, 3.5], target: [-5.6, 2.3, 0], fov: 40 }, { pos: [-2.0, 2.7, 2.8], target: [-5.8, 2.4, 0], fov: 38, roll: -0.03 })}>
-        <Toon kind="extra" look={RIDERS[5].look} style={{ hair: "short", mustache: true }} position={[-4.0, 0.0, 1.0]} rotationY={1.2} face={ff(f, "happy", 4)} pose={{ bob: Math.abs(Math.sin(f * 0.8)) * 0.05, head: [-0.2, 0, Math.sin(f * 0.8) * 0.15], lean: -0.1, armL: [-0.4, 0, -0.6], armR: [-0.4, 0, 0.6] }} />
-      </Velo>
-    ),
-    overlay: (f) => <Stamp f={f} at={W(44) - 2} text="HAHAHA" box={false} size={150} y={0.1} rot={-6} />,
+    render: (f, s, e) => {
+      const fans = [
+        { x: -2.4, z: -0.2, look: { skin: "#f1c7a0", hoodie: "#c62a2a", hoodie2: "#a82222", pants: "#2e3440", hair: "#2a211c" }, style: { hair: "cap" as const, cap: "#1b1b1f" } },
+        { x: -2.65, z: 0.45, look: { skin: "#c88f66", hoodie: "#f2b636", hoodie2: "#d99e26", pants: "#1b1b1f", hair: "#1b1716" }, style: { hair: "curly" as const } },
+        { x: -2.35, z: 1.1, look: { skin: "#f5d2b0", hoodie: "#2c6fb6", hoodie2: "#245c98", pants: "#2e3440", hair: "#5a3a22" }, style: { hair: "cap" as const, cap: "#3e9b4a" } },
+      ];
+      return (
+        <Velo f={f} laugh cam={glide(f, s, e, { pos: [1.6, 1.75, 0.45], target: [-2.45, 1.35, 0.45], fov: 48 }, { pos: [1.2, 1.8, 0.45], target: [-2.45, 1.4, 0.45], fov: 46, roll: -0.03 })}>
+          {fans.map((fa, i) => (
+            <Toon key={i} kind="extra" look={fa.look} style={fa.style} position={[fa.x, 0, fa.z]} rotationY={Math.PI / 2 + (1 - i) * 0.25} face={ff(f + i * 9, "happy", i + 4)}
+              pose={{ bob: Math.abs(Math.sin(f * 0.8 + i)) * 0.05, head: [-0.2, 0, Math.sin(f * 0.8 + i) * 0.15], lean: -0.1, armL: [-0.3, 0, -0.5], armR: i === 1 ? [-1.4, 0, 0.3] : [-0.3, 0, 0.6] }} />
+          ))}
+        </Velo>
+      );
+    },
+    overlay: (f) => <Stamp f={f} at={W(44) - 2} text="HAHAHA" box={false} size={150} y={0.08} rot={-6} />,
   },
   // "Then he started winning. He was beating top professional riders. Guys who were way stronger than him."
   {

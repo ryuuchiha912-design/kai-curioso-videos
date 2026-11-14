@@ -85,7 +85,7 @@ export const RIDERS: { look: Partial<ToonLook>; style: ToonStyle }[] = [
 ];
 /** Dirigentes da federação (1934): de terno, cada um de um jeito. */
 export const OFFICIALS: { look: Partial<ToonLook>; style: ToonStyle }[] = [
-  { look: { skin: "#f1c7a0", hoodie: "#4a4f58", hoodie2: "#3a3f48", pants: "#2e3440", hair: "#8e8a86" }, style: { hair: "bald", mustache: true, glasses: true, tie: "#c62a2a" } },
+  { look: { skin: "#f1c7a0", hoodie: "#4a4f58", hoodie2: "#3a3f48", pants: "#2e3440", hair: "#8e8a86" }, style: { hair: "bald", mustache: true, tie: "#c62a2a" } },
   { look: { skin: "#e8b98f", hoodie: "#2f3b57", hoodie2: "#26304a", pants: "#1f2638", hair: "#b8b2ac" }, style: { hair: "short", tie: "#e0b13a" } },
   { look: { skin: "#c88f66", hoodie: "#6b5b4b", hoodie2: "#5a4a3a", pants: "#3a2e24", hair: "#1b1716" }, style: { hair: "short", mustache: true, tie: "#2c6fb6" } },
 ];
@@ -131,7 +131,7 @@ export const Velodrome: React.FC<{ crowd?: boolean; modern?: boolean; f?: number
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}><planeGeometry args={[60, 60]} /><M c={modern ? "#5a7a4a" : "#8a6a48"} /></mesh>
       {[[1.2, "#2c6fb6"], [-0.4, "#c62a2a"], [2.6, "#1b1b1f"]].map(([x, c]) => <mesh key={String(x)} rotation={[-Math.PI / 2, 0, 0]} position={[x as number, 0.01, 0]}><planeGeometry args={[0.06, 60]} /><meshBasicMaterial color={c as string} /></mesh>)}
       {/* parede inclinada */}
-      <mesh position={[-3.6, 0.9, 0]} rotation={[0, 0, -0.85]}><planeGeometry args={[2.6, 60]} /><M c="#ffffff" map={wt} /></mesh>
+      <group position={[-3.6, 0.9, 0]} rotation={[0, 0, -0.85]}><mesh rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[2.6, 60]} /><M c="#ffffff" map={wt} /></mesh></group>
       <Box s={[0.15, 0.5, 60]} p={[-4.55, 2.0, 0]} c="#e9e4d8" />
       {/* arquibancada com torcida */}
       {crowd && [0, 1, 2, 3].map((row) => (
