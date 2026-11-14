@@ -21,7 +21,7 @@ const NOME = process.argv[2] || 'UM DIA IMPOSSÍVEL';
     const sh = (txt, size, fill, y) => T(960, y + size * 0.08, txt, size, '#1A1210', size * 0.24) + T(960, y, txt, size, fill, size * 0.15);
     g += sh(NOME, 84, '#F7D64A', 500);
     g += G('translate(960,585)', R(-345, -32, 690, 64, 32, '#1A1210', 0) + T(0, 4, 'E SE… O IMPOSSÍVEL ACONTECESSE COM VOCÊ?', 28, '#FFFFFF'));
-    g += T(960, 650, 'VÍDEO NOVO TODA SEMANA', 26, '#7FE3FF', 6);
+    g += T(960, 650, '@SEOAMANHA · VÍDEO NOVO TODA SEMANA', 26, '#7FE3FF', 6);
     document.getElementById('s').innerHTML = g;
   }, NOME);
   await p.waitForTimeout(1200);
