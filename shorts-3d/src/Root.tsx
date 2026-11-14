@@ -1,4 +1,5 @@
 import { Composition } from "remotion";
+import { Fundo } from "./longos/Fundos";
 import { loadFont } from "@remotion/google-fonts/LilitaOne";
 import { loadFont as loadNunito } from "@remotion/google-fonts/Nunito";
 import { FPS } from "./kit/anim";
@@ -41,6 +42,7 @@ const V = { fps: FPS, width: 1080, height: 1920 };
 
 export const Root = () => (
   <>
+    <Composition id="FundoLongo" component={Fundo} durationInFrames={1} fps={FPS} width={2304} height={1296} defaultProps={{ set: "quarto" as const }} />
     {/* Shorts verticais (1080x1920, 30 fps) */}
     <Composition id="Short" component={Short} durationInFrames={Math.ceil(MOEDINHA_SEC * FPS)} {...V} defaultProps={{ captions: true }} />
     <Composition id="Ocarina" component={Ocarina} durationInFrames={Math.ceil(OCARINA_SEC * FPS)} {...V} defaultProps={{ captions: true }} />
