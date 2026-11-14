@@ -150,7 +150,7 @@ S[2] = (t, d) => {
   }
   if (t < aE) {
     let g = classroom() + paper(540, 1000, 2.0, -6, '10');
-    g += KAIs({ x: 540, y: 2150, s: 1.2, expr: 'happy', hl: [-200, -420], hr: [200, -420] });
+    g += KAIs({ x: 540, y: 2150, s: 1.2, expr: 'happy', hl: [-200, -420], hr: [200, -420], fore: '0' });
     return { g, cam: [540, 1100, 1.0] };
   }
   let g = room('#CFE0EA', '#9AA3AD', 1500) + mirror(540, 900, G(`translate(540,${980}) scale(1.1)`, head(Object.assign({}, KAI, { expr: t > aZ + 0.2 ? 'surprised' : 'happy', fore: t > aZ ? '0' : 10 }))));
