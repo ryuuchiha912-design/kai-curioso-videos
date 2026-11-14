@@ -21,11 +21,11 @@ function caption(t) {
   }
   return '';
 }
-const LOOK = `<defs><filter id="grade"><feColorMatrix type="saturate" values="1.0"/><feComponentTransfer><feFuncR type="linear" slope="0.96" intercept="0.035"/><feFuncG type="linear" slope="0.95" intercept="0.025"/><feFuncB type="linear" slope="0.94" intercept="0.035"/></feComponentTransfer></filter>
+const LOOK = `<defs><filter id="grade"><feColorMatrix type="saturate" values="1.3"/><feComponentTransfer><feFuncR type="linear" slope="1.04" intercept="0"/><feFuncG type="linear" slope="1.03" intercept="0"/><feFuncB type="linear" slope="1.02" intercept="0"/></feComponentTransfer></filter>
 <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="4"/><feColorMatrix type="saturate" values="0"/></filter>
 <radialGradient id="vig" cx="50%" cy="48%" r="75%"><stop offset="60%" stop-color="#2a1838" stop-opacity="0"/><stop offset="100%" stop-color="#2a1838" stop-opacity="0.3"/></radialGradient>
-<linearGradient id="tint" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a6ac8" stop-opacity="0.10"/><stop offset="1" stop-color="#ffb070" stop-opacity="0.08"/></linearGradient></defs>
-<rect width="1080" height="1920" fill="url(#tint)"/><rect width="1080" height="1920" fill="url(#vig)"/><rect width="1080" height="1920" filter="url(#grain)" opacity="0.24" style="mix-blend-mode:overlay"/>`;
+<linearGradient id="tint" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a6ac8" stop-opacity="0.05"/><stop offset="1" stop-color="#ffb070" stop-opacity="0.08"/></linearGradient></defs>
+<rect width="1080" height="1920" fill="url(#tint)"/><rect width="1080" height="1920" fill="url(#vig)"/><rect width="1080" height="1920" filter="url(#grain)" opacity="0.18" style="mix-blend-mode:overlay"/>`;
 const VOL = `<defs><radialGradient id="vol" cx="0.32" cy="0.28" r="0.85"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0.30"/><stop offset="0.45" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="0.75" stop-color="#2A1838" stop-opacity="0.10"/><stop offset="1" stop-color="#2A1838" stop-opacity="0.32"/></radialGradient></defs>`;
 const CAMZ = { 0: [1.12, 140], 1: [1.15, 110], 2: [1.2, 60], 4: [1.18, 110], 5: [1.12, 90], 6: [1.15, 100], 8: [1.12, 90], 9: [1.0, 0], 13: [1.12, 60], 14: [1.15, 90], 16: [1.1, 40], 17: [1.15, 110], 18: [1.0, 0], 19: [1.12, 120], 20: [1.0, 80], 21: [1.1, 60], 22: [1.12, 140] };
 window.renderAt = function (t) {
