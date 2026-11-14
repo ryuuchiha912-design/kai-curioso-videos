@@ -6,13 +6,13 @@ const { chromium } = require('playwright'); const fs = require('fs');
   const errs = []; p.on('pageerror', e => errs.push(String(e)));
   await p.goto('file://' + process.cwd() + '/perfil.html'); await p.evaluate(() => document.fonts.ready);
   const variants = [
-    ['C', `
+    ['C2', `
       let g = VOL + '<rect width="1920" height="1080" fill="#0F1B33"/>';
       g += '<defs><radialGradient id="gl"><stop offset="0" stop-color="#7FE3FF" stop-opacity="0.55"/><stop offset="1" stop-color="#7FE3FF" stop-opacity="0"/></radialGradient></defs>' + C(960, 470, 430, 'url(#gl)', 0);
       g += '<circle cx="960" cy="470" r="330" fill="none" stroke="#7FE3FF" stroke-width="14" opacity="0.9"/>';
       for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2; g += Ln(960 + Math.cos(a) * 300, 470 + Math.sin(a) * 300, 960 + Math.cos(a) * 330, 470 + Math.sin(a) * 330, '#7FE3FF', i % 3 ? 6 : 14); }
       g += Ln(960, 470, 960 + Math.cos(-2.2) * 260, 470 + Math.sin(-2.2) * 260, 'rgba(127,227,255,0.5)', 12) + Ln(960, 470, 960 + Math.cos(-0.6) * 200, 470 + Math.sin(-0.6) * 200, 'rgba(127,227,255,0.5)', 16);
-      g += person(Object.assign(neoAt(30), { x: 960, y: 2200, s: 2.5, expr: 'neutral', lx: 1 }));
+      g += person(Object.assign(neoAt(30), { x: 960, y: 2200, s: 2.5, expr: 'neutral', smile: true, lx: 1 }));
       return g;`],
     ['D', `
       let g = VOL + '<defs><linearGradient id="dn" x1="0" y1="0" x2="1" y2="0"><stop offset="0.5" stop-color="#F6B56A"/><stop offset="0.5" stop-color="#1A2550"/></linearGradient></defs><rect width="1920" height="1080" fill="url(#dn)"/>';

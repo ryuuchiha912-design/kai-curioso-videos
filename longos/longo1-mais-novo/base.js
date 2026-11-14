@@ -90,6 +90,7 @@ function animeFace(d) {
   const m = { sleep: 'M-10,66 L10,66', angry: 'M-20,72 Q0,58 20,72', sad: 'M-18,72 Q0,60 18,72', neutral: 'M-14,66 L14,66', sus: 'M-18,66 Q4,70 22,60', tired: 'M-14,68 L14,68', worried: 'M-18,70 Q0,60 18,70', squish: 'M-24,66 q6,-8 12,0 t12,0 t12,0 t12,0' }[e];
   if (e === 'surprised') g += E(0, 66, 11, 15, '#5A1F1A', 5);
   else if (e === 'happy') g += P('M-26,58 Q0,90 26,58 Z', '#5A1F1A', 6) + P('M-14,76 Q0,86 14,76 Q0,70 -14,76Z', '#E86A6A', 0);
+  else if (d.smile) g += P('M-30,56 Q0,94 30,56 Z', '#5A1F1A', 6) + P('M-16,76 Q0,86 16,76 Q0,70 -16,76Z', '#E86A6A', 0);
   else g += P(m, 'none', 7);
   return g;
 }
