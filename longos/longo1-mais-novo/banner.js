@@ -16,12 +16,12 @@ const NOME = process.argv[2] || 'UM DIA IMPOSSÍVEL';
     g += C(960, 540, 330, 'url(#cl)', 0) + '<circle cx="960" cy="540" r="250" fill="none" stroke="#7FE3FF" stroke-width="8" opacity="0.6"/>';
     for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2; g += Ln(960 + Math.cos(a) * 228, 540 + Math.sin(a) * 228, 960 + Math.cos(a) * 250, 540 + Math.sin(a) * 250, '#7FE3FF', i % 3 ? 4 : 10); }
     // o personagem em 3 idades (esquerda) e a mãe com o bebê (direita), dentro da faixa segura
-    g += person(neoAt(30, { x: 440, y: 830, s: 0.46, expr: 'neutral', lx: 1 }));
-    g += person(Object.assign({}, LUCIA, { x: 1480, y: 830, s: 0.48, sx: -1, expr: 'happy', hl: [-90, -330], hr: [90, -330] })) + babyHeld(1480, 830 - 0.92 * 0.48 * 330, 0.46);
+    
+    
     const sh = (txt, size, fill, y) => T(960, y + size * 0.08, txt, size, '#1A1210', size * 0.24) + T(960, y, txt, size, fill, size * 0.15);
-    g += sh(NOME, 84, '#F7D64A', 500);
-    g += G('translate(960,585)', R(-345, -32, 690, 64, 32, '#1A1210', 0) + T(0, 4, 'E SE… O IMPOSSÍVEL ACONTECESSE COM VOCÊ?', 28, '#FFFFFF'));
-    g += T(960, 650, '@SEOAMANHA · VÍDEO NOVO TODA SEMANA', 26, '#7FE3FF', 6);
+    g += sh(NOME, 110, '#F7D64A', 560);
+    
+    
     document.getElementById('s').innerHTML = g;
   }, NOME);
   await p.waitForTimeout(1200);
