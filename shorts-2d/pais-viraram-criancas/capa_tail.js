@@ -12,8 +12,8 @@ window.renderAt = function () {
   g += pp(PAIk, { x: 830, y: 1900, s: 0.85, sx: -1, expr: 'sad', hl: [-110, -170], hr: [110, -170] }) + tears(830, 1900 - 0.85 * (268 + 120 * 1.35) - 20, 0.4, 1.0);
   g += KAIs({ x: 540, y: 1640, s: 1.2, expr: 'surprised', hl: [-190, -380], hr: [190, -380] });
   g += G('translate(540,620) rotate(-5)', R(-260, -70, 520, 140, 36, '#FFFFFF', 8) + T(0, 8, 'EU: 16 ANOS', 70, '#C62A2A'));
-  g += G('translate(250,1290) rotate(-6)', R(-120, -48, 240, 96, 26, '#2E2433', 0) + T(0, 6, '6 ANOS', 50, '#F7D64A')) + G('translate(830,1290) rotate(6)', R(-120, -48, 240, 96, 26, '#2E2433', 0) + T(0, 6, '7 ANOS', 50, '#F7D64A'));
-  document.getElementById('s').innerHTML = `<rect width="1080" height="1920" fill="#000"/>` + g + LOOK;
+  g += G('translate(250,1225) rotate(-6)', R(-120, -48, 240, 96, 26, '#2E2433', 0) + T(0, 6, '6 ANOS', 50, '#F7D64A')) + G('translate(830,1225) rotate(6)', R(-120, -48, 240, 96, 26, '#2E2433', 0) + T(0, 6, '7 ANOS', 50, '#F7D64A'));
+  document.getElementById('s').innerHTML = `<rect width="1080" height="1920" fill="#000"/>` + `<defs><radialGradient id="vol" cx="0.32" cy="0.28" r="0.85"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0.30"/><stop offset="0.45" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="0.75" stop-color="#2A1838" stop-opacity="0.10"/><stop offset="1" stop-color="#2A1838" stop-opacity="0.32"/></radialGradient></defs>` + g + LOOK;
 };
 window.DUR = DUR;
 window.renderAt(0);
