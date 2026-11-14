@@ -8,10 +8,16 @@ window.renderAt = function () {
   ZID = 0; TNOW = 0.7;
   let g = room('#F6E3C8', '#B9874F', 1560) + windowFrame(660, 470, 320, 300, '#BFE3F5') + sun(900, 560, 46, 0.5);
   g += R(60, 1000, 200, 240, 10, '#8A5A3A', 8) + R(80, 1020, 160, 90, 6, '#B9874F', 0) + R(80, 1130, 160, 90, 6, '#B9874F', 0);   // cômoda
-  g += bedKid(560, 1620, 1.3) + blanket(560, 1560, 1.3, '#7A90C8');
-  g += lying(Object.assign({}, KAI, { expr: 'squish' }), 270, 1380, 0.95) + tears(270, 1330, 0.3, 0.8);
-  g += bag(720, 1220, 1.95, KAI_B, 8, -8);
-  g += limb(470, 1520, 330, 1700, KAI.shirt, 44) + C(320, 1715, 30, KAI.skin) + C(320, 1715, 30, 'url(#vol)', 0);
+  g += bedKid(560, 1620, 1.3);
+  // corpo do Kai deitado (ombros + cobertor), ligado à cabeça
+  g += P('M330,1400 Q380,1360 470,1380 L480,1545 L330,1545Z', KAI.shirt) + P('M330,1400 Q380,1360 470,1380 L480,1545 L330,1545Z', 'url(#vol)', 0);
+  g += P('M352,1392 Q400,1440 470,1430', 'none', 0) + `<path d="M350,1395 Q400,1445 472,1428" fill="none" stroke="#1A1A20" stroke-width="34" stroke-linecap="round"/>` + R(440, 1420, 26, 70, 8, '#F07A1A', 4);
+  g += P('M450,1545 L450,1430 Q520,1380 640,1400 Q760,1370 880,1410 Q960,1420 960,1470 L960,1545Z', '#7A90C8') + P('M450,1545 L450,1430 Q520,1380 640,1400 Q760,1370 880,1410 Q960,1420 960,1470 L960,1545Z', 'url(#vol)', 0);
+  g += E(905, 1400, 48, 34, '#7A90C8') + E(840, 1395, 44, 32, '#7A90C8');   // pés embaixo do cobertor
+  g += lying(Object.assign({}, KAI, { expr: 'squish' }), 255, 1415, 0.9) + tears(255, 1360, 0.3, 0.8);
+  g += bag(690, 1280, 1.35, KAI_B, 8, -8);
+  g += limb(440, 1450, 330, 1650, KAI.shirt, 44) + C(322, 1668, 30, KAI.skin) + C(322, 1668, 30, 'url(#vol)', 0);   // braço pedindo ajuda
+  g += limb(470, 1420, 545, 1330, KAI.shirt, 40) + C(552, 1322, 28, KAI.skin);                                         // mão empurrando a mochila
   for (const [x, y, s, sd] of [[180, 820, 1.2, 1], [900, 900, 1.0, 2], [820, 1700, 1.1, 3], [380, 1800, 0.9, 4]]) g += stone(x, y, s, sd);
   for (let i = 0; i < 3; i++) g += Ln(250 + i * 50, 1140 - i * 30, 280 + i * 50, 1100 - i * 30, '#FFFFFF', 8);
   g += G('translate(820,690) rotate(8)', R(-180, -70, 360, 140, 34, '#C62A2A', 9) + T(0, 8, '50 KG', 88, '#FFFFFF'));
