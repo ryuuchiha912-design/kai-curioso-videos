@@ -22,6 +22,9 @@ import { Capa as AviaoCapa } from "./short8/Capa";
 import { Pombo } from "./short9/Pombo";
 import { Torre } from "./short10/Torre";
 import { TorreCapa } from "./short10/Capa";
+import { Bike } from "./short11/Bike";
+import { BikeCapa } from "./short11/Capa";
+import { TOTAL as BIKE_SEC } from "./short11/shots";
 import { NicoAvatar, NicoBanner } from "./channel/NicoBrand";
 import { TOTAL as TORRE_SEC } from "./short10/shots";
 import { TOTAL as POMBO_SEC } from "./short9/shots";
@@ -53,6 +56,8 @@ export const Root = () => (
     <Composition id="TorreCapaEN" component={TorreCapa} durationInFrames={1} {...V} />
     <Composition id="NicoAvatar" component={NicoAvatar} durationInFrames={1} fps={FPS} width={800} height={800} />
     <Composition id="NicoBanner" component={NicoBanner} durationInFrames={1} fps={FPS} width={2560} height={1440} defaultProps={{ lang: "en" as const }} />
+    <Composition id="BikeEN" component={Bike} durationInFrames={Math.ceil(BIKE_SEC * FPS)} {...V} defaultProps={{ captions: true, audio: true }} />
+    <Composition id="BikeCapaEN" component={BikeCapa} durationInFrames={1} {...V} />
     <Composition id="AviaoCapa" component={AviaoCapa} durationInFrames={1} {...V} defaultProps={{ lang: "pt" as const }} />
     <Composition id="AviaoCapaEN" component={AviaoCapa} durationInFrames={1} {...V} defaultProps={{ lang: "en" as const }} />
     {/* Vídeo longo 16:9 (canal do Ren) */}
