@@ -44,19 +44,35 @@ export const RoadBike: React.FC<{ spin: number; c?: string }> = ({ spin, c = "#c
   </group>
 );
 
-/** Bicicleta deitada (estilo Velocar): comprida, baixa, banco reclinado. */
-export const LyingBike: React.FC<{ spin: number; c?: string }> = ({ spin, c = "#2c6fb6" }) => (
-  <group>
-    <Wheel p={[0, 0.28, -0.75]} r={0.28} spin={spin * 1.3} /><Wheel p={[0, 0.28, 0.8]} r={0.28} spin={spin * 1.3} />
-    <Tube a={[0, 0.28, -0.75]} b={[0, 0.42, -0.2]} c={c} r={0.03} /><Tube a={[0, 0.42, -0.2]} b={[0, 0.48, 0.95]} c={c} r={0.03} />
-    <Tube a={[0, 0.48, 0.95]} b={[0, 0.28, 0.8]} c={c} r={0.03} />
-    {/* banco reclinado */}
-    <Box s={[0.36, 0.05, 0.42]} p={[0, 0.46, -0.25]} c="#3a2a1e" />
-    <group position={[0, 0.5, -0.45]} rotation={[-0.9, 0, 0]}><Box s={[0.36, 0.05, 0.5]} p={[0, 0, -0.22]} c="#3a2a1e" /></group>
-    <mesh position={[0, 0.5, 0.95]} rotation={[spin * 0.6, 0, 0]}><cylinderGeometry args={[0.09, 0.09, 0.04, 16]} /><M c="#9aa3ad" r={0.3} /></mesh>
-    <Tube a={[-0.22, 0.42, 0.05]} b={[0.22, 0.42, 0.05]} c="#1b1b1f" r={0.02} />
-  </group>
-);
+/** Bicicleta deitada (estilo Velocar, 1933): comprida e baixa, banco reclinado, pedais lá na frente. */
+export const LyingBike: React.FC<{ spin: number; c?: string }> = ({ spin, c = "#c62a2a" }) => {
+  const crank: V3 = [0, 0.5, 0.38];
+  const ca = spin * 1.4;
+  return (
+    <group>
+      <Wheel p={[0, 0.3, -0.85]} r={0.3} spin={spin * 1.2} /><Wheel p={[0, 0.3, 0.95]} r={0.3} spin={spin * 1.2} />
+      {/* quadro: viga principal da roda de trás até o garfo da frente */}
+      <Tube a={[0, 0.3, -0.85]} b={[0, 0.36, -0.3]} c={c} r={0.035} />
+      <Tube a={[0, 0.36, -0.3]} b={[0, 0.36, 0.7]} c={c} r={0.04} />
+      <Tube a={[0, 0.36, 0.7]} b={[0, 0.3, 0.95]} c={c} r={0.03} />
+      <Tube a={[0, 0.36, 0.7]} b={[0, 0.62, 0.78]} c={c} r={0.03} />
+      {/* haste dos pedais */}
+      <Tube a={[0, 0.36, 0.15]} b={crank} c={c} r={0.03} />
+      <group position={crank} rotation={[ca, 0, 0]}>
+        <mesh rotation={[0, 0, Math.PI / 2]}><cylinderGeometry args={[0.09, 0.09, 0.03, 18]} /><M c="#9aa3ad" r={0.3} /></mesh>
+        {[-1, 1].map((k) => <group key={k} position={[k * 0.06, 0, 0]} rotation={[k > 0 ? Math.PI : 0, 0, 0]}><Box s={[0.02, 0.16, 0.025]} p={[0, -0.08, 0]} c="#3a3f4b" shadow={false} /><Box s={[0.1, 0.025, 0.06]} p={[k * 0.04, -0.16, 0]} c="#1b1b1f" shadow={false} /></group>)}
+      </group>
+      {/* corrente */}
+      <Tube a={[0, 0.5, 0.38]} b={[0, 0.3, -0.85]} c="#4a4d55" r={0.008} />
+      {/* banco: assento + encosto reclinado */}
+      <Box s={[0.4, 0.07, 0.42]} p={[0, 0.42, -0.32]} c="#3a2a1e" />
+      <group position={[0, 0.44, -0.52]} rotation={[-0.78, 0, 0]}><Box s={[0.4, 0.06, 0.6]} p={[0, 0, -0.3]} c="#3a2a1e" /></group>
+      <Tube a={[0, 0.36, -0.55]} b={[0, 0.72, -0.85]} c={c} r={0.02} />
+      {/* guidão por baixo do banco, dos dois lados */}
+      {[-1, 1].map((k) => <Tube key={k} a={[0, 0.38, -0.12]} b={[k * 0.3, 0.42, -0.2]} c="#1b1b1f" r={0.018} />)}
+    </group>
+  );
+};
 
 /** Ciclista sentado normal (pedalando). */
 export const UprightRider: React.FC<{ p: V3; ry?: number; f: number; kind?: "nico" | "bia" | "general"; face: ToonFace; c?: string; speed?: number }> = ({ p, ry = 0, f, kind = "bia", face, c, speed = 0.4 }) => {
@@ -69,15 +85,17 @@ export const UprightRider: React.FC<{ p: V3; ry?: number; f: number; kind?: "nic
     </group>
   );
 };
-/** Ciclista deitado (o Nico como Francis Faure). */
+/** Ciclista deitado (o Nico como Francis Faure): costas no encosto, pernas esticadas até os pedais. */
 export const LyingRider: React.FC<{ p: V3; ry?: number; f: number; face: ToonFace; speed?: number }> = ({ p, ry = 0, f, face, speed = 0.5 }) => {
   const a = f * speed;
-  const pose: Pose = { legL: -1.05 + Math.sin(a) * 0.35, legR: -1.05 - Math.sin(a) * 0.35, armL: [-0.25, 0, -0.35], armR: [-0.25, 0, 0.35], head: [0.75, 0, 0] };
+  const TILT = -0.78;
+  // perna "para baixo" no corpo inclinado vira horizontal para a frente com -0.79 de giro na perna
+  const pose: Pose = { legL: -0.8 + Math.sin(a * 1.4) * 0.2, legR: -0.8 - Math.sin(a * 1.4) * 0.2, armL: [0.15, 0, -0.42], armR: [0.15, 0, 0.42], head: [0.55, 0, 0] };
   return (
     <group position={p} rotation={[0, ry, 0]}>
       <LyingBike spin={a} />
-      <group position={[0, 0.48, -0.32]} rotation={[-1.05, 0, 0]}>
-        <Toon kind="nico" position={[0, -0.72, 0]} face={face} pose={pose} scale={0.95} />
+      <group position={[0, 0.47, -0.36]} rotation={[TILT, 0, 0]}>
+        <Toon kind="nico" position={[0, -0.72 * 0.92, 0.06]} face={face} pose={pose} scale={0.92} />
       </group>
     </group>
   );

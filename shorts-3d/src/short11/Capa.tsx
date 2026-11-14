@@ -10,7 +10,7 @@ const T: React.FC<{ children: React.ReactNode; size: number; color?: string; rot
 );
 export const BikeCapa: React.FC = () => (
   <AbsoluteFill style={{ background: "#000" }}>
-    <Stage flat background="#e8d2b0" lights={LIGHT_VELO} cam={{ pos: [1.5, 0.75, 2.8], target: [0.3, 0.75, -0.3], fov: 44 }} fg={
+    <Stage flat background="#e8d2b0" lights={LIGHT_VELO} cam={{ pos: [2.7, 1.0, 1.4], target: [0.3, 0.6, 0.05], fov: 48 }} fg={
       <Cel>
         <Velodrome f={10} />
         <LyingRider p={[0.3, 0, 0]} f={6} speed={0.8} face={{ expr: "smug", eyes: "big", iris: "#e2a236", lid: -0.14, look: [0.4, 0] }} />
