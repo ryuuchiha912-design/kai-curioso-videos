@@ -42,40 +42,140 @@ def put(buf, sig, t, g=1.0):
     j = min(len(buf), i + len(sig)); buf[i:j] += sig[: j - i] * g
 
 
-# ------------------------------------------------------------------ trilha por trecho
+# ------------------------------------------------------------------ trilha por trecho (instrumentos diferentes em cada parte)
 NOTE = lambda m: 440 * 2 ** ((m - 69) / 12)
 music = np.zeros(N)
-def arps(a, b, chords, bpm, vel=1.0, pat=(0, 1, 2, 1, 2, 1, 0, 1), dec=0.9, oct_=12, bass=True):
-    beat = 60 / bpm; t = a; k = 0
-    while t < b - 0.3:
-        ch = chords[(k // 8) % len(chords)]
-        put(music, tone(NOTE(ch[pat[k % 8]] + oct_), 1.4, r=dec), t, 0.3 * vel)
-        if bass and k % 8 == 0: put(music, tone(NOTE(ch[0] - 12), 3.0, a=0.01, r=1.6), t, 0.38 * vel)
-        t += beat / 2; k += 1
-MYST = [[57, 60, 64], [53, 57, 60], [55, 59, 62], [52, 55, 59]]
-PLAY = [[60, 64, 67], [65, 69, 72], [67, 71, 74], [60, 64, 67]]
-TENS = [[57, 60, 64], [56, 60, 63], [57, 60, 64], [52, 56, 59]]
-SAD = [[57, 60, 64], [53, 57, 60], [48, 52, 55], [55, 59, 62]]
-WARM = [[60, 64, 67], [55, 59, 62], [57, 60, 64], [53, 57, 60]]
-HOPE = [[53, 57, 60], [55, 59, 62], [60, 64, 67], [57, 60, 64]]
 L_ = lambda i: L[i]["start"]
-arps(0.0, L_(3) - 0.3, MYST, 70, vel=0.85, dec=1.0)
-arps(L_(3) - 0.2, L_(8) - 0.3, PLAY, 100, vel=0.8, pat=(0, 2, 1, 2, 0, 2, 1, 2), dec=0.4)
-arps(L_(8) - 0.2, L_(21) - 0.3, TENS, 78, vel=0.75, dec=0.7)
-put(music, tone(NOTE(45), 4.0, r=2.5, harm=(1, 0.5)), L_(21) - 0.05, 0.6)
-arps(L_(22) - 0.2, L_(26) - 0.3, TENS, 70, vel=0.7, dec=0.8)
-arps(L_(26) - 0.2, L_(33) - 0.3, SAD, 58, vel=0.9, dec=1.3)
-arps(L_(33) - 0.2, L_(39) - 0.3, WARM, 64, vel=0.85, dec=1.1)
-arps(L_(39) - 0.2, L_(49) - 0.3, SAD, 56, vel=0.85, dec=1.3)
-# canção de ninar (caixinha de música) na reta final
-lull = [76, 79, 81, 79, 76, 74, 72, 74, 76, 76, 74, 72]
-t = L_(49) - 0.2; k = 0
-while t < L_(59) - 0.6: put(music, tone(NOTE(lull[k % len(lull)] + 12), 1.2, a=0.003, r=0.5, harm=(1, 0.25)), t, 0.2); t += 0.62; k += 1
-arps(L_(49) - 0.2, L_(59) - 0.6, SAD, 48, vel=0.6, dec=1.6)
-arps(L_(61) - 0.2, TOTAL, HOPE, 64, vel=1.05, dec=1.2)
-pad_t = np.arange(N) / SR
-pad = 0.07 * (np.sin(2 * np.pi * NOTE(60) * pad_t) + np.sin(2 * np.pi * NOTE(64) * pad_t) + np.sin(2 * np.pi * NOTE(67) * pad_t))
-music += pad * np.clip((pad_t - L_(65)) / 1.5, 0, 1)
+TT = lambda d: np.arange(int(d * SR)) / SR
+def inst_piano(f, d=1.8, br=1.0):
+    t = TT(d); return sum(h * np.sin(2 * np.pi * f * k * 1.0007 ** (k - 1) * t) * np.exp(-t * (1.6 + k * 0.9)) for k, h in enumerate((1, 0.5 * br, 0.25 * br, 0.12 * br), 1)) * np.minimum(1, t / 0.004)
+def inst_marimba(f, d=0.7):
+    t = TT(d); return (np.sin(2 * np.pi * f * t) + 0.35 * np.sin(2 * np.pi * f * 4 * t) * np.exp(-t * 18)) * np.exp(-t * 5) * np.minimum(1, t / 0.002)
+def inst_pluck(f, d=1.2, damp=1.0):
+    t = TT(d); return sum((1 / k) * np.sin(2 * np.pi * f * k * t) * np.exp(-t * (2.5 + k * 1.8) * damp) for k in range(1, 7)) * np.minimum(1, t / 0.002)
+def inst_pizz(f): return inst_pluck(f, 0.35, 4.0)
+def inst_box(f, d=1.4, detune=0.0):
+    t = TT(d); f = f * (1 + detune); return (np.sin(2 * np.pi * f * t) + 0.4 * np.sin(2 * np.pi * 2 * f * t) * np.exp(-t * 6) + 0.25 * np.sin(2 * np.pi * 5.04 * f * t) * np.exp(-t * 14)) * np.exp(-t * 2.2) * np.minimum(1, t / 0.002)
+def inst_pad(freqs, d, att=1.2, rel=1.4):
+    t = TT(d); g = np.zeros_like(t)
+    for f in freqs:
+        for dt in (-0.004, 0.0, 0.004): g += np.sin(2 * np.pi * f * (1 + dt) * t + 0.4 * np.sin(2 * np.pi * 4.8 * t))
+    env = np.minimum(1, t / att) * np.minimum(1, np.maximum(0, (d - t) / rel))
+    return g * env / (3 * len(freqs))
+def inst_bass(f, d=0.5):
+    t = TT(d); return np.tanh(1.6 * (np.sin(2 * np.pi * f * t) + 0.3 * np.sin(4 * np.pi * f * t))) * np.exp(-t * 3) * np.minimum(1, t / 0.005)
+def dr_kick():
+    t = TT(0.35); return np.sin(2 * np.pi * (45 * t + 75 * (1 - np.exp(-t * 30)) / 30)) * np.exp(-t * 9)
+def dr_snare():
+    t = TT(0.2); n = rng.standard_normal(len(t)); return (0.7 * np.diff(n, prepend=0) * 0.5 + 0.4 * np.sin(2 * np.pi * 185 * t)) * np.exp(-t * 22)
+def dr_hat():
+    t = TT(0.06); n = rng.standard_normal(len(t)); return np.diff(n, prepend=0) * 0.35 * np.exp(-t * 70)
+def dr_tom(f=110):
+    t = TT(0.5); return np.sin(2 * np.pi * f * (1 - 0.25 * t) * t) * np.exp(-t * 7)
+def heart():
+    t = TT(0.6); k = lambda o: np.where(t >= o, np.sin(2 * np.pi * 52 * (t - o)) * np.exp(-(t - o) * 14), 0); return k(0) + 0.7 * k(0.22)
+def tick():
+    t = TT(0.03); return np.sin(2 * np.pi * 2400 * t) * np.exp(-t * 200)
+def riser(d):
+    t = TT(d); n = np.convolve(rng.standard_normal(len(t)), np.ones(6) / 6, mode="same"); return (n * 0.5 + 0.5 * np.sin(2 * np.pi * (200 + 600 * (t / d) ** 2) * t)) * (t / d) ** 2.2
+def stinger():
+    t = TT(2.5); n = np.diff(rng.standard_normal(len(t)), prepend=0); return np.sin(2 * np.pi * 55 * t) * np.exp(-t * 1.6) * 1.2 + n * 0.25 * np.exp(-t * 3)
+def M(sig, at, g): put(music, sig, at, g)
+def steps(a, b, bpm, sub=4):
+    st = 60 / bpm / sub; t = a; k = 0
+    while t < b - 0.05: yield t, k; t += st; k += 1
+# acordes (graus MIDI)
+Am, F, C, G, Em, Dm, E = [57, 60, 64], [53, 57, 60], [48, 52, 55], [55, 59, 62], [52, 55, 59], [50, 53, 57], [52, 56, 59]
+
+# 1) mistério — pad + caixinha de música + coração (L0–2)
+a, b = 0.0, L_(3) - 0.2
+for i, ch in enumerate([Am, F, Dm, E]): M(inst_pad([NOTE(n) for n in ch], (b - a) / 4 + 1.5), a + i * (b - a) / 4, 0.55)
+for t, k in steps(a + 0.5, b, 70, 2): M(inst_box(NOTE([81, 76, 79, 76, 77, 72, 74, 76][k % 8])), t, 0.22)
+for t, k in steps(L_(2), b, 72, 1): M(heart(), t, 0.7)
+M(riser(2.0), L_(3) - 2.2, 0.35)
+# 2) alegre — marimba + violão + bateria leve (L3–7)
+a, b = L_(3) - 0.2, L_(8) - 0.25
+prog = [C, G, Am, F]
+for t, k in steps(a, b, 112, 4):
+    bar = int(k // 16); ch = prog[bar % 4]
+    if k % 2 == 0: M(inst_marimba(NOTE(ch[(k // 2) % 3] + 12 + (12 if k % 8 == 6 else 0))), t, 0.28)
+    if k % 8 == 0: M(inst_pluck(NOTE(ch[0])), t, 0.25); M(inst_bass(NOTE(ch[0] - 12), 0.45), t, 0.45)
+    if k % 8 == 4: M(inst_pluck(NOTE(ch[1])), t, 0.2)
+    if k % 8 == 0: M(dr_kick(), t, 0.55)
+    if k % 8 == 4: M(dr_snare(), t, 0.3)
+    if k % 2 == 1: M(dr_hat(), t, 0.25)
+# 3) cômico-tenso — pizzicato + baixo andando + palmas (L8–15)
+a, b = L_(8) - 0.15, L_(16) - 0.3
+walk = [45, 47, 48, 50, 52, 50, 48, 47]
+prog = [Am, Dm, E, Am]
+for t, k in steps(a, b, 96, 2):
+    ch = prog[(k // 8) % 4]
+    M(inst_pizz(NOTE(ch[k % 3] + 12)), t, 0.32 if k % 2 == 0 else 0.18)
+    if k % 2 == 0: M(inst_bass(NOTE(walk[(k // 2) % 8] - 12), 0.35), t, 0.5)
+    if k % 8 == 4: M(dr_snare(), t, 0.22)
+# 4) suspense no médico — tic-tac + piano espaçado + pad grave (L16–20)
+a, b = L_(16) - 0.2, L_(21) - 0.2
+M(inst_pad([NOTE(45), NOTE(52)], b - a + 1.0, att=2.0), a, 0.5)
+for t, k in steps(a, b, 60, 1): M(tick(), t, 0.5)
+for t, k in steps(a + 1, b, 30, 1): M(inst_piano(NOTE([69, 72, 71, 68][k % 4]), 2.5), t, 0.3)
+# 5) "dia 13" — impacto + coração + subida (L21–23)
+M(stinger(), L_(21) - 0.05, 0.9)
+a, b = L_(21) + 1.0, L_(24) - 0.2
+for t, k in steps(a, b, 80, 1): M(heart(), t, 0.65)
+M(inst_pad([NOTE(n) for n in [52, 55, 59]], b - a + 1, att=2.5), a, 0.4)
+# 6) "menor de idade" — tambores crescendo (L24–25)
+a, b = L_(24) - 0.15, L_(26) - 0.2
+for t, k in steps(a, b, 100, 2):
+    g = 0.25 + 0.5 * (t - a) / (b - a)
+    M(dr_tom(110 if k % 4 else 80), t, g * (1 if k % 2 == 0 else 0.6))
+M(stinger(), L_(25) + 0.2, 0.6)
+# 7) ligação pra mãe — piano emocional + cordas (L26–31)
+a, b = L_(26) - 0.2, L_(32) - 0.3
+prog = [Am, F, C, G]
+dur = 60 / 64 * 4
+for i, (t, k) in enumerate(steps(a, b, 64 / 4, 1)):
+    ch = prog[i % 4]; M(inst_pad([NOTE(n) for n in ch], dur + 1.2, att=1.0), t, 0.45); M(inst_piano(NOTE(ch[0] - 12), 3.5), t, 0.35)
+for t, k in steps(a, b, 64, 2): M(inst_piano(NOTE([76, 72, 69, 72, 74, 71, 67, 71][k % 8]), 1.6, 0.6), t, 0.22)
+# 8) escola / mãe envelhecendo — violão agridoce (L32–38)
+a, b = L_(32) - 0.2, L_(39) - 0.3
+prog = [C, Em, Am, F]
+for t, k in steps(a, b, 76, 2):
+    ch = prog[(k // 8) % 4]; pat = [0, 1, 2, 1, 2, 1, 0, 2]
+    M(inst_pluck(NOTE(ch[pat[k % 8]] + 12), 1.6, 0.8), t, 0.3)
+    if k % 8 == 0: M(inst_pluck(NOTE(ch[0] - 12), 2.0, 0.6), t, 0.4); M(inst_pad([NOTE(n) for n in ch], 60 / 76 * 4 + 1, att=0.8), t, 0.25)
+# 9) dentes e esquecimento — caixinha desafinada + pad sombrio + relógio (L39–45)
+a, b = L_(39) - 0.2, L_(46) - 0.3
+M(inst_pad([NOTE(45), NOTE(48), NOTE(52)], b - a + 1.5, att=2.0), a, 0.5)
+for t, k in steps(a, b, 58, 2): M(inst_box(NOTE([81, 77, 76, 72, 74, 71, 69, 68][k % 8]), 1.6, detune=0.012 * np.sin(k)), t, 0.2)
+for t, k in steps(L_(42), b, 60, 1): M(tick(), t, 0.35)
+# 10) caderno e cuidados — piano quente + cordas subindo (L46–51)
+a, b = L_(46) - 0.2, L_(52) - 0.3
+prog = [F, C, G, Am]
+for i, (t, k) in enumerate(steps(a, b, 60 / 4, 1)):
+    ch = prog[i % 4]; M(inst_pad([NOTE(n + 12) for n in ch], 4 + 1.5, att=1.5), t, 0.35 + 0.05 * i); M(inst_piano(NOTE(ch[0] - 12), 3.5), t, 0.35)
+for t, k in steps(a, b, 60, 2): M(inst_piano(NOTE([72, 76, 79, 76][k % 4]), 1.4, 0.5), t, 0.18)
+# 11) canção de ninar — só caixinha de música + pad bem baixo (L52–58)
+a, b = L_(52) - 0.2, L_(59) - 0.8
+lull = [76, 79, 81, 79, 76, 74, 72, 74, 76, 76, 74, 72, 74, 76, 72, 72]
+for t, k in steps(a, b, 92, 1): M(inst_box(NOTE(lull[k % len(lull)] + 12), 1.6), t, 0.26)
+M(inst_pad([NOTE(n) for n in [48, 55, 64]], b - a + 1, att=3.0, rel=3.0), a, 0.3)
+# 12) zero: silêncio. 13) acordou / caderno — pad de suspense + subida (L61–64)
+a, b = L_(61) - 0.1, L_(65) - 0.3
+M(inst_pad([NOTE(n) for n in [52, 59, 64]], b - a + 1, att=1.5), a, 0.4)
+for t, k in steps(a, b, 70, 1): M(inst_piano(NOTE([64, 67, 71, 72][k % 4] + 12), 1.4, 0.4), t, 0.15)
+M(riser(2.5), L_(64) - 0.5, 0.3)
+# 14) final — esperança: piano + cordas + bateria suave crescendo (L65–fim)
+a, b = L_(65) - 0.2, TOTAL
+prog = [F, G, C, Am]
+for i, (t, k) in enumerate(steps(a, b, 70 / 4, 1)):
+    ch = prog[i % 4]; M(inst_pad([NOTE(n + 12) for n in ch], 60 / 70 * 4 + 1.5, att=0.8), t, 0.45); M(inst_bass(NOTE(ch[0] - 12), 1.5), t, 0.4)
+for t, k in steps(a, b, 70, 2):
+    ch = prog[(k // 8) % 4]
+    M(inst_piano(NOTE(ch[[0, 1, 2, 1][k % 4]] + 12), 1.5, 0.7), t, 0.25)
+    if t > L_(66) - 0.3:
+        if k % 8 == 0: M(dr_kick(), t, 0.4)
+        if k % 8 == 4: M(dr_snare(), t, 0.18)
+        if k % 2 == 1: M(dr_hat(), t, 0.15)
 
 # ------------------------------------------------------------------ efeitos
 sfx = np.zeros(N)
@@ -153,8 +253,5 @@ m = subprocess.run(["ffmpeg", "-hide_banner", "-i", "mix_raw.wav", "-af", "loudn
 gain = -14 - float(json.loads(m[m.rindex("{"): m.rindex("}") + 1])["input_i"])
 subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", "mix_raw.wav", "-af", f"volume={gain:.2f}dB,alimiter=limit=0.891:level=false", "-ar", "48000", "-ac", "2", "mix.wav"], check=True)
 print(f"ganho {gain:+.2f} dB -> mix.wav")
-if os.path.isdir("frames") and len(os.listdir("frames")) > 10:
-    subprocess.run(["ffmpeg", "-y", "-v", "error", "-framerate", "24", "-i", "frames/%05d.jpg", "-i", "mix.wav", "-map", "0:v", "-map", "1:a",
-                    "-c:v", "libx264", "-crf", "18", "-preset", "medium", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-shortest",
-                    "-movflags", "+faststart", "/home/user/neo_mais_novo.mp4"], check=True)
-    print("video -> /home/user/neo_mais_novo.mp4")
+subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", "/home/user/neo_mais_novo.mp4", "-i", "mix.wav", "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", "/home/user/neo_mais_novo_v2.mp4"], check=True)
+print("video -> /home/user/neo_mais_novo_v2.mp4")
