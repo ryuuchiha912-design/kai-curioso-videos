@@ -10,7 +10,7 @@ import type { Pose } from "./Character";
  */
 export type ToonExpr = "neutral" | "smile" | "happy" | "surprised" | "worried" | "smug" | "sad";
 export type ToonFace = { expr: ToonExpr; blink?: number; look?: [number, number]; mouthOpen?: number; blush?: boolean; sweat?: boolean; eyes?: "dot" | "big"; iris?: string; lid?: number };
-export type ToonKind = "kai" | "bia" | "ren" | "nico" | "general";
+export type ToonKind = "kai" | "bia" | "ren" | "nico" | "general" | "extra";
 
 const INK = "#1d1512";
 const q = (v: number, s = 6) => Math.round(v * s) / s;
@@ -104,10 +104,14 @@ export function toonFaceTexture(st: ToonFace) {
   });
 }
 
-const LOOK: Record<ToonKind, { skin: string; hoodie: string; hoodie2: string; pants: string; shoe: string; sole: string; hair: string }> = {
+export type ToonLook = { skin: string; hoodie: string; hoodie2: string; pants: string; shoe: string; sole: string; hair: string };
+/** Visual de figurante (kind "extra"): cabelo, bigode, óculos, gravata, boné de ciclista. */
+export type ToonStyle = { hair?: "short" | "bald" | "cap" | "bun" | "curly"; cap?: string; mustache?: boolean; glasses?: boolean; tie?: string };
+const LOOK: Record<ToonKind, ToonLook> = {
   kai: { skin: "#f7dcc6", hoodie: "#24356a", hoodie2: "#1a2650", pants: "#262a36", shoe: "#2b2b33", sole: "#f07a1a", hair: "#16161c" },
   bia: { skin: "#f1c7a0", hoodie: "#2fa59a", hoodie2: "#23857c", pants: "#3a3f6b", shoe: "#f4f1ea", sole: "#e04b3c", hair: "#4a2a1a" },
   ren: { skin: "#f6e2d4", hoodie: "#1b1b21", hoodie2: "#232329", pants: "#2a2d38", shoe: "#1c1c22", sole: "#ececf0", hair: "#121216" },
+  extra: { skin: "#f1c7a0", hoodie: "#555b66", hoodie2: "#4a4f58", pants: "#2e3440", shoe: "#2b2b2b", sole: "#1b1b1f", hair: "#2a211c" },
   general: { skin: "#f1c7a0", hoodie: "#5d6b3a", hoodie2: "#4e5a30", pants: "#4a5530", shoe: "#4a3020", sole: "#2a1a10", hair: "#3a2a1e" },
   nico: { skin: "#f8e4d6", hoodie: "#f1f1f4", hoodie2: "#dedee6", pants: "#2b2e3a", shoe: "#f4f4f6", sole: "#16161a", hair: "#141418" },
 };
@@ -294,6 +298,36 @@ const GeneralCap: React.FC = () => (
   </group>
 );
 
+/** Cabelos/acessórios de figurante. */
+const ExtraHair: React.FC<{ c: string; st: ToonStyle }> = ({ c, st }) => (
+  <group>
+    {st.hair !== "bald" && st.hair !== "curly" && (
+      <mesh position={[0, 0.03, -0.02]} rotation={[-0.45, 0, 0]} castShadow>
+        <sphereGeometry args={[HEAD_R * 1.06, 40, 24, 0, Math.PI * 2, 0, Math.PI * 0.42]} />
+        {mat(c, 0.6)}
+      </mesh>
+    )}
+    {st.hair === "bald" && [-1, 1].map((k) => (
+      <mesh key={k} position={[k * HEAD_R * 0.86, 0.02, -0.12]} scale={[0.5, 0.8, 1]}><sphereGeometry args={[0.14, 14, 10]} />{mat(c, 0.6)}</mesh>
+    ))}
+    {st.hair === "curly" && Array.from({ length: 12 }, (_, i) => {
+      const a = (i / 12) * Math.PI * 2;
+      return <mesh key={i} position={[Math.cos(a) * 0.24, 0.28 + Math.sin(i * 1.7) * 0.03, Math.sin(a) * 0.24 - 0.04]}><sphereGeometry args={[0.12, 14, 10]} />{mat(c, 0.7)}</mesh>;
+    })}
+    {st.hair === "bun" && <mesh position={[0, HEAD_R + 0.06, -0.12]}><sphereGeometry args={[0.12, 20, 16]} />{mat(c, 0.6)}</mesh>}
+    {st.hair === "cap" && (
+      <group>
+        <mesh position={[0, 0.06, -0.02]} rotation={[-0.35, 0, 0]}><sphereGeometry args={[HEAD_R * 1.08, 32, 20, 0, Math.PI * 2, 0, Math.PI * 0.42]} />{mat(st.cap ?? "#f2f2f2", 0.6)}</mesh>
+        <mesh position={[0, 0.2, 0.3]} rotation={[0.4, 0, 0]} scale={[1, 0.15, 0.55]}><sphereGeometry args={[0.2, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2]} />{mat(st.cap ?? "#f2f2f2", 0.5)}</mesh>
+      </group>
+    )}
+    {st.mustache && <mesh position={[0, -0.09, HEAD_R * 0.97]} scale={[1.6, 0.45, 0.5]}><sphereGeometry args={[0.06, 14, 10]} />{mat(c, 0.6)}</mesh>}
+    {st.glasses && [-1, 1].map((k) => (
+      <mesh key={k} position={[k * 0.12, 0.0, HEAD_R * 0.95]}><torusGeometry args={[0.075, 0.012, 8, 24]} />{mat("#2a2a30", 0.4)}</mesh>
+    ))}
+  </group>
+);
+
 const BiaHair: React.FC<{ c: string }> = ({ c }) => (
   <group>
     <mesh position={[0, 0.02, -0.015]} rotation={[-0.5, 0, 0]} castShadow>
@@ -333,10 +367,10 @@ const ToonFacePatch: React.FC<{ state: ToonFace }> = ({ state }) => {
   );
 };
 
-export type ToonProps = { kind: ToonKind; pose?: Pose; face: ToonFace; holdR?: React.ReactNode; holdL?: React.ReactNode; position?: [number, number, number]; rotationY?: number; scale?: number };
+export type ToonProps = { kind: ToonKind; pose?: Pose; face: ToonFace; holdR?: React.ReactNode; holdL?: React.ReactNode; position?: [number, number, number]; rotationY?: number; scale?: number; look?: Partial<ToonLook>; style?: ToonStyle };
 
-export const Toon: React.FC<ToonProps> = ({ kind, pose = {}, face, holdR, holdL, position = [0, 0, 0], rotationY = 0, scale = 1 }) => {
-  const L = LOOK[kind];
+export const Toon: React.FC<ToonProps> = ({ kind, pose = {}, face, holdR, holdL, position = [0, 0, 0], rotationY = 0, scale = 1, look, style = {} }) => {
+  const L = { ...LOOK[kind], ...(look ?? {}) };
   const armL = pose.armL ?? [0, 0, -0.15];
   const armR = pose.armR ?? [0, 0, 0.15];
   const head = pose.head ?? [0, 0, 0];
@@ -375,7 +409,7 @@ export const Toon: React.FC<ToonProps> = ({ kind, pose = {}, face, holdR, holdL,
               {mat(L.hoodie2, 0.75)}
             </mesh>
             {/* bolso canguru */}
-            {kind !== "ren" && kind !== "nico" && kind !== "general" && (
+            {kind !== "ren" && kind !== "nico" && kind !== "general" && kind !== "extra" && (
               <mesh position={[0, 0.86, 0.17]} scale={[1, 0.5, 0.25]}>
                 <sphereGeometry args={[0.13, 20, 12]} />
                 {mat(L.hoodie2, 0.75)}
@@ -388,6 +422,13 @@ export const Toon: React.FC<ToonProps> = ({ kind, pose = {}, face, holdR, holdL,
                   <torusGeometry args={[0.12, 0.022, 10, 28]} />
                   {mat("#111114", 0.7)}
                 </mesh>
+              </group>
+            ) : kind === "extra" ? (
+              <group>
+                {style.tie ? <>
+                  <mesh position={[0, 1.27, 0.03]} rotation={[Math.PI / 2 - 0.2, 0, 0]}><torusGeometry args={[0.11, 0.03, 8, 24]} />{mat("#f4f4f6", 0.6)}</mesh>
+                  <mesh position={[0, 1.13, 0.2]} rotation={[0.1, 0, 0]}><boxGeometry args={[0.06, 0.24, 0.02]} />{mat(style.tie, 0.5)}</mesh>
+                </> : <mesh position={[0, 1.27, 0.0]} rotation={[Math.PI / 2 - 0.15, 0, 0]}><torusGeometry args={[0.12, 0.022, 10, 28]} />{mat(L.hoodie2, 0.7)}</mesh>}
               </group>
             ) : kind === "general" ? (
               <group>
@@ -477,7 +518,7 @@ export const Toon: React.FC<ToonProps> = ({ kind, pose = {}, face, holdR, holdL,
                     {mat(L.skin, 0.5)}
                   </mesh>
                 ))}
-                {kind === "kai" ? <KaiHair c={L.hair} /> : kind === "ren" ? <RenHair c={L.hair} /> : kind === "nico" ? <NicoHair c={L.hair} /> : kind === "general" ? <GeneralCap /> : <BiaHair c={L.hair} />}
+                {kind === "kai" ? <KaiHair c={L.hair} /> : kind === "ren" ? <RenHair c={L.hair} /> : kind === "nico" ? <NicoHair c={L.hair} /> : kind === "general" ? <GeneralCap /> : kind === "extra" ? <ExtraHair c={L.hair} st={style} /> : <BiaHair c={L.hair} />}
               </group>
             </group>
           </group>

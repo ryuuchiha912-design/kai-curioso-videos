@@ -82,9 +82,14 @@ def march(a, b, vel=1.0, bpm=132):
         put(music, noise(0.03, r=0.01), t + beat / 4, 0.12 * vel)
         t += beat / 2; k += 1
 march(0.0, MEET)
-put(music, mx(tone(NOTE(43), END - MEET, "saw", a=0.3, r=99) * 0.3, tone(NOTE(44), END - MEET, "saw", a=0.5, r=99) * 0.2), MEET, 0.5)
+# tensão só na reunião (suave, sem zumbido), e a marcha volta na cena das corridas de hoje
+TENS_END = LS[12] - 0.15
+tens = mx(tone(NOTE(55), TENS_END - MEET, a=0.6, r=99), tone(NOTE(50), TENS_END - MEET, a=0.8, r=99) * 0.7)
+n = len(tens); tens *= np.clip(np.arange(n) / (0.6 * SR), 0, 1) * np.clip((n - np.arange(n)) / (0.6 * SR), 0, 1)
+put(music, tens, MEET, 0.35)
 t = MEET
-while t < END - 0.3: put(music, tone(NOTE(31), 0.4, r=0.2), t, 0.7); t += 0.8
+while t < TENS_END - 0.4: put(music, tone(NOTE(38), 0.35, r=0.15), t, 0.45); t += 0.9
+march(TENS_END, END, 0.9, 132)
 march(END, TOTAL, 0.8, 120)
 for a, b in ((MEET - 0.25, MEET),):
     i0, i1 = int(a * SR), int(b * SR); music[i0:i1] *= np.linspace(1, 0.2, i1 - i0)

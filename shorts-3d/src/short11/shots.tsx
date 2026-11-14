@@ -6,7 +6,7 @@ import { Pose } from "../kit/Character";
 import { Toon, ToonExpr, ToonFace } from "../kit/Toon";
 import { blinkAt, FPS, kf, kf3, pop } from "../kit/anim";
 import { Stamp, nicoFace } from "../short8/shots";
-import { LIGHT_ROOM, LIGHT_VELO, LyingBike, LyingRider, MeetingRoom, Paper, RecordBoard, Stopwatch, UprightRider, Velodrome, Wind } from "./cena";
+import { LIGHT_ROOM, LIGHT_VELO, LyingBike, LyingRider, MeetingRoom, OFFICIALS, Paper, RecordBoard, RIDERS, Stopwatch, UprightRider, Velodrome, Wind } from "./cena";
 
 /** Short (inglês) "This bike was so fast they BANNED it" — canal Nico Explains, tudo em 3D. */
 export type Shot = { name: string; from: number; to: number; render: (f: number, s: number, e: number) => React.ReactNode; overlay?: (f: number) => React.ReactNode };
@@ -42,7 +42,7 @@ export const SHOTS: Shot[] = [
       return (
         <Velo f={f} cam={glide(f, s, e, { pos: [1.6, 0.55, z + 3.2], target: [0.3, 0.55, z], fov: 42 }, { pos: [1.3, 0.7, z + 2.4], target: [0.3, 0.6, z], fov: 40, roll: 0.05 })}>
           <LyingRider p={[0.3, 0, z]} f={f} speed={0.8} face={nicoFace(f, [[s, "smug"]], { blush: false })} />
-          <UprightRider p={[1.5, 0, z - 3.5 + (f - s) * 0.02]} f={f} face={ff(f, "surprised", 3, { sweat: true })} c="#3e9b4a" speed={0.6} />
+          <UprightRider p={[1.5, 0, z - 3.5 + (f - s) * 0.02]} f={f} v={3} face={ff(f, "surprised", 3, { sweat: true })} c="#3e9b4a" speed={0.6} />
           <group position={[0, 0, z]}><Wind f={f} speed={0.14} y0={0.2} y1={1.0} x={0.3} /></group>
         </Velo>
       );
@@ -60,7 +60,7 @@ export const SHOTS: Shot[] = [
       return (
         <Velo f={f} cam={glide(f, s, e, { pos: [3.0, 2.6, 4.0], target: [-1, 1.2, -4], fov: 44 }, { pos: [2.2, 1.4, z + 4.6], target: [0.2, 0.7, z], fov: 40 })}>
           <LyingRider p={[0.3, 0, z]} f={f} speed={0.3} face={nicoFace(f, [[s, "smile"]])} />
-          {[0, 1, 2].map((i) => <UprightRider key={i} p={[1.6 + (i % 2) * 0.9, 0, -2.5 - i * 1.6]} f={f + i * 7} face={ff(f, i === 1 ? "surprised" : "neutral", i + 2)} c={["#c62a2a", "#e0b13a", "#3e9b4a"][i]} speed={0.25} />)}
+          {[0, 1, 2].map((i) => <UprightRider key={i} v={i} p={[1.6 + (i % 2) * 0.9, 0, -2.5 - i * 1.6]} f={f + i * 7} face={ff(f, i === 1 ? "surprised" : "neutral", i + 2)} c={["#c62a2a", "#e0b13a", "#3e9b4a"][i]} speed={0.25} />)}
         </Velo>
       );
     },
@@ -92,7 +92,7 @@ export const SHOTS: Shot[] = [
     name: "04 plateia ri", from: C(42), to: C(45),
     render: (f, s, e) => (
       <Velo f={f} laugh cam={glide(f, s, e, { pos: [-1.5, 2.6, 3.5], target: [-5.6, 2.3, 0], fov: 40 }, { pos: [-2.0, 2.7, 2.8], target: [-5.8, 2.4, 0], fov: 38, roll: -0.03 })}>
-        <Toon kind="general" position={[-4.0, 0.0, 1.0]} rotationY={1.2} face={ff(f, "happy", 4)} pose={{ bob: Math.abs(Math.sin(f * 0.8)) * 0.05, head: [-0.2, 0, Math.sin(f * 0.8) * 0.15], lean: -0.1, armL: [-0.4, 0, -0.6], armR: [-0.4, 0, 0.6] }} />
+        <Toon kind="extra" look={RIDERS[5].look} style={{ hair: "short", mustache: true }} position={[-4.0, 0.0, 1.0]} rotationY={1.2} face={ff(f, "happy", 4)} pose={{ bob: Math.abs(Math.sin(f * 0.8)) * 0.05, head: [-0.2, 0, Math.sin(f * 0.8) * 0.15], lean: -0.1, armL: [-0.4, 0, -0.6], armR: [-0.4, 0, 0.6] }} />
       </Velo>
     ),
     overlay: (f) => <Stamp f={f} at={W(44) - 2} text="HAHAHA" box={false} size={150} y={0.1} rot={-6} />,
@@ -106,8 +106,8 @@ export const SHOTS: Shot[] = [
       return (
         <Velo f={f} cam={{ pos: [3.6, 1.3, base + 3.4], target: [0.8, 0.7, base - 0.2], fov: 42 }}>
           <LyingRider p={[0.3, 0, nz]} f={f} speed={0.8} face={nicoFace(f, [[s, "smug"], [W(48), "happy"]])} />
-          <UprightRider p={[1.5, 0, base]} f={f} face={ff(f, "worried", 3, { sweat: true })} c="#c62a2a" speed={0.7} />
-          <UprightRider p={[2.5, 0, base - 1.2]} f={f + 5} face={ff(f, "surprised", 5, { sweat: true })} c="#e0b13a" speed={0.7} />
+          <UprightRider p={[1.5, 0, base]} f={f} v={1} face={ff(f, "worried", 3, { sweat: true })} c="#c62a2a" speed={0.7} />
+          <UprightRider p={[2.5, 0, base - 1.2]} f={f + 5} v={2} face={ff(f, "surprised", 5, { sweat: true })} c="#e0b13a" speed={0.7} />
           <group position={[0, 0, base]}><Wind f={f} speed={0.16} y0={0.2} y1={1.6} x={1.4} /></group>
         </Velo>
       );
@@ -125,7 +125,7 @@ export const SHOTS: Shot[] = [
       return (
         <Velo f={f} bg="#bfe3f5" cam={glide(f, s, e, { pos: [0.9, 1.0, z + 4.2], target: [0.9, 0.7, z], fov: 40 }, { pos: [0.9, 1.1, z + 3.5], target: [0.9, 0.7, z], fov: 40 })}>
           <LyingRider p={[0.3, 0, z]} f={f} speed={0.5} face={nicoFace(f, [[s, "smile"]])} />
-          <UprightRider p={[1.5, 0, z]} f={f} face={ff(f, "worried", 3, { sweat: true })} c="#c62a2a" speed={0.5} />
+          <UprightRider p={[1.5, 0, z]} f={f} v={0} face={ff(f, "worried", 3, { sweat: true })} c="#c62a2a" speed={0.5} />
           <group position={[0, 0, z]}>
             <Wind f={f} n={10} speed={0.12} y0={0.15} y1={0.75} x={0.3} />
             <Wind f={f + 20} n={22} speed={0.12} y0={0.3} y1={2.0} x={1.5} />
@@ -180,7 +180,7 @@ export const SHOTS: Shot[] = [
       <Stage flat background="#c9b48a" lights={LIGHT_ROOM} cam={glide(f, s, e, { pos: [0, 2.4, 3.4], target: [0, 1.2, -0.6], fov: 42 }, { pos: [0, 2.2, 1.0], target: [0, 1.0, -0.5], fov: 38 })} fg={
         <Cel>
           <MeetingRoom />
-          {[-1.1, 0, 1.1].map((x, i) => <Toon key={i} kind="general" position={[x, 0, -1.6]} face={ff(f, i === 1 ? "smug" : "neutral", i + 6)} pose={{ ...idle(f, i), armL: [-0.6, 0, -0.2], armR: [-0.6, 0, 0.2] }} />)}
+          {[-1.1, 0, 1.1].map((x, i) => <Toon key={i} kind="extra" look={OFFICIALS[i].look} style={OFFICIALS[i].style} position={[x, 0, -1.6]} rotationY={-x * 0.15} face={ff(f, (["worried", "smug", "neutral"] as const)[i], i + 6)} pose={{ ...idle(f, i), armL: [-0.6, 0, -0.2], armR: [-0.6, 0, i === 1 ? 0.2 + kf(f, [[W(119) - 6, 0], [W(119), 0.9]]) : 0.2] }} />)}
           <Paper p={[0, 1.01, -0.4]} stamp={kf(f, [[W(122) - 3, 0], [W(122) + 2, 1]])} />
         </Cel>
       } />
@@ -205,7 +205,7 @@ export const SHOTS: Shot[] = [
       const base = (f - s) * 0.14;
       return (
         <Velo f={f} modern bg="#bfe3f5" cam={glide(f, s, e, { pos: [3.4, 1.6, base + 4.0], target: [0.8, 0.8, base], fov: 42 }, { pos: [3.0, 1.4, base + 3.2], target: [0.8, 0.8, base], fov: 40 })}>
-          {[0, 1, 2, 3, 4].map((i) => <UprightRider key={i} p={[0.4 + (i % 2) * 0.9, 0, base - i * 1.3]} f={f + i * 4} face={ff(f, "neutral", i + 2)} c={["#1b1b1f", "#e0312a", "#2c6fb6", "#f2b636", "#3e9b4a"][i]} speed={0.7} />)}
+          {[0, 1, 2, 3, 4].map((i) => <UprightRider key={i} v={i + 1} p={[0.4 + (i % 2) * 0.9, 0, base - i * 1.3]} f={f + i * 4} face={ff(f, "neutral", i + 2)} c={["#1b1b1f", "#e0312a", "#2c6fb6", "#f2b636", "#3e9b4a"][i]} speed={0.7} />)}
           <group position={[3.6, 0, base + 0.6]}>
             <Toon kind="nico" position={[0, 0, 0]} rotationY={-1.2} face={nicoFace(f, [[s, "sad"]])} pose={{ ...idle(f), head: [0.15, 0, 0] }} />
           </group>

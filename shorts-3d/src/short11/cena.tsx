@@ -2,7 +2,7 @@ import React from "react";
 import * as THREE from "three";
 import { Box } from "../kit/props";
 import { Lights } from "../kit/Stage";
-import { Toon, ToonFace } from "../kit/Toon";
+import { Toon, ToonFace, ToonLook, ToonStyle } from "../kit/Toon";
 import type { Pose } from "../kit/Character";
 import { canvasTexture, FONT, fontReady } from "../kit/textures";
 import { rand } from "../kit/anim";
@@ -74,14 +74,31 @@ export const LyingBike: React.FC<{ spin: number; c?: string }> = ({ spin, c = "#
   );
 };
 
+/** Ciclistas diferentes: pele, cabelo/boné, bigode, camisa. */
+export const RIDERS: { look: Partial<ToonLook>; style: ToonStyle }[] = [
+  { look: { skin: "#f1c7a0", hoodie: "#c62a2a", hoodie2: "#a82222", pants: "#1b1b1f", hair: "#2a211c" }, style: { hair: "cap", cap: "#ffffff" } },
+  { look: { skin: "#c88f66", hoodie: "#2c6fb6", hoodie2: "#245c98", pants: "#1b1b1f", hair: "#1b1716" }, style: { hair: "short", mustache: true } },
+  { look: { skin: "#f5d2b0", hoodie: "#f2b636", hoodie2: "#d99e26", pants: "#2e3440", hair: "#b5651d" }, style: { hair: "curly" } },
+  { look: { skin: "#e8b98f", hoodie: "#3e9b4a", hoodie2: "#33803d", pants: "#1b1b1f", hair: "#5a3a22" }, style: { hair: "cap", cap: "#1b1b1f", mustache: true } },
+  { look: { skin: "#9a6a48", hoodie: "#7a4cc8", hoodie2: "#653ea8", pants: "#2e3440", hair: "#141418" }, style: { hair: "short" } },
+  { look: { skin: "#f1c7a0", hoodie: "#f4f4f6", hoodie2: "#d8d8de", pants: "#1b1b1f", hair: "#d9b45a" }, style: { hair: "bald", mustache: true } },
+];
+/** Dirigentes da federação (1934): de terno, cada um de um jeito. */
+export const OFFICIALS: { look: Partial<ToonLook>; style: ToonStyle }[] = [
+  { look: { skin: "#f1c7a0", hoodie: "#4a4f58", hoodie2: "#3a3f48", pants: "#2e3440", hair: "#8e8a86" }, style: { hair: "bald", mustache: true, glasses: true, tie: "#c62a2a" } },
+  { look: { skin: "#e8b98f", hoodie: "#2f3b57", hoodie2: "#26304a", pants: "#1f2638", hair: "#b8b2ac" }, style: { hair: "short", tie: "#e0b13a" } },
+  { look: { skin: "#c88f66", hoodie: "#6b5b4b", hoodie2: "#5a4a3a", pants: "#3a2e24", hair: "#1b1716" }, style: { hair: "short", mustache: true, tie: "#2c6fb6" } },
+];
+
 /** Ciclista sentado normal (pedalando). */
-export const UprightRider: React.FC<{ p: V3; ry?: number; f: number; kind?: "nico" | "bia" | "general"; face: ToonFace; c?: string; speed?: number }> = ({ p, ry = 0, f, kind = "bia", face, c, speed = 0.4 }) => {
+export const UprightRider: React.FC<{ p: V3; ry?: number; f: number; v?: number; face: ToonFace; c?: string; speed?: number }> = ({ p, ry = 0, f, v = 0, face, c, speed = 0.4 }) => {
+  const R = RIDERS[v % RIDERS.length];
   const a = f * speed;
   const pose: Pose = { lean: 0.7, legL: -0.7 + Math.sin(a) * 0.45, legR: -0.7 - Math.sin(a) * 0.45, armL: [-1.25, 0, -0.08], armR: [-1.25, 0, 0.08], head: [-0.45, 0, 0], bob: Math.abs(Math.sin(a)) * 0.01 };
   return (
     <group position={p} rotation={[0, ry, 0]}>
       <RoadBike spin={a} c={c} />
-      <Toon kind={kind} position={[0, 0.24, -0.2]} face={face} pose={pose} scale={0.95} />
+      <Toon kind="extra" look={R.look} style={R.style} position={[0, 0.24, -0.2]} face={face} pose={pose} scale={0.95} />
     </group>
   );
 };
