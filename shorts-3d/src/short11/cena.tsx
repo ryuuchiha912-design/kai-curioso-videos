@@ -76,10 +76,10 @@ export const LyingBike: React.FC<{ spin: number; c?: string }> = ({ spin, c = "#
 
 /** Ciclistas diferentes: pele, cabelo/boné, bigode, camisa. */
 export const RIDERS: { look: Partial<ToonLook>; style: ToonStyle }[] = [
-  { look: { skin: "#f1c7a0", hoodie: "#c62a2a", hoodie2: "#a82222", pants: "#1b1b1f", hair: "#2a211c" }, style: { hair: "cap", cap: "#ffffff" } },
+  { look: { skin: "#f1c7a0", hoodie: "#c62a2a", hoodie2: "#a82222", pants: "#1b1b1f", hair: "#d9b45a" }, style: { hair: "short" } },
   { look: { skin: "#c88f66", hoodie: "#2c6fb6", hoodie2: "#245c98", pants: "#1b1b1f", hair: "#1b1716" }, style: { hair: "short", mustache: true } },
   { look: { skin: "#f5d2b0", hoodie: "#f2b636", hoodie2: "#d99e26", pants: "#2e3440", hair: "#b5651d" }, style: { hair: "curly" } },
-  { look: { skin: "#e8b98f", hoodie: "#3e9b4a", hoodie2: "#33803d", pants: "#1b1b1f", hair: "#5a3a22" }, style: { hair: "cap", cap: "#1b1b1f", mustache: true } },
+  { look: { skin: "#e8b98f", hoodie: "#3e9b4a", hoodie2: "#33803d", pants: "#1b1b1f", hair: "#5a3a22" }, style: { hair: "short", mustache: true } },
   { look: { skin: "#9a6a48", hoodie: "#7a4cc8", hoodie2: "#653ea8", pants: "#2e3440", hair: "#141418" }, style: { hair: "short" } },
   { look: { skin: "#f1c7a0", hoodie: "#f4f4f6", hoodie2: "#d8d8de", pants: "#1b1b1f", hair: "#d9b45a" }, style: { hair: "bald", mustache: true } },
 ];

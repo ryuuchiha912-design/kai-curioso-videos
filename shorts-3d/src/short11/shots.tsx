@@ -92,9 +92,9 @@ export const SHOTS: Shot[] = [
     name: "04 plateia ri", from: C(42), to: C(45),
     render: (f, s, e) => {
       const fans = [
-        { x: -2.4, z: -0.2, look: { skin: "#f1c7a0", hoodie: "#c62a2a", hoodie2: "#a82222", pants: "#2e3440", hair: "#2a211c" }, style: { hair: "cap" as const, cap: "#1b1b1f" } },
+        { x: -2.4, z: -0.2, look: { skin: "#f1c7a0", hoodie: "#c62a2a", hoodie2: "#a82222", pants: "#2e3440", hair: "#2a211c" }, style: { hair: "short" as const } },
         { x: -2.65, z: 0.45, look: { skin: "#c88f66", hoodie: "#f2b636", hoodie2: "#d99e26", pants: "#1b1b1f", hair: "#1b1716" }, style: { hair: "curly" as const } },
-        { x: -2.35, z: 1.1, look: { skin: "#f5d2b0", hoodie: "#2c6fb6", hoodie2: "#245c98", pants: "#2e3440", hair: "#5a3a22" }, style: { hair: "cap" as const, cap: "#3e9b4a" } },
+        { x: -2.35, z: 1.1, look: { skin: "#f5d2b0", hoodie: "#2c6fb6", hoodie2: "#245c98", pants: "#2e3440", hair: "#5a3a22" }, style: { hair: "bald" as const, mustache: true } },
       ];
       return (
         <Velo f={f} laugh cam={glide(f, s, e, { pos: [1.6, 1.75, 0.45], target: [-2.45, 1.35, 0.45], fov: 48 }, { pos: [1.2, 1.8, 0.45], target: [-2.45, 1.4, 0.45], fov: 46, roll: -0.03 })}>

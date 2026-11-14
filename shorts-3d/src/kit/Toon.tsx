@@ -312,7 +312,7 @@ const ShortHair: React.FC<{ c: string }> = ({ c }) => (
 );
 const ExtraHair: React.FC<{ c: string; st: ToonStyle }> = ({ c, st }) => (
   <group>
-    {(st.hair === "short" || st.hair === "cap" || st.hair === "bun" || !st.hair) && <ShortHair c={c} />}
+    {(st.hair === "short" || st.hair === "bun" || !st.hair) && <ShortHair c={c} />}
     {st.hair === "bald" && [-1, 1].map((k) => (
       <mesh key={k} position={[k * HEAD_R * 0.9, 0.0, -0.1]} scale={[0.45, 0.75, 1]}><sphereGeometry args={[0.14, 14, 10]} />{mat(c, 0.6)}</mesh>
     ))}
@@ -323,10 +323,22 @@ const ExtraHair: React.FC<{ c: string; st: ToonStyle }> = ({ c, st }) => (
     {st.hair === "curly" && <mesh position={[0, 0.3, -0.06]}><sphereGeometry args={[0.24, 18, 14]} />{mat(c, 0.7)}</mesh>}
     {st.hair === "bun" && <mesh position={[0, HEAD_R + 0.06, -0.12]}><sphereGeometry args={[0.12, 20, 16]} />{mat(c, 0.6)}</mesh>}
     {st.hair === "cap" && (
-      /* boné de ciclista dos anos 30: copa baixa e aba curta, por cima do cabelo */
-      <group position={[0, 0.27, 0.02]} rotation={[-0.25, 0, 0]}>
-        <mesh scale={[1, 0.42, 1]}><sphereGeometry args={[0.27, 28, 16, 0, Math.PI * 2, 0, Math.PI / 2]} />{mat(st.cap ?? "#f2f2f2", 0.6)}</mesh>
-        <mesh position={[0, 0.0, 0.25]} rotation={[0.15, 0, 0]} scale={[1, 0.12, 0.55]}><sphereGeometry args={[0.2, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2]} />{mat(st.cap ?? "#f2f2f2", 0.5)}</mesh>
+      /* boné de pano dos anos 30: cobre o topo da cabeça como um gorro justo, aba curta na frente; cabelo aparecendo nos lados */
+      <group>
+        {[-1, 1].map((k) => <Strand key={k} az={k * 1.3} el={0.22} w={0.08} h={0.22} t={0.02} c={c} R={HEAD_R * 1.03} hug={0.6} />)}
+        {[-1, -0.5, 0, 0.5, 1].map((k, i) => <Strand key={"n" + i} az={Math.PI + k * 0.9} el={0.15} w={0.11} h={0.16} t={0.02} c={c} R={HEAD_R * 1.03} hug={0.7} />)}
+        <mesh position={[0, 0.03, -0.02]} rotation={[-0.4, 0, 0]} castShadow>
+          <sphereGeometry args={[HEAD_R * 1.09, 40, 24, 0, Math.PI * 2, 0, Math.PI * 0.4]} />
+          {mat(st.cap ?? "#f2f2f2", 0.65)}
+        </mesh>
+        <mesh position={[0, 0.03, -0.02]} rotation={[-0.4, 0, 0]}>
+          <torusGeometry args={[HEAD_R * 1.09 * Math.sin(Math.PI * 0.4), 0.018, 8, 40]} />
+          {mat("#1b1b1f", 0.6)}
+        </mesh>
+        <mesh position={[0, 0.2, 0.31]} rotation={[0.55, 0, 0]} scale={[1, 0.1, 0.5]}>
+          <sphereGeometry args={[0.2, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2]} />
+          {mat(st.cap ?? "#f2f2f2", 0.5)}
+        </mesh>
       </group>
     )}
     {st.mustache && <mesh position={[0, -0.085, HEAD_R * 0.98]} scale={[1.5, 0.4, 0.45]}><sphereGeometry args={[0.06, 14, 10]} />{mat(c === "#d9b45a" ? "#8a6a3a" : c, 0.6)}</mesh>}
