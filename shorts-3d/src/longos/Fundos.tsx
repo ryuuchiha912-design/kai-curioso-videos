@@ -17,7 +17,7 @@ type V3 = [number, number, number];
 export type FundoId =
   | "banheiro" | "quarto" | "quartoNoite" | "sala" | "escritorio" | "banco" | "mercado" | "consultorio"
   | "infancia" | "infanciaNoite" | "maeSala" | "maeSalaNoite" | "maeCozinha" | "escola" | "rua" | "ruaTarde"
-  | "restaurante" | "loja" | "hospital" | "hospitalQuarto";
+  | "restaurante" | "loja" | "hospital" | "hospitalQuarto" | "velorio" | "metro" | "ruaCidade";
 
 // ------------------------------------------------------------------ texturas
 const tx = (t: THREE.Texture, rx: number, ry: number) => {
@@ -262,25 +262,58 @@ const SETS: Record<FundoId, { cam?: { pos: V3; target: V3; fov?: number }; night
       <group position={[-3.4, 0, -2.2]}><Box s={[0.7, 0.5, 0.4]} p={[0, 1.2, 0]} c="#1a2330" /><Box s={[0.6, 0.38, 0.41]} p={[0, 1.2, 0.003]} c="#1f3a2a" e="#3cc46a" ei={0.3} /><Box s={[0.08, 1.0, 0.08]} p={[0, 0.5, 0]} c="#9aa3ad" /></group>
       <Chair p={[-0.2, 0, -1.2]} c="#3f86cf" ry={-0.5} /><Plant p={[-4.8, 0, -1.6]} s={0.9} />
     </Room>) },
+  velorio: { bg: "#efe6da", scene: () => (
+    <Room wall="#e9dccb" wall2="#dccdb8" wallTex={tx(stripesV("#ebdfcf", "#e3d5c2"), 6, 1)} floor={tx(planks("#9a6a42"), 6, 4)} ceil="#f4efe6">
+      <Box s={[3.2, 2.6, 0.05]} p={[0, 1.6, -2.55]} c="#c9b28e" />
+      <Box s={[0.12, 1.8, 0.05]} p={[0, 2.0, -2.5]} c="#f4efe6" /><Box s={[0.9, 0.12, 0.05]} p={[0, 2.5, -2.5]} c="#f4efe6" />
+      <group position={[0, 0, -1.9]}><Box s={[2.4, 0.75, 0.8]} p={[0, 0.375, 0]} c="#6b4426" /><Box s={[2.5, 0.06, 0.9]} p={[0, 0.78, 0]} c="#f4f1ea" />
+        {[-0.9, -0.45, 0, 0.45, 0.9].map((x, i) => <mesh key={i} position={[x, 0.95, 0]} castShadow><sphereGeometry args={[0.2, 14, 10]} /><M c={["#ffffff", "#f2d2dc", "#ffffff", "#f6e7a8", "#ffffff"][i]} /></mesh>)}
+      </group>
+      {[-2.3, 2.3].map((x, i) => <group key={i} position={[x, 0, -2.1]}><Box s={[0.06, 1.3, 0.06]} p={[0, 0.65, 0]} c="#3a2a1a" /><mesh position={[0, 1.5, 0]} castShadow><torusGeometry args={[0.42, 0.14, 12, 24]} /><M c={i ? "#f2d2dc" : "#ffffff"} /></mesh><Box s={[0.5, 0.06, 0.02]} p={[0, 1.5, 0.12]} c="#7a2e3a" /></group>)}
+      {[-1.4, 1.4].map((x, i) => <group key={i} position={[x, 0, -1.6]}><Box s={[0.12, 0.9, 0.12]} p={[0, 0.45, 0]} c="#d8c39a" /><Box s={[0.08, 0.26, 0.08]} p={[0, 1.03, 0]} c="#fbf6ee" /><mesh position={[0, 1.22, 0]}><sphereGeometry args={[0.05, 10, 8]} /><meshStandardMaterial color="#ffd27a" emissive="#ffb340" emissiveIntensity={1.4} /></mesh></group>)}
+      {[-4.3, -3.5, 3.5, 4.3].map((x, i) => [-0.6, 0.4].map((z) => <Chair key={`${i}${z}`} p={[x, 0, z]} c="#4a3a2e" ry={x < 0 ? Math.PI / 2 : -Math.PI / 2} />))}
+      <Plant p={[-4.9, 0, -2.0]} s={1.0} /><Plant p={[4.9, 0, -2.0]} s={1.0} />
+    </Room>) },
+  metro: { bg: "#dfe6ea", cam: { pos: [0, 1.5, 4.2], target: [0, 1.3, 0], fov: 46 }, scene: () => (
+    <group>
+      <mesh position={[0, 1.6, -1.6]}><planeGeometry args={[14, 3.2]} /><M c="#dfe6ea" /></mesh>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 1]} receiveShadow><planeGeometry args={[14, 7]} /><M c="#8a919c" map={tx(tiles("#8e96a2", "#7c838e"), 10, 5)} /></mesh>
+      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 2.9, 1]}><planeGeometry args={[14, 7]} /><M c="#f4f6f8" /></mesh>
+      {[-4.2, -1.4, 1.4, 4.2].map((x, i) => <group key={i}><Box s={[2.2, 0.85, 0.04]} p={[x, 1.75, -1.57]} c="#1d2a3e" e="#2a3c5a" ei={0.4} /><Box s={[2.3, 0.06, 0.06]} p={[x, 2.2, -1.55]} c="#b8c0ca" /></group>)}
+      {[-6.5, -3.4, 0.5, 3.4, 6.5].map((x, i) => <Box key={i} s={[0.4, 0.06, 0.05]} p={[x, 1.8, -1.56]} c="#f6e7a8" e="#f6e7a8" ei={0.8} />)}
+      <Box s={[14, 0.45, 0.6]} p={[0, 0.45, -1.25]} c="#3f86cf" /><Box s={[14, 0.5, 0.12]} p={[0, 0.95, -1.5]} c="#3a76b8" />
+      {[-5, -2.5, 0, 2.5, 5].map((x, i) => <Box key={i} s={[0.06, 2.9, 0.06]} p={[x, 1.45, 0.2]} c="#c4ccd6" />)}
+      <Box s={[14, 0.05, 0.05]} p={[0, 2.55, 0.2]} c="#c4ccd6" />
+      {Array.from({ length: 14 }).map((_, i) => <group key={i} position={[-6.5 + i, 2.35, 0.2]}><Box s={[0.03, 0.3, 0.03]} p={[0, 0.05, 0]} c="#9aa3ad" /><mesh position={[0, -0.14, 0]}><torusGeometry args={[0.08, 0.02, 8, 16]} /><M c="#f2b636" /></mesh></group>)}
+      <Box s={[14, 0.18, 0.04]} p={[0, 2.75, -1.55]} c="#f2b636" />
+      {Array.from({ length: 6 }).map((_, i) => <mesh key={i} position={[-5 + i * 2, 2.88, 0.6]}><boxGeometry args={[1.2, 0.03, 0.25]} /><meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={0.7} /></mesh>)}
+    </group>) },
   rua: { bg: "#a9dcff", scene: () => <Rua /> },
+  ruaCidade: { bg: "#a9dcff", scene: () => <Rua cidade /> },
   ruaTarde: { bg: "#f6b585", scene: () => <Rua tarde /> },
 };
 
-const Rua: React.FC<{ tarde?: boolean }> = ({ tarde }) => (
+const Rua: React.FC<{ tarde?: boolean; cidade?: boolean }> = ({ tarde, cidade }) => (
   <group>
     <mesh position={[0, 6, -14]}><planeGeometry args={[80, 20]} /><meshBasicMaterial color={tarde ? "#f3a874" : "#a9dcff"} /></mesh>
     {tarde && <mesh position={[6, 2.8, -13.9]}><circleGeometry args={[1.2, 32]} /><meshBasicMaterial color="#ffe0a0" /></mesh>}
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, -2]} receiveShadow><planeGeometry args={[60, 30]} /><M c="#8a8f99" /></mesh>
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 1.2]} receiveShadow><planeGeometry args={[60, 3.4]} /><M c="#c9c2b4" map={tx(tiles("#cfc8ba", "#b3ab9c"), 24, 2)} /></mesh>
-    {/* escola */}
-    <group position={[0, 0, -4.5]}>
+    {cidade && <group position={[0, 0, -4.5]}>
+      {[["#f0b27a", "PADARIA", "#c62a2a"], ["#9fc7e8", "", "#2c6fb6"], ["#c9e3b0", "FARMÁCIA", "#2e9e5b"]].map(([c, t, sc], i) => <group key={i} position={[(i - 1) * 4.4, 0, 0]}>
+        <Box s={[4.2, 4.6, 1]} p={[0, 2.3, -0.5]} c={c} /><Box s={[4.4, 0.25, 1.2]} p={[0, 4.65, -0.4]} c="#8a5a33" />
+        {[-1.2, 1.2].map((x) => <Box key={x} s={[1.0, 0.9, 0.06]} p={[x, 3.3, 0.02]} c="#bfe3f5" />)}
+        {t ? <><Box s={[2.6, 1.3, 0.06]} p={[0.4, 1.1, 0.02]} c="#bfe3f5" /><Box s={[0.9, 2.0, 0.06]} p={[-1.4, 1.0, 0.03]} c="#6b4426" /><Sign text={t} p={[0, 2.2, 0.08]} w={2.4} h={0.5} bg={sc} fg="#ffffff" /><Box s={[3.6, 0.12, 0.7]} p={[0, 1.95, 0.35]} c={sc} /></> : <><Box s={[1.1, 2.1, 0.06]} p={[0, 1.05, 0.03]} c="#7a4a2a" /><Box s={[1.0, 0.9, 0.06]} p={[-1.4, 1.4, 0.02]} c="#bfe3f5" /><Box s={[1.0, 0.9, 0.06]} p={[1.4, 1.4, 0.02]} c="#bfe3f5" /></>}
+      </group>)}
+    </group>}
+    {!cidade && <group position={[0, 0, -4.5]}>
       <Box s={[9, 4.2, 1]} p={[0, 2.1, -0.5]} c={tarde ? "#e8a070" : "#f0b27a"} /><Box s={[9.4, 0.3, 1.3]} p={[0, 4.3, -0.4]} c="#b5523b" />
       {[-3.3, -1.7, 1.7, 3.3].map((x, i) => [1.4, 3.0].map((y) => <Box key={`${i}${y}`} s={[1.0, 0.9, 0.06]} p={[x, y, 0.02]} c="#bfe3f5" />))}
       <Box s={[1.6, 2.2, 0.06]} p={[0, 1.1, 0.02]} c="#6b4426" /><Sign text="ESCOLA" p={[0, 2.9, 0.08]} w={2.4} h={0.6} bg="#2c6fb6" fg="#ffffff" />
-    </group>
+    </group>}
     {/* grade */}
-    {Array.from({ length: 23 }).map((_, i) => <Box key={i} s={[0.06, 1.6, 0.06]} p={[-6.6 + i * 0.6, 0.8, -1.4]} c="#3a3f4b" />)}
-    <Box s={[14, 0.08, 0.08]} p={[0, 1.55, -1.4]} c="#3a3f4b" /><Box s={[14, 0.08, 0.08]} p={[0, 0.3, -1.4]} c="#3a3f4b" />
+    {!cidade && Array.from({ length: 23 }).map((_, i) => <Box key={i} s={[0.06, 1.6, 0.06]} p={[-6.6 + i * 0.6, 0.8, -1.4]} c="#3a3f4b" />)}
+    {!cidade && <><Box s={[14, 0.08, 0.08]} p={[0, 1.55, -1.4]} c="#3a3f4b" /><Box s={[14, 0.08, 0.08]} p={[0, 0.3, -1.4]} c="#3a3f4b" /></>}
     {[[-7.5, -3], [7.5, -3.5], [-9.5, -6]].map(([x, z], i) => <group key={i} position={[x, 0, z]}><Box s={[0.3, 2.2, 0.3]} p={[0, 1.1, 0]} c="#8a5a33" /><mesh position={[0, 2.8, 0]} castShadow><sphereGeometry args={[1.3, 18, 14]} /><M c={tarde ? "#6a8a3a" : "#5fae58"} /></mesh></group>)}
     {[-10, 10].map((x, i) => <Box key={i} s={[4, 7, 3]} p={[x, 3.5, -8]} c={["#c3a6ff", "#8fd0c9"][i]} />)}
   </group>
@@ -291,7 +324,7 @@ const CAM_DEF = { pos: [0, 1.55, 5.4] as V3, target: [0, 1.25, 0] as V3, fov: 38
 /** Um fundo 3D parado (para virar imagem). */
 export const Fundo: React.FC<{ set: FundoId }> = ({ set }) => {
   const S = SETS[set];
-  const outdoor = set === "rua" || set === "ruaTarde";
+  const outdoor = set === "rua" || set === "ruaTarde" || set === "ruaCidade";
   const L = S.night ? <Lights warm="#9fb4ff" sky="#3a4a8a" key={1.0} keyPos={[3, 6, 5]} /> : set === "ruaTarde" ? <Lights warm="#ffc27a" sky="#ffd9b0" key={2.3} keyPos={[6, 5, 5]} /> : <Lights warm="#fff1d6" sky="#e6f2ff" key={outdoor ? 2.4 : 2.0} keyPos={[-3, 6, 6]} />;
   return (
     <AbsoluteFill style={{ background: S.bg }}>

@@ -1,0 +1,428 @@
+// ================= LONGO 3 — "E se a sua FELICIDADE dobrasse todo dia?" =================
+BG_NAMES.push('velorio', 'metro', 'ruaCidade');
+for (const n of ['velorio', 'metro', 'ruaCidade']) { const im = document.createElement('img'); im.src = 'bg/' + n + '.png'; im.style.cssText = 'position:absolute;left:-192px;top:-108px;width:2304px;height:1296px;display:none;filter:blur(1.1px) saturate(1.12)'; BGI.appendChild(im); BGIMG[n] = im; }
+const DAVI = xt({ skin: '#8A5A3A', shirt: '#E0B13A', hair: 'afro', hairCol: '#1B1716', iris: '#4A2E1A' });
+const AVO = xt({ skin: '#EAC3A0', shirt: '#8E5A9A', inner: '#F4EAD8', stripe: '#6E3A7A', hair: 'bun', hairCol: '#E6E2EA', old: true, specs: '#B58A4A', iris: '#6A4A3A', skirt: '#4A3A5A', pants: '#EAC3A0', legX: 30 });
+const CAIXA2 = xt({ skin: '#C88F66', shirt: '#3E9B4A', apron: '#E04B3C', hair: 'curly', hairCol: '#2A1C14', iris: '#5A3A22', earring: '#F2B636', skirt: '#2E3442', pants: '#C88F66' });
+const APRES = xt({ skin: '#F1C7A0', shirt: '#7A2E3A', tie: '#F2B636', hair: 'side', hairCol: '#2A211C', iris: '#3A4A6A', legX: 70 });
+const LUCIA_P = Object.assign({}, LUCIA, { shirt: '#2A2A33', stripe: '#1A1A20', inner: '#3A3A44' });
+const LUTO1 = xt({ skin: '#D9A47A', shirt: '#22222A', hair: 'wavy', hairCol: '#2A1C14', iris: '#5A3A22', skirt: '#22222A', pants: '#D9A47A' });
+const LUTO2 = xt({ skin: '#F1C7A0', shirt: '#22222A', hair: 'buzz', hairCol: '#5A5048', iris: '#3A4A6A', old: true });
+const LUTO3 = xt({ skin: '#C88F66', shirt: '#2A2A36', hair: 'pony', hairCol: '#1B1716', iris: '#4A3A2A', earring: '#C4C4CC' });
+const AGE = 25;
+const NEO25 = (o) => NEOp(AGE, o);
+const wg = (L, re, n = 0) => { const ws = TL.lines[L].words; let c = 0; for (const w of ws) if (re.test(w.text.toLowerCase())) { if (c === n) return w.start; c++; } return TL.lines[L].start; };
+const at = (L, re, n = 0, pre = 0.25) => wg(L, re, n) - TL.lines[L].start - pre;   // tempo local da palavra
+// ---------- medidor de felicidade
+const FE = [];
+const setF = (L, re, v, n = 0) => FE.push({ t: wg(L, re, n), v });
+const setL = (L, v) => FE.push({ t: TL.lines[L].start, v });
+setF(0, /^cem/, 100); setF(3, /duzentos/, 200); setF(6, /quatrocentos/, 400); setF(9, /oitocentos/, 800); setF(10, /^mil/, 1600); setF(13, /^três/, 3200);
+setF(18, /^seis/, 6400); setL(22, 12800); setL(26, 25600); setF(28, /cinquenta/, 51200); setL(31, 102400); setL(36, 204800); setF(47, /quatrocentos/, 409600);
+setF(51, /^cem/, 100000); setF(51, /^dez/, 10000); setF(51, /^mil/, 1000); setF(51, /^cem/, 100, 1); setF(52, /zero/, 0);
+setF(61, /risada/, 30); setF(64, /oitenta/, 80); setF(64, /trinta/, 30); setF(65, /feliz/, 100);
+FE.sort((a, b) => a.t - b.t);
+function felAt(T) {
+  let prev = 100, cur = null;
+  for (const e of FE) { if (e.t > T) break; prev = cur === null ? e.v : cur; cur = e.v; }
+  if (cur === null) return 0;
+  const last = [...FE].reverse().find(e => e.t <= T), k = eout(prog(T, last.t, last.t + 0.7));
+  if (prev > 0 && cur > 0) return prev * Math.pow(cur / prev, k);
+  return lerp(prev, cur, k);
+}
+const fmt = (v) => Math.round(v).toLocaleString('pt-BR') + '%';
+const felCol = (v) => v <= 100 ? '#2E9E5B' : v <= 1600 ? '#E8A21A' : v <= 25600 ? '#FF6A1A' : '#E0245E';
+const DAYS = [[2, '1'], [3, '2'], [6, '3'], [9, '4'], [10, '5'], [13, '6'], [18, '7'], [22, '8'], [26, '9'], [28, '10'], [31, '11'], [36, '12'], [47, '13'], [56, '14'], [64, 'HOJE']];
+function dayLbl(T) { let d = ''; for (const [L, v] of DAYS) if (T >= TL.lines[L].start - 0.15) d = v; return d; }
+function meterPill(x, y, v, t, label = 'FELICIDADE', col = null) {
+  const c = col || felCol(v), f = clamp(v / 100), big = v > 100 ? Math.min(1, Math.log10(v / 100) / 3.6) : 0;
+  const sh = v >= 102400 ? [Math.sin(t * 53) * 3, Math.cos(t * 47) * 3] : [0, 0];
+  const glow = big > 0 ? R(-6, -6, 532, 86, 32, c, 0, `opacity="${0.25 + 0.25 * Math.sin(t * 8)}"`) : '';
+  return G(`translate(${x + sh[0]},${y + sh[1]})`, glow + R(0, 0, 520, 74, 26, '#1A1210', 6) + (f > 0 ? R(7, 7, Math.max(40, 506 * f), 60, 20, c, 0) : '') + T(260, 49, `${label} ${fmt(v)}`, v >= 100000 ? 34 : 38, '#FFFFFF', 8));
+}
+let LASTF = null;
+function levelHud(i, t) {
+  if (i < 2 || i > 68) return '';
+  const d = dayLbl(t), v = felAt(t);
+  let g = '';
+  if (d) g += G('translate(70,62)', R(0, 0, d === 'HOJE' ? 190 : 210, 74, 26, '#1A1210', 6) + T(d === 'HOJE' ? 95 : 105, 49, d === 'HOJE' ? 'HOJE' : `DIA ${d}`, 44, '#FFFFFF'));
+  const last = [...FE].reverse().find(e => e.t <= t), k = last ? 1 + 0.18 * (1 - prog(t, last.t, last.t + 0.45)) : 1;
+  g += G(`translate(${d ? 296 : 70},62)`, G(`translate(260,37) scale(${k}) translate(-260,-37)`, meterPill(0, 0, v, t)));
+  if (i === 68 && t > wg(68, /saudade/) - 0.1) g += G(`translate(296,150) scale(${pop1(t, wg(68, /saudade/) - 0.1)})`, meterPill(0, 0, 100, t, 'SAUDADE', '#3F86CF'));
+  return g;
+}
+// ---------- objetos 2D
+function meterBig(x, y, s, v, t, label = 'FELICIDADE', col = null) {
+  const c = col || felCol(v);
+  return G(`translate(${x},${y}) scale(${s})`, R(-420, -110, 840, 220, 50, '#1A1210', 9) + R(-404, -94, 808 * clamp(v / 100) || 0, 188, 40, c, 0) + T(0, -26, label, 44, '#FFFFFF', 8) + T(0, 64, fmt(v), 92, '#FFE14D', 12));
+}
+function confetti(t, n = 30, seed = 5) { let g = ''; const r = rng(seed); const cols = ['#FFE14D', '#FF6B9A', '#7FE3FF', '#7BE38A', '#FF9A3A']; for (let i = 0; i < n; i++) { const x = r() * 1920, sp = 140 + r() * 180, y = ((r() * 1300 + t * sp) % 1300) - 150, a = t * 200 * (r() - 0.5) + i * 40; g += G(`translate(${x + Math.sin(t * 2 + i) * 30},${y}) rotate(${a})`, R(-12, -6, 24, 12, 3, cols[i % 5], 0)); } return g; }
+function haha(t, x, y, n = 4, col = '#FFE14D') { let g = ''; for (let i = 0; i < n; i++) { const k = ((t * 0.5 + i / n) % 1); g += G(`translate(${x + Math.sin(i * 2.3) * 160 + (i % 2 ? 60 : -60)},${y - k * 260}) rotate(${i % 2 ? 8 : -8}) scale(${0.7 + 0.4 * Math.sin(k * 3)})`, `<g opacity="${1 - k}">` + T(0, 0, 'HA', 60, col, 10) + '</g>'); } return g; }
+function car(x, y, s, col, flip = 1, drv = null) { let g = R(-260, -90, 520, 110, 40, col, 7) + P('M-170,-90 L-120,-170 L110,-170 L170,-90Z', col, 7) + P('M-150,-96 L-110,-158 L-10,-158 L-10,-96Z', '#BFE3F5', 5) + P('M10,-96 L10,-158 L100,-158 L150,-96Z', '#BFE3F5', 5) + C(-160, 22, 46, '#2A2A33', 7) + C(160, 22, 46, '#2A2A33', 7) + C(-160, 22, 18, '#9AA3AD', 0) + C(160, 22, 18, '#9AA3AD', 0) + E(240, -40, 18, 12, '#FFE9A0', 4); if (drv) g += G('translate(60,-110) scale(0.26)', drv); return G(`translate(${x},${y}) scale(${s * flip},${s})`, g); }
+function gum(x, y, s) { return G(`translate(${x},${y}) scale(${s})`, P('M-40,0 Q-30,-30 0,-24 Q36,-34 44,0 Q20,14 0,8 Q-20,16 -40,0Z', '#FF8FC0', 6) + P('M0,-24 Q6,-80 2,-120', 'none', 5) + C(2, -124, 8, '#FF8FC0', 4)); }
+function wallet(x, y, s, open = 0) { return G(`translate(${x},${y}) scale(${s}) rotate(-8)`, R(-90, -60, 180, 120, 16, '#7A4A2A', 7) + Ln(-90, 0, 90, 0, '#5A3418', 6) + R(-40, -86 - open * 40, 80, 44, 6, '#7BC67E', 4)); }
+function studioTv(t) { return rays(t, '#3A1F6A', '#C2577A') + G('translate(1560,150)', R(-120, -40, 240, 80, 20, '#E0245E', 6) + C(-80, 0, 12, '#FFFFFF', 0) + T(20, 14, 'AO VIVO', 36, '#FFFFFF')); }
+function viralPhone(x, y, s, t, at0) { const v = Math.floor(1000000 * clamp(Math.pow(prog(t, at0, at0 + 2.4), 2.2))); return G(`translate(${x},${y}) scale(${s})`, R(-170, -320, 340, 640, 44, '#1A1A20', 8) + R(-150, -290, 300, 580, 26, '#F4F6FA', 0) + R(-150, -290, 300, 230, 26, '#2C3E66', 0) + G('translate(0,-170) scale(0.5)', head(Object.assign(neoAt(AGE), { hs: 1, expr: 'laugh' }))) + C(0, -175, 40, 'rgba(255,255,255,0.0)', 0) + T(0, 0, 'HOMEM RI SEM PARAR', 24, '#1A1210') + T(0, 40, 'NO METRÔ', 24, '#1A1210') + R(-130, 90, 260, 70, 20, '#E0245E', 0) + T(0, 136, v.toLocaleString('pt-BR'), 34, '#FFFFFF') + T(0, 190, 'visualizações', 22, '#5A6070') + heart(-90, 250, 0.35, '#E0245E') + heart(0, 250, 0.35, '#E0245E') + heart(90, 250, 0.35, '#E0245E')); }
+function callScreen(x, y, s, name, t, ring = 1, sub = 'chamando…') { const sh = ring ? Math.sin(t * 40) * 5 : 0; return G(`translate(${x + sh},${y}) scale(${s})`, R(-160, -300, 320, 600, 44, '#1A1A20', 8) + R(-142, -272, 284, 544, 26, '#2C3550', 0) + C(0, -120, 70, '#F4F1EA', 0) + T(0, -100, name[0], 70, '#2C3550') + T(0, 10, name, 46, '#FFFFFF') + T(0, 56, sub, 26, '#BFC8DA') + C(-70, 190, 40, '#4CAF50', 0) + C(70, 190, 40, '#E04B3C', 0)); }
+function frameAvo(x, y, s, expr = 'happy') { return G(`translate(${x},${y}) scale(${s})`, R(-150, -180, 300, 360, 14, '#8A5A33', 9) + R(-120, -150, 240, 300, 6, '#F4E6D2', 0) + clipG('<rect x="-120" y="-150" width="240" height="300"/>', G('translate(0,-10) scale(0.62)', head(Object.assign({}, AVO, { hs: 1, expr, blink: false })))) + P('M-150,-180 L-90,-180 L-150,-120Z', '#22222A', 0)); }
+function searchPhone(x, y, s, t, at0) { const q = 'como ficar triste', n = Math.floor(clamp((t - at0) / 1.6) * q.length); return G(`translate(${x},${y}) scale(${s})`, R(-170, -320, 340, 640, 44, '#1A1A20', 8) + R(-150, -290, 300, 580, 26, '#F4F6FA', 0) + R(-130, -250, 260, 64, 32, '#FFFFFF', 5) + T(0, -208, q.slice(0, n) + (Math.sin(t * 8) > 0 ? '|' : ''), 26, '#1A1210') + (n >= q.length ? [0, 1, 2].map(i => R(-130, -150 + i * 90, 260, 70, 12, '#E6EAF2', 0) + Ln(-110, -125 + i * 90, 80, -125 + i * 90, '#9AA6B8', 6)).join('') : '')); }
+function pizza(x, y, s) { let g = C(0, 0, 150, '#E8B66A', 8) + C(0, 0, 124, '#F2B636', 0); const r = rng(9); for (let i = 0; i < 9; i++) g += C((r() - 0.5) * 180, (r() - 0.5) * 180, 18, '#C62A2A', 4); for (let i = 0; i < 4; i++) g += Ln(0, 0, Math.cos(i * 0.785) * 150, Math.sin(i * 0.785) * 150, 'rgba(120,70,30,0.5)', 4); return G(`translate(${x},${y}) scale(${s},${s * 0.45})`, g); }
+function polaAvo(x, y, s, rot) { return G(`translate(${x},${y}) rotate(${rot}) scale(${s})`, R(-170, -200, 340, 400, 10, '#FFFFFF', 7) + R(-150, -180, 300, 290, 4, '#E8C9A0', 0) + clipG('<rect x="-150" y="-180" width="300" height="290"/>', sepia(G('translate(0,-30) scale(0.55)', person(Object.assign({}, AVO, { x: 0, y: 400, s: 1, old: false, specs: null, hairCol: '#3A2418', expr: 'happy', hl: [-200, -420], hr: [180, -300] }))))) + T(0, 160, '1978', 40, '#5A4A3A')); }
+function wallKnock(x, y, t, a0) { if (t < a0) return ''; const k = ((t - a0) * 2.2) % 1; return G(`translate(${x},${y}) scale(${1 + 0.2 * (1 - k)})`, star(0, 0, 90, 56, 10, '#FFE14D') + T(0, 12, 'TUM!', 42, '#C62A2A')); }
+function bicycle(x, y, s) { return G(`translate(${x},${y}) scale(${s})`, C(-90, 0, 60, 'none', 8) + C(90, 0, 60, 'none', 8) + P('M-90,0 L-20,-90 L60,-90 L90,0 M-20,-90 L0,0 L60,-90 M-30,-110 L-5,-110 M60,-90 L50,-130 L80,-130', 'none', 8)); }
+function candies(x, y, s) { return G(`translate(${x},${y}) scale(${s})`, candy(-50, 0, 0.9, '#E04B3C') + candy(40, 20, 0.9, '#F2B636') + candy(10, -40, 0.9, '#3F86CF')); }
+const crySide = (x, y, t, s = 1) => tears(x, y, t, s);
+const NEOS = (o) => NEO25(Object.assign({ s: 0.92 }, o));
+
+const S = [];
+// 0 — gancho: acorda sorrindo; aparece o número
+S[0] = (t, d) => { const aC = at(0, /^cem/, 0, 0.4);
+  let g = lying(Object.assign(neoAt(AGE), { hs: 1, expr: t < 1.4 ? 'sleep' : 'happy' }), 1560, 760, 0.55);
+  if (t > aC) g += meterBig(820, 460, pop1(t, aC) * 1.0, felAt(TL.lines[0].start + t), t) + sparkle(1210, 360, 1.2) + sparkle(440, 560, 0.9);
+  return sc('quarto', g, drift(t, d, [960, 540, 1.0], [900, 520, 1.12])); };
+// 1 — vai dobrar; "você vai implorar pra ficar triste"
+S[1] = (t, d) => { const aA = at(1, /amanhã/), aD = at(1, /depois/), aI = at(1, /implorar/, 0, 0.6);
+  let g = rays(t, '#3A1F6A', '#FF7A1A');
+  const v = t < aA ? 100 : t < aD ? lerp(100, 200, eout(prog(t, aA, aA + 0.6))) : t < aI ? lerp(200, 400, eout(prog(t, aD, aD + 0.6))) : 409600 * eout(prog(t, aI, aI + 1.2)) + 400;
+  g += meterBig(960, 330, 1.0, v, t);
+  if (t > aI) g += NEOS({ x: 960, y: 1180, s: 0.9, expr: 'creepy', hl: [-150, -330], hr: [150, -330] }) + bigTxt(960, 620, pop1(t, aI + 0.4), 'VOCÊ VAI IMPLORAR', 'PRA FICAR TRISTE', '#FFFFFF', '#FFE14D', 56, 74);
+  return sc(null, g, drift(t, d, [960, 540, 1.0], [960, 540, 1.06])); };
+// 2 — dia 1: café, ônibus, assobio
+S[2] = (t, d) => { const aO = at(2, /ônibus/), aA = at(2, /assobia/);
+  let g = NEOS({ x: 760, y: FY, expr: 'happy', hr: t < aO ? [130, -330] : [150, -230], smile: true });
+  if (t < aO) g += mug(880, 560, 1.0, t) + sparkle(940, 470, 0.8);
+  else if (t < aA) g += busSide(1450, 900, 0.9, 'NA HORA ✓', '#F2B636');
+  else g += notes(t, 860, 420);
+  return sc(t < aO ? 'maeCozinha' : t < aA ? 'rua' : 'escritorio', g, drift(t, d, [960, 540, 1.0], [960, 520, 1.06])); };
+// 3 — dia 2: pisa no chiclete e ri
+S[3] = (t, d) => { const aE = at(3, /engraçado/);
+  let g = NEOS({ x: 900, y: FY, expr: t > aE ? 'laugh' : 'surprised', hl: [-160, -220], hr: [160, -220] }) + gum(1000, FY - 10, 1.0);
+  if (t > aE) g += haha(t, 900, 330, 3);
+  return sc('ruaCidade', g, drift(t, d, [960, 600, 1.12], [960, 560, 1.0])); };
+// 4 — o chefe grita; "que bom que o senhor é sincero!"
+S[4] = (t, d) => { const aR = at(4, /responde/, 0, 0.1);
+  let g = pp(CHEFE, { x: 1300, y: FY, s: 0.95, sx: -1, expr: 'angry', hr: [220, -360], hl: [-140, -200] }) + NEOS({ x: 620, y: FY, expr: 'happy', smile: true, lx: 1 });
+  if (t < aR + 0.2) g += say(1000, 150, 620, 'ISSO TÁ UM LIXO!!!', 52, 'right', '#FFFFFF', t, 0.3) + G(`translate(${1300 + Math.sin(t * 50) * 4},420)`, '');
+  if (t > aR) g += say(160, 150, 760, 'QUE BOM QUE O SENHOR É SINCERO!', 42, 'left', '#FFF6C8', t, aR);
+  return sc('escritorio', g, drift(t, d, [960, 540, 1.0], [960, 520, 1.06])); };
+// 5 — o chefe não sabe se demite ou dá aumento
+S[5] = (t, d) => { let g = pp(CHEFE, { x: 960, y: FY + 20, s: 1.0, expr: 'surprised', hl: [-120, -500], hr: [120, -500] });
+  g += badgeB(560, 330, pop1(t, 0.6), 'DEMITIR?', '#C62A2A', '#FFFFFF', 54, -5) + badgeB(1360, 330, pop1(t, 1.3), 'AUMENTO?', '#2E9E5B', '#FFFFFF', 54, 5);
+  return sc('escritorio', g, drift(t, d, [960, 520, 1.05], [960, 500, 1.15])); };
+// 6 — dia 3: trânsito parado, cantando junto
+S[6] = (t, d) => { const aJ = at(6, /junto/, 0, 0.6);
+  let g = car(620, 900, 1.25, '#3F86CF', 1, head(Object.assign(neoAt(AGE), { hs: 1, expr: 'laugh' }))) + notes(t, 600, 560);
+  g += car(1380, 940, 1.25, '#E04B3C', -1, head(Object.assign({}, xt({ skin: '#D9A47A', hair: 'buzz', hairCol: '#2A211C', stubble: true, iris: '#4A3A2A' }), { hs: 1, expr: t > aJ ? 'laugh' : 'sus' })));
+  if (t > aJ) g += notes(t + 0.5, 1360, 600);
+  return sc('ruaCidade', g, drift(t, d, [960, 560, 1.0], [960, 540, 1.08])); };
+// 7 — Provine: rimos até 30x mais acompanhados
+S[7] = (t, d) => { const aT = at(7, /trinta/, 0, 0.4), aP = at(7, /pega/, 0, 0.3);
+  let g = rays(t, '#1E2A5A', '#3C5A8A') + badgeB(960, 190, pop1(t, 1.2), 'ROBERT PROVINE · PESQUISADOR DO RISO', '#FFFFFF', '#1A1210', 38, -2);
+  g += G('translate(560,620)', C(0, -80, 60, '#E8E4F0', 6) + P('M-70,60 Q-70,-10 0,-10 Q70,-10 70,60Z', '#E8E4F0', 6) + T(0, 140, 'SOZINHO', 40, '#FFFFFF', 8) + T(0, 220, '1x', 70, '#FFE14D', 12));
+  if (t > aT) { for (let i = 0; i < 5; i++) g += G(`translate(${1180 + (i % 3) * 140 + (i > 2 ? 70 : 0)},${560 + (i > 2 ? 110 : 0)}) scale(0.8)`, C(0, -80, 60, '#FFB86B', 6) + P('M-70,60 Q-70,-10 0,-10 Q70,-10 70,60Z', '#FFB86B', 6)); g += G(`translate(1320,880) scale(${pop1(t, aT)})`, T(0, 0, 'ATÉ 30x MAIS', 70, '#FFE14D', 12)); }
+  if (t > aP) g += haha(t, 1320, 420, 4);
+  return sc(null, g, [960, 540, 1.0]); };
+// 8 — a sua risada pegando em todo mundo
+S[8] = (t, d) => { let g = '';
+  [[COLEGA1, 380], [COLEGA2, 640], [MOCA, 1280], [GERENTE, 1540]].forEach(([c, x], i) => { g += pp(c, { x, y: FY + 10, s: 0.82, sx: x > 960 ? -1 : 1, expr: t > 0.4 + i * 0.3 ? 'laugh' : 'neutral' }); });
+  g += NEOS({ x: 960, y: FY, s: 0.95, expr: 'laugh', hl: [-150, -330], hr: [150, -330] }) + haha(t, 960, 380, 6);
+  return sc('escritorio', g, drift(t, d, [960, 540, 1.08], [960, 540, 1.0])); };
+// 9 — dia 4: mercado, a moça do caixa, a fila inteira ri
+S[9] = (t, d) => { const aP = at(9, /piada/), aR = at(9, /ri\.?$/, 0, 0.2), aF = at(9, /inteira/, 0, 0.4);
+  let g = pp(CAIXA2, { x: 1300, y: FY, s: 0.92, sx: -1, expr: t > aR ? 'laugh' : 'tired' }) + NEOS({ x: 820, y: FY, expr: 'happy', smile: true, hr: [140, -330], lx: 1 });
+  if (t > aF) g += pp(LUTO2, { x: 330, y: FY + 20, s: 0.78, shirt: '#3E6A8A', expr: 'laugh' }) + pp(COLEGA2, { x: 520, y: FY + 30, s: 0.78, expr: 'laugh' }) + haha(t, 700, 360, 5);
+  if (t > aP && t < aR) g += say(380, 170, 560, 'SABE O QUE O PATO DISSE?', 38, 'left', '#FFF6C8', t, aP);
+  return sc('mercado', g, drift(t, d, [960, 540, 1.0], [960, 520, 1.06])); };
+// 10 — dia 5: festa no cérebro; sem preguiça, medo, sono
+S[10] = (t, d) => { const ks = [/preguiça/, /medo/, /sono/].map(r => at(10, r, 0, 0.3)), aF = at(10, /festa/);
+  let g = rays(t, '#5A1F6A', '#FF6B9A') + (t > aF ? confetti(t, 40) : '') + G(`translate(960,430) scale(${0.9 + 0.05 * Math.sin(t * 9)})`, brainIco(0, 0, 1.6));
+  if (t > aF) g += notes(t, 1100, 330) + notes(t + 0.4, 760, 360);
+  ['PREGUIÇA', 'MEDO', 'SONO'].forEach((l, i) => { const k = pop1(t, ks[i]); if (k > 0) g += G(`translate(${520 + i * 440},820) scale(${k})`, R(-180, -50, 360, 100, 30, '#FFFFFF', 7) + T(0, 16, l, 46, '#1A1210') + Ln(-160, 0, 160, 0, '#C62A2A', 12)); });
+  return sc(null, g, [960, 540, 1.0]); };
+// 11 — arruma a casa às 3 da manhã, cantando
+S[11] = (t, d) => { let g = NEOS({ x: 900 + Math.sin(t * 2) * 160, y: FY, expr: 'laugh', hl: [-180, -380 + Math.sin(t * 8) * 60], hr: [180, -300] }) + notes(t, 900 + Math.sin(t * 2) * 160, 380);
+  g += G('translate(1600,250)', clockBig(0, 0, 80, -Math.PI / 2 + 2.6, -Math.PI / 2) + T(0, 140, '03:00', 46, '#FFFFFF', 10));
+  return sc('quartoNoite', g, drift(t, d, [960, 540, 1.0], [960, 520, 1.06])); };
+// 12 — vizinho bate na parede; você bate no ritmo
+S[12] = (t, d) => { const aV = at(12, /volta/);
+  let g = wallKnock(380, 420, t, 0.4) + NEOS({ x: 1100, y: FY, expr: t > aV ? 'laugh' : 'surprised', hr: t > aV ? [150, -430 + Math.abs(Math.sin(t * 9)) * 80] : [150, -230], hl: [-150, -230] });
+  if (t > aV) g += wallKnock(1500, 420, t + 0.2, aV) + notes(t, 1200, 360);
+  return sc('quartoNoite', g, drift(t, d, [960, 540, 1.0], [1000, 540, 1.06])); };
+// 13 — dia 6: perde a carteira e acha hilário
+S[13] = (t, d) => { const aH = at(13, /hilário/);
+  let g = NEOS({ x: 900, y: FY, expr: t > aH ? 'laugh' : 'surprised', hl: [-160, -230], hr: [160, -230] }) + G(`translate(0,${Math.min(0, -300 + t * 260)})`, wallet(1300, FY - 30, 0.9));
+  g += badgeB(1300, 640, pop1(t, 1.6), 'CARTEIRA PERDIDA', '#C62A2A', '#FFFFFF', 40, 4);
+  if (t > aH) g += haha(t, 900, 330, 4);
+  return sc('ruaCidade', g, drift(t, d, [960, 540, 1.0], [940, 520, 1.08])); };
+// 14 — atravessa sem olhar; o carro freia; você agradece
+S[14] = (t, d) => { const aF = at(14, /freia/), aG = at(14, /grita/), aA = at(14, /agradece/);
+  const cx = t < aF ? 2400 - (t / aF) * 1000 : 1400;
+  let g = NEOS({ x: 820, y: FY, expr: t > aA ? 'happy' : t > aF ? 'surprised' : 'laugh', smile: t > aA, hr: t > aA ? [160, -400] : [160, -230], lx: 1 });
+  g += car(cx, 930, 1.3, '#E04B3C', -1, head(Object.assign({}, xt({ skin: '#F1C7A0', hair: 'side', hairCol: '#4A4A55', iris: '#3A4A6A' }), { hs: 1, expr: t > aG ? 'angry' : 'surprised' })));
+  if (t > aF && t < aF + 1.2) g += crash(1150, 600, t, aF, 'SCREEECH!');
+  if (t > aG) g += say(1050, 180, 560, 'TÁ MALUCO?!', 52, 'right', '#FFFFFF', t, aG);
+  if (t > aA) g += say(180, 180, 620, 'OBRIGADO PELA EMOÇÃO!', 42, 'left', '#FFF6C8', t, aA);
+  return sc('ruaCidade', g, [960, 540, 1.0]); };
+// 15 — pontinha de dúvida
+S[15] = (t, d) => { const aN = at(15, /normal/, 0, 0.5);
+  let g = NEOS({ x: 960, y: FY + 40, s: 1.0, expr: 'happy', smile: true }) + think(1120, 230, 620, 'SERÁ QUE ISSO É NORMAL?', 40, t, aN);
+  return sc('quartoNoite', g, drift(t, d, [960, 540, 1.0], [960, 480, 1.16])); };
+// 16 — o médico: exames perfeitos
+S[16] = (t, d) => { const aP = at(16, /perfeito/);
+  let g = pp(MEDICO, { x: 1300, y: FY, s: 0.95, sx: -1, expr: 'neutral', hr: [220, -330] }) + NEOS({ x: 640, y: FY, expr: 'happy', smile: true, lx: 1 }) + xray(1000, 400, 0.6, t);
+  if (t > aP) g += badgeB(1000, 160, pop1(t, aP), 'TUDO PERFEITO ✓', '#2E9E5B', '#FFFFFF', 48);
+  return sc('consultorio', g, drift(t, d, [960, 540, 1.0], [960, 520, 1.05])); };
+// 17 — "o problema não é o que você sente; é o que você não sente mais"
+S[17] = (t, d) => { const aP = at(17, /problema/), aN = at(17, /não/, 2, 0.3);
+  let g = pp(MEDICO, { x: 1250, y: FY, s: 1.0, sx: -1, expr: 'worried' }) + NEOS({ x: 640, y: FY, expr: 'happy', smile: true, lx: 1 });
+  g += say(860, 140, 900, 'O PROBLEMA NÃO É O QUE VOCÊ SENTE…', 38, 'right', '#FFFFFF', t, aP);
+  if (t > aN) g += say(860, 320, 900, '…É O QUE VOCÊ NÃO SENTE MAIS.', 42, 'right', '#FFE9F0', t, aN);
+  return sc('consultorio', g, drift(t, d, [960, 540, 1.0], [1060, 480, 1.16])); };
+// 18 — dia 7: rindo no metrô; alguém grava
+S[18] = (t, d) => { const aG = at(18, /grava/);
+  let g = pp(MOCA, { x: 1480, y: FY, s: 0.9, sx: -1, expr: 'sus', hr: t > aG ? [210, -420] : [150, -200] }) + pp(LUTO2, { x: 350, y: FY + 10, s: 0.85, shirt: '#5A6070', expr: 'tired' });
+  g += NEOS({ x: 860, y: FY, expr: 'laugh', hl: [-160, -260], hr: [170, -330] }) + haha(t, 860, 380, 4);
+  if (t > aG) g += G(`translate(1640,${430})`, R(-40, -70, 80, 140, 14, '#1A1A20', 5) + C(0, -40, 8, '#E0245E', 0, `opacity="${0.5 + 0.5 * Math.sin(t * 10)}"`)) + badgeB(1560, 260, pop1(t, aG), '● REC', '#E0245E', '#FFFFFF', 36);
+  return sc('metro', g, drift(t, d, [960, 540, 1.0], [980, 520, 1.06])); };
+// 19 — 1 milhão de views; o homem mais feliz do Brasil
+S[19] = (t, d) => { const aH = at(19, /homem/);
+  let g = rays(t, '#2C1A5A', '#E0245E') + viralPhone(620, 560, 1.15, t, 0.2);
+  g += bigTxt(1320, 500, pop1(t, aH), 'O HOMEM MAIS', 'FELIZ DO BRASIL', '#FFFFFF', '#FFE14D', 60, 76) + confetti(t, 20, 3);
+  return sc(null, g, [960, 540, 1.0]); };
+// 20 — TV, propaganda, palestra
+S[20] = (t, d) => { const aP = at(20, /propaganda/), aL = at(20, /palestra/), aS = at(20, /segredo/);
+  let g = studioTv(t) + pp(APRES, { x: 1350, y: FY, s: 0.95, sx: -1, expr: 'happy', hr: [220, -330] }) + NEOS({ x: 680, y: FY, expr: 'laugh', lx: 1, hl: [-160, -330] });
+  ['TV', 'PROPAGANDA', 'PALESTRA'].forEach((l, i) => { const k = pop1(t, [0.3, aP, aL][i]); if (k > 0) g += badgeB(400 + i * 520, 200, k, l, '#FFFFFF', '#1A1210', 44, i % 2 ? 4 : -4); });
+  if (t > aS) g += say(1000, 330, 600, 'QUAL É O SEGREDO?', 46, 'right', '#FFFFFF', t, aS);
+  return sc(null, g, [960, 540, 1.0]); };
+// 21 — "eu não sei. eu só acordo assim."
+S[21] = (t, d) => { const aE = at(21, /eu/, 0, 0.2);
+  let g = studioTv(t) + NEOS({ x: 960, y: FY + 60, s: 1.05, expr: 'happy', smile: true, hl: [-160, -200], hr: [160, -200] });
+  g += say(1100, 230, 640, 'EU NÃO SEI. EU SÓ ACORDO ASSIM.', 38, 'left', '#FFF6C8', t, aE);
+  return sc(null, g, drift(t, d, [960, 540, 1.0], [960, 470, 1.18])); };
+// 22 — dia 8: o Davi liga; foi demitido; voz tremendo
+S[22] = (t, d) => { const aD = at(22, /demitido/);
+  let g = NEOS({ x: 600, y: FY, expr: 'happy', smile: true, lx: 1 }) + callScreen(1300, 520, 0.9, 'DAVI', t, t < 1.0 ? 1 : 0, t < 1.0 ? 'chamando…' : 'em ligação');
+  if (t > aD) g += G('translate(1300,520)', G(`translate(${Math.sin(t * 60) * 3},0)`, sad3(0, 0)));
+  return sc('sala', g, [960, 540, 1.0]); };
+function sad3(x, y) { return G(`translate(${x},${y}) scale(0.5)`, head(Object.assign({}, DAVI, { hs: 1, expr: 'sad' }))) + tears(x, y - 10, TNOW, 0.5); }
+// 23 — "que demais! agora você tem tempo livre!"
+S[23] = (t, d) => { const aQ = at(23, /que/, 0, 0.1);
+  let g = NEOS({ x: 700, y: FY, expr: 'laugh', hl: [-170, -330], lx: 1 }) + say(900, 180, 820, 'QUE DEMAIS! AGORA VOCÊ TEM TEMPO LIVRE!', 38, 'right', '#FFF6C8', t, aQ);
+  return sc('sala', g, drift(t, d, [960, 540, 1.0], [880, 520, 1.1])); };
+// 24 — silêncio; ele desliga
+S[24] = (t, d) => { const aD = at(24, /desliga/);
+  let g = dark(0.55) + G(`translate(960,480) scale(${pop1(t, 0.1)})`, R(-260, -70, 520, 140, 40, '#1A1210', 7) + T(0, 18, t > aD ? 'CHAMADA ENCERRADA' : '…', 46, '#FFFFFF'));
+  g += G('translate(960,760) scale(1.5)', sad3(0, 0));
+  return sc('sala', g, [960, 540, 1.0]); };
+// 25 — você acha estranho, mas nada te deixa mal
+S[25] = (t, d) => { const aN = at(25, /nada/);
+  let g = NEOS({ x: 960, y: FY + 30, s: 1.0, expr: t > aN ? 'happy' : 'neutral', smile: t > aN }) + think(1100, 260, 520, 'ESTRANHO…', 46, t, 0.4);
+  if (t > aN) g += bigTxt(960, 230, pop1(t, aN), 'NADA CONSEGUE', 'TE DEIXAR MAL', '#FFFFFF', '#FFE14D', 56, 70);
+  return sc('quartoNoite', g, drift(t, d, [960, 540, 1.0], [960, 520, 1.08])); };
+// 26 — dia 9: a mãe liga: "você parece diferente"
+S[26] = (t, d) => { const aT = at(26, /televisão/), aD = at(26, /diferente/, 0, 0.6);
+  let g = pp(LUCIA, { x: 1380, y: FY, s: 0.92, sx: -1, expr: t > aD ? 'worried' : 'neutral' }) + tv2d(560, 560, 0.75, rays(t, '#3A1F6A', '#C2577A') + G('translate(0,150) scale(0.45)', head(Object.assign(neoAt(AGE), { hs: 1, expr: 'laugh' }))));
+  g += say(1000, 160, 760, t > aD ? 'VOCÊ TÁ BEM? VOCÊ PARECE… DIFERENTE.' : 'FILHO, EU TE VI NA TELEVISÃO.', 38, 'left', '#FFE9F0', t, t > aD ? aD : 0.4);
+  return sc('maeSala', g, drift(t, d, [960, 540, 1.0], [1060, 520, 1.08])); };
+// 27 — "nunca estive melhor!" e desliga
+S[27] = (t, d) => { const aD = at(27, /desliga/);
+  let g = NEOS({ x: 640, y: FY, expr: 'laugh', lx: 1 }) + say(840, 180, 600, 'NUNCA ESTIVE MELHOR, MÃE!', 42, 'right', '#FFF6C8', t, 0.2);
+  if (t > aD) g += G('translate(1380,560)', R(-200, -60, 400, 120, 30, '#1A1210', 6) + T(0, 16, 'CLIQUE.', 50, '#FFFFFF'));
+  return sc('sala', g, [960, 540, 1.0]); };
+// 28 — dia 10: 51.200%; você percebe uma coisa
+S[28] = (t, d) => { const aP = at(28, /percebe/);
+  let g = NEOS({ x: 960, y: FY + 30, s: 1.0, expr: t > aP ? 'surprised' : 'happy', smile: t <= aP }) + meterBig(960, 230, pop1(t, 0.3), felAt(TL.lines[28].start + t), t);
+  return sc('quarto', g, drift(t, d, [960, 540, 1.0], [960, 520, 1.1])); };
+// 29 — não sobra espaço: preocupação, saudade, tristeza
+S[29] = (t, d) => { const ks = [/preocupação/, /saudade/, /tristeza/].map(r => at(29, r, 0, 0.3));
+  let g = rays(t, '#2A2340', '#5A4A8A') + G('translate(960,420)', C(0, 0, 230, '#FFE14D', 10) + T(0, 30, 'FELICIDADE', 70, '#1A1210'));
+  ['PREOCUPAÇÃO', 'SAUDADE', 'TRISTEZA'].forEach((l, i) => { const k = pop1(t, ks[i]); if (k > 0) { const out = Math.min(1, (t - ks[i]) / 0.8); g += G(`translate(${480 + i * 480 + (i - 1) * out * 220},${820 + out * 160}) scale(${k}) rotate(${(i - 1) * out * 20})`, `<g opacity="${1 - out * 0.5}">` + R(-200, -50, 400, 100, 30, '#BFC8DA', 7) + T(0, 16, l, 40, '#3A3F4B') + '</g>'); } });
+  return sc(null, g, [960, 540, 1.0]); };
+// 30 — parece um presente… até precisar dela
+S[30] = (t, d) => { const aA = at(30, /até/, 0, 0.2);
+  let g = rays(t, '#2A2340', '#5A4A8A') + G(`translate(960,440) scale(${pop1(t, 0.2)})`, R(-170, -130, 340, 260, 20, '#E0245E', 9) + R(-30, -130, 60, 260, 0, '#FFE14D', 0) + R(-170, -30, 340, 60, 0, '#FFE14D', 0));
+  if (t > aA) g += dark(prog(t, aA, aA + 1.2) * 0.75) + bigTxt(960, 820, pop1(t, aA + 0.3), 'ATÉ O DIA EM QUE', 'VOCÊ PRECISA DELA', '#FFFFFF', '#FF8A8A', 54, 68);
+  return sc(null, g, [960, 540, 1.0]); };
+// 31 — dia 11: o celular toca; é a sua mãe
+S[31] = (t, d) => { const aM = at(31, /mãe/, 0, 0.3);
+  let g = NEOS({ x: 640, y: FY, expr: 'happy', smile: true, lx: 1 }) + callScreen(1300, 520, 0.95, 'MÃE', t, 1);
+  if (t > aM) g += heart(1300, 230, 0.8);
+  return sc('quarto', g, drift(t, d, [960, 540, 1.0], [1100, 520, 1.1])); };
+// 32 — a mãe chorando: "a sua avó… se foi"
+S[32] = (t, d) => { const aA = at(32, /avó/, 0, 0.3);
+  let g = pp(LUCIA, { x: 960, y: FY + 40, s: 1.0, expr: 'sad' }) + tears(960, 420, t, 1.0);
+  g += say(1150, 170, 640, t > aA ? 'A SUA AVÓ… ELA SE FOI.' : 'FILHO…', 44, 'left', '#FFE9F0', t, 0.6);
+  return sc('maeSalaNoite', g, drift(t, d, [960, 520, 1.05], [960, 480, 1.16])); };
+// 33 — e você… sorri
+S[33] = (t, d) => { let g = dark(0.35) + NEOS({ x: 960, y: FY + 380, s: 1.6, expr: t > 0.9 ? 'creepy' : 'neutral' }) + callScreen(1560, 560, 0.6, 'MÃE', t, 0, 'em ligação');
+  return sc('quartoNoite', g, drift(t, d, [960, 420, 1.0], [960, 380, 1.18])); };
+// 34 — você tenta parar; a boca não obedece; risadinha
+S[34] = (t, d) => { const aR = at(34, /risadinha/);
+  let g = NEOS({ x: 960, y: FY + 380, s: 1.6, expr: t > aR ? 'laugh' : 'creepy' }) + G('translate(0,0)', t > aR ? T(1260, 360, 'hihi…', 50, '#FFFFFF', 10) : '') + sweatLines(960, 380, t);
+  return sc('quartoNoite', g, drift(t, d, [960, 400, 1.15], [960, 400, 1.05])); };
+// 35 — "você tá rindo?"
+S[35] = (t, d) => { const aV = at(35, /você/, 0, 0.1);
+  let g = dark(0.25) + pp(LUCIA, { x: 960, y: FY + 40, s: 1.0, expr: 'surprised' }) + tears(960, 420, t * 0.4, 1.0);
+  g += say(1150, 200, 520, 'VOCÊ TÁ RINDO?', 50, 'left', '#FFE9F0', t, aV);
+  return sc('maeSalaNoite', g, drift(t, d, [960, 520, 1.05], [960, 440, 1.22])); };
+// 36 — dia 12: o velório
+S[36] = (t, d) => { let g = frameAvo(960, 330, 0.75) + G('translate(960,640) scale(0.9)', '');
+  return sc('velorio', g, drift(t, d, [960, 500, 1.15], [960, 540, 1.0])); };
+// 37 — todos chorando; você com o sorriso mais bonito da sala
+S[37] = (t, d) => { const aV = at(37, /você/, 0, 0.2);
+  let g = frameAvo(960, 300, 0.55);
+  [[LUTO1, 300], [LUTO2, 560], [LUCIA_P, 1400], [LUTO3, 1660]].forEach(([c, x]) => { g += pp(c, { x, y: FY, s: 0.85, sx: x > 960 ? -1 : 1, expr: 'sad' }) + tears(x, 460, t, 0.6); });
+  g += NEOS({ x: 980, y: FY + 20, s: 0.95, shirt: '#22222A', inner: '#22222A', expr: t > aV ? 'creepy' : 'neutral' });
+  if (t > aV) g += G(`translate(980,${FY - 620})`, `<circle r="135" fill="none" stroke="#FF2A2A" stroke-width="10" opacity="${pop1(t, aV)}"/>`);
+  return sc('velorio', g, drift(t, d, [960, 560, 1.0], [980, 460, 1.18])); };
+// 38 — a foto: bicicleta e balas no bolso
+S[38] = (t, d) => { const aB = at(38, /bicicleta/), aL = at(38, /bala/);
+  let g = frameAvo(560, 480, 1.0) + memPanel(1000, 160, 760, 420, pop1(t, aB), sepia(R(0, 0, 760, 420, 0, '#BFE3C8', 0) + bicycle(420, 300, 1.0) + G('translate(560,420) scale(0.42)', person(Object.assign(neoAt(8), { x: 0, y: 0, s: 1, expr: 'happy' }))) + G('translate(250,420) scale(0.42)', person(Object.assign({}, AVO, { x: 0, y: 0, s: 1, old: false, hairCol: '#9A948E', expr: 'happy', hr: [200, -330] })))), 1);
+  if (t > aL) g += memPanel(1100, 620, 560, 340, pop1(t, aL), sepia(R(0, 0, 560, 340, 0, '#E8C9A0', 0) + G('translate(280,210)', R(-170, -110, 340, 220, 30, '#8E5A9A', 7) + R(40, -40, 110, 100, 10, '#7A4A8A', 6)) + candies(330, 160, 0.8)), 2, 3);
+  return sc('velorio', g, drift(t, d, [960, 540, 1.0], [960, 540, 1.04])); };
+// 39 — cheiro de bolo de fubá; "meu menino"
+S[39] = (t, d) => { const aM = at(39, /menino/, 0, 0.5);
+  let g = memPanel(260, 140, 1400, 760, 1, sepia(R(0, 0, 1400, 760, 0, '#F2D9B0', 0) + G('translate(1000,700) scale(0.9)', person(Object.assign({}, AVO, { x: 0, y: 0, s: 1, old: false, hairCol: '#9A948E', expr: 'happy', hl: [-200, -300], hr: [200, -300] }))) + cake(560, 520, 0.9) + G('translate(560,300)', `<path d="M-40,0 q20,-40 0,-80 q-20,-40 0,-80 M20,0 q20,-40 0,-80 q-20,-40 0,-80" stroke="#FFFFFF" stroke-width="10" fill="none" opacity="0.7"/>`)), 4);
+  if (t > aM) g += say(1160, 180, 520, 'MEU MENINO!', 50, 'left', '#FFE9F0', t, aM);
+  return sc('velorio', g, drift(t, d, [960, 540, 1.0], [960, 540, 1.06])); };
+// 40 — devia doer, mas não dói; assustador
+S[40] = (t, d) => { const aA = at(40, /assustadora/, 0, 0.6);
+  let g = NEOS({ x: 960, y: FY + 380, s: 1.6, shirt: '#22222A', inner: '#22222A', expr: 'creepy' }) + tears(960, 300, t * 0, 0);
+  if (t > aA) g += dark(prog(t, aA, aA + 0.6) * 0.5) + bigTxt(960, 860, pop1(t, aA), 'A COISA MAIS', 'ASSUSTADORA', '#FFFFFF', '#FF6A6A', 52, 74);
+  return sc('velorio', g, drift(t, d, [960, 420, 1.0], [960, 380, 1.14])); };
+// 41 — a mãe não olha pra você
+S[41] = (t, d) => { let g = pp(LUCIA_P, { x: 1250, y: FY, s: 0.95, expr: 'sad' }) + tears(1250, 440, t, 0.7) + NEOS({ x: 640, y: FY, s: 0.92, shirt: '#22222A', inner: '#22222A', expr: 'creepy', lx: 1 });
+  return sc('velorio', g, drift(t, d, [960, 540, 1.0], [1050, 520, 1.08])); };
+// 42 — "eu precisava de um abraço triste"
+S[42] = (t, d) => { const aE = at(42, /precisava/, 0, 0.6), aV = at(42, /você/, 0, 0.3);
+  let g = pp(LUCIA_P, { x: 1200, y: FY, s: 0.98, sx: -1, expr: 'sad' }) + tears(1200, 440, t, 0.7) + NEOS({ x: 640, y: FY, s: 0.92, shirt: '#22222A', inner: '#22222A', expr: 'creepy', lx: 1 });
+  g += say(900, 140, 860, 'EU PRECISAVA DE UM ABRAÇO TRISTE.', 40, 'right', '#FFE9F0', t, aE);
+  if (t > aV) g += say(900, 320, 860, 'E VOCÊ NÃO TINHA NENHUM PRA ME DAR.', 38, 'right', '#FFE9F0', t, aV);
+  return sc('velorio', g, drift(t, d, [960, 540, 1.0], [1080, 480, 1.14])); };
+// 43 — à noite: 200 mil %; "como ficar triste"
+S[43] = (t, d) => { const aC = at(43, /como/, 0, 0.1);
+  let g = NEOS({ x: 640, y: FY, expr: 'creepy', hr: [110, -400], lx: 1 }) + searchPhone(1250, 560, 1.0, t, aC);
+  return sc('quartoNoite', g, drift(t, d, [960, 540, 1.0], [1150, 520, 1.12])); };
+// 44 — os psicólogos: a tristeza tem uma função
+S[44] = (t, d) => { const aF = at(44, /função/, 0, 0.4);
+  let g = rays(t, '#1E2A5A', '#3C5A8A') + bigTxt(960, 330, pop1(t, 1.0), 'A TRISTEZA', 'NÃO É UM DEFEITO', '#FFFFFF', '#7FC8FF', 64, 80);
+  if (t > aF) g += badgeB(960, 700, pop1(t, aF), 'ELA TEM UMA FUNÇÃO', '#FFFFFF', '#1A1210', 56);
+  return sc(null, g, [960, 540, 1.0]); };
+// 45 — avisa que perdeu algo; aproxima as pessoas
+S[45] = (t, d) => { const aA = at(45, /aproximarem/, 0, 0.4);
+  let g = rays(t, '#1E2A5A', '#3C5A8A') + G('translate(560,520)', C(0, 0, 180, '#FFFFFF', 9) + T(0, -10, '⚠', 10, '#000') + P('M0,-110 L100,70 L-100,70Z', '#FFE14D', 9) + T(0, 50, '!', 110, '#1A1210')) + T(560, 800, 'TE AVISA', 52, '#FFFFFF', 10);
+  if (t > aA) g += G(`translate(1360,560) scale(${pop1(t, aA)})`, G('translate(-90,0) scale(0.5)', person(Object.assign({}, LUTO1, { x: 0, y: 300, s: 1, shirt: '#E07B9A', expr: 'sad', hr: [200, -300] }))) + G('translate(90,0) scale(0.5)', person(Object.assign({}, DAVI, { x: 0, y: 300, s: 1, sx: -1, expr: 'worried', hr: [200, -300] }))) + heart(0, -260, 1.0)) + T(1360, 800, 'APROXIMA AS PESSOAS', 46, '#FFFFFF', 10);
+  return sc(null, g, [960, 540, 1.0]); };
+// 46 — sem tristeza você não consola ninguém
+S[46] = (t, d) => { let g = NEOS({ x: 960, y: FY + 260, s: 1.0, expr: 'creepy' }) + dark(0.25) + bigTxt(960, 240, pop1(t, 0.4), 'SEM TRISTEZA, VOCÊ NÃO', 'CONSEGUE CONSOLAR NINGUÉM', '#FFFFFF', '#FF8A8A', 48, 58);
+  return sc('quartoNoite', g, drift(t, d, [960, 540, 1.0], [960, 520, 1.08])); };
+// 47 — dia 13: no chão do quarto, rindo e sem conseguir parar
+S[47] = (t, d) => { let g = lying(Object.assign(neoAt(AGE), { hs: 1, expr: 'laugh', hrot: Math.sin(t * 14) * 6 }), 960, 800, 0.85) + haha(t, 960, 520, 6, '#FF8A8A') + tears(960, 640, t, 0.7);
+  return sc('quartoNoite', g, drift(t, d, [960, 600, 1.0], [960, 640, 1.16])); };
+// 48 — você fala com o número
+S[48] = (t, d) => { const aN = at(48, /número/, 0, 0.4);
+  let g = lying(Object.assign(neoAt(AGE), { hs: 1, expr: 'laugh' }), 700, 860, 0.7) + (t > aN ? meterBig(1250, 400, pop1(t, aN), 409600, t) : '');
+  return sc('quartoNoite', g, drift(t, d, [960, 560, 1.0], [1050, 520, 1.08])); };
+// 49 — "eu não quero mais. pode levar tudo."
+S[49] = (t, d) => { let g = NEOS({ x: 960, y: FY + 380, s: 1.6, expr: 'sad' }) + tears(960, 330, t, 1.2) + meterBig(420, 300, 0.55, 409600, t);
+  g += say(1220, 300, 560, 'PODE LEVAR TUDO.', 46, 'left', '#FFFFFF', t, at(49, /pode/, 0, 0.1));
+  return sc('quartoNoite', g, drift(t, d, [960, 420, 1.0], [960, 380, 1.12])); };
+// 50 — o número começa a cair
+S[50] = (t, d) => { let g = dark(0.4) + meterBig(960, 480, 1.0, 409600 * Math.pow(0.25, prog(t, 0.6, 1.8)), t);
+  return sc('quartoNoite', g, [960, 540, 1.0]); };
+// 51 — cem mil, dez mil, mil, cem
+S[51] = (t, d) => { let g = dark(0.55) + meterBig(960, 480, 1.0, felAt(TL.lines[51].start + t), t);
+  return sc('quartoNoite', g, drift(t, d, [960, 540, 1.0], [960, 540, 1.1])); };
+// 52 — zero
+S[52] = (t, d) => { let g = R(-200, -200, 2320, 1480, 0, '#08070C', 0) + meterBig(960, 480, 1.0, 0, t, 'FELICIDADE', '#3A3F4B');
+  return sc(null, g, [960, 540, 1.0]); };
+// 53 — finalmente… dói
+S[53] = (t, d) => { const aD = at(53, /dói/, 0, 0.3);
+  let g = NEOS({ x: 960, y: FY + 380, s: 1.6, expr: t > aD ? 'sad' : 'neutral' }) + (t > aD ? tears(960, 330, t, 1.3) : '');
+  return sc('quartoNoite', g, drift(t, d, [960, 420, 1.0], [960, 380, 1.14])); };
+// 54 — dói tudo: a avó, o Davi, a voz da mãe
+S[54] = (t, d) => { const ks = [/avó/, /davi/, /voz/].map(r => at(54, r, 0, 0.3));
+  let g = dark(0.3);
+  if (t > ks[0]) g += memPanel(120, 180, 520, 560, pop1(t, ks[0]), sepia(R(0, 0, 520, 560, 0, '#E8C9A0', 0) + G('translate(260,300) scale(0.9)', head(Object.assign({}, AVO, { hs: 1, expr: 'happy', blink: false })))), 5, -4);
+  if (t > ks[1]) g += memPanel(700, 180, 520, 560, pop1(t, ks[1]), R(0, 0, 520, 560, 0, '#2C3550', 0) + G('translate(260,300) scale(0.9)', head(Object.assign({}, DAVI, { hs: 1, expr: 'sad' }))), 6, 3);
+  if (t > ks[2]) g += memPanel(1280, 180, 520, 560, pop1(t, ks[2]), R(0, 0, 520, 560, 0, '#3A2A40', 0) + G('translate(260,300) scale(0.9)', head(Object.assign({}, LUCIA, { hs: 1, expr: 'surprised' }))) + T(260, 520, 'VOCÊ TÁ RINDO?', 40, '#FFE9F0', 8), 7, -3);
+  return sc('quartoNoite', g, [960, 540, 1.0]); };
+// 55 — chora a noite inteira
+S[55] = (t, d) => { let g = sitPerson(neoAt(AGE), 960, 820, 0.95, { expr: 'sad' }) + tears(960, 420, t, 1.0);
+  g += G('translate(1600,220)', clockBig(0, 0, 70, -Math.PI / 2 + t * 0.6, -Math.PI / 2 + t * 4));
+  return sc('quartoNoite', g, drift(t, d, [960, 540, 1.0], [960, 500, 1.1])); };
+// 56 — dia 14: na porta da mãe, olhos inchados
+S[56] = (t, d) => { let g = NEOS({ x: 700, y: FY, expr: 'sad', lx: 1 }) + tears(700, 440, t * 0.5, 0.5) + G(`translate(1000,380) scale(${pop1(t, 1.0)})`, T(0, 0, 'TOC TOC', 50, '#FFFFFF', 10));
+  g += G('translate(1600,220)', clockBig(0, 0, 70, -Math.PI / 2 + 3.67, -Math.PI / 2) + T(0, 120, '07:00', 40, '#FFFFFF', 8));
+  return sc('ruaCidade', g, drift(t, d, [960, 540, 1.0], [960, 520, 1.06])); };
+// 57 — ela abre a porta; não precisa de palavra
+S[57] = (t, d) => { let g = pp(LUCIA, { x: 1200, y: FY, s: 0.95, sx: -1, expr: t > 2.2 ? 'sad' : 'surprised' }) + NEOS({ x: 700, y: FY, expr: 'sad', lx: 1 }) + tears(700, 440, t, 0.7);
+  return sc('maeSala', g, drift(t, d, [960, 540, 1.0], [960, 500, 1.12])); };
+// 58 — abraço triste, juntos
+S[58] = (t, d) => { let g = NEOS({ x: 900, y: FY, expr: 'sad', hl: [40, -200], hr: [190, -240], lx: 1 }) + pp(LUCIA, { x: 1010, y: FY, s: 0.95, sx: -1, expr: 'sad', hr: [-190, -240], hl: [-40, -200] }) + tears(880, 440, t, 0.6) + tears(1030, 440, t + 0.3, 0.6);
+  return sc('maeSala', g, drift(t, d, [960, 540, 1.0], [960, 480, 1.16])); };
+// 59 — e também o mais bonito
+S[59] = (t, d) => { let g = NEOS({ x: 900, y: FY, expr: 'sad', hl: [40, -200], hr: [190, -240], lx: 1 }) + pp(LUCIA, { x: 1010, y: FY, s: 0.95, sx: -1, expr: 'happy', hr: [-190, -240], hl: [-40, -200] });
+  for (let i = 0; i < 5; i++) { const k = ((t * 0.45 + i / 5) % 1); g += heart(800 + i * 80, 560 - k * 360, 0.9 * (1 - k)); }
+  return sc('maeSala', g, drift(t, d, [960, 480, 1.16], [960, 500, 1.22])); };
+// 60 — o Davi: pede desculpa e só ouve
+S[60] = (t, d) => { const aD = at(60, /desculpa/), aO = at(60, /ouvindo/, 1, 0.4);
+  let g = sitPerson(DAVI, 1250, 820, 0.88, { expr: 'sad', hr: [-80, -250] }) + sitPerson(neoAt(AGE), 700, 820, 0.88, { expr: 'worried', lx: 1 });
+  if (t > aD && t < aO) g += say(260, 160, 480, 'ME DESCULPA.', 46, 'left', '#FFFFFF', t, aD);
+  if (t > aO) g += badgeB(960, 200, pop1(t, aO), 'SÓ OUVINDO', '#FFFFFF', '#1A1210', 52);
+  return sc('sala', g, drift(t, d, [960, 540, 1.0], [960, 520, 1.06])); };
+// 61 — uma risada pequena, cansada, de verdade
+S[61] = (t, d) => { const aV = at(61, /verdade/, 0, 0.4);
+  let g = sitPerson(DAVI, 1250, 820, 0.88, { expr: 'happy', hr: [-80, -250] }) + sitPerson(neoAt(AGE), 700, 820, 0.88, { expr: 'neutral', lx: 1 }) + T(1420, 380, 'ha.', 46, '#FFFFFF', 10);
+  if (t > aV) g += badgeB(1250, 240, pop1(t, aV), 'DE VERDADE', '#2E9E5B', '#FFFFFF', 44);
+  return sc('sala', g, drift(t, d, [960, 540, 1.0], [1150, 500, 1.14])); };
+// 62 — vale mais do que um milhão por cento
+S[62] = (t, d) => { const aM = at(62, /milhão/, 0, 0.4);
+  let g = rays(t, '#C9708A', '#F7C99A') + G('translate(960,330)', T(0, 0, '1.000.000%', 110, '#FFFFFF', 14) + (t > aM ? Ln(-360, -30, 360, -30, '#C62A2A', 18) : ''));
+  if (t > aM) g += badgeB(960, 640, pop1(t, aM + 0.3), 'ESSA RISADA VALE MAIS', '#FFFFFF', '#1A1210', 52);
+  return sc(null, g, [960, 540, 1.0]); };
+// 63 — pizza e conversa até a noite
+S[63] = (t, d) => { let g = sitPerson(DAVI, 1250, 820, 0.88, { expr: 'laugh', hr: [-100, -230] }) + sitPerson(neoAt(AGE), 700, 820, 0.88, { expr: 'happy', hl: [80, -250], lx: 1 }) + pizza(960, 720, 0.8);
+  return sc(t > d * 0.6 ? 'quartoNoite' : 'sala', g, drift(t, d, [960, 540, 1.0], [960, 520, 1.08])); };
+// 64 — hoje: o medidor nunca passou de 100 (80, 30)
+S[64] = (t, d) => { const aO = at(64, /oitenta/), aT = at(64, /trinta/);
+  let g = NEOS({ x: 960, y: FY + 30, s: 1.0, expr: t > aT ? 'neutral' : t > aO ? 'happy' : 'neutral', smile: t > aO && t < aT }) + meterBig(960, 230, 0.8, felAt(TL.lines[64].start + t), t);
+  return sc('quarto', g, drift(t, d, [960, 540, 1.0], [960, 520, 1.06])); };
+// 65 — feliz por um motivo; triste também
+S[65] = (t, d) => { const aT = at(65, /triste/, 0, 0.3);
+  let g = rays(t, '#3B4F8A', '#F0A070') + bigTxt(560, 420, pop1(t, 1.2), 'FELIZ', 'POR UM MOTIVO', '#FFFFFF', '#FFE14D', 76, 60);
+  if (t > aT) g += bigTxt(1360, 420, pop1(t, aT), 'TRISTE', 'TAMBÉM', '#FFFFFF', '#7FC8FF', 76, 60);
+  g += NEOS({ x: 960, y: 1200, s: 0.9, expr: 'happy', smile: true });
+  return sc(null, g, [960, 540, 1.0]); };
+// 66 — semana passada: fotos antigas da avó
+S[66] = (t, d) => { let g = sitPerson(LUCIA, 1180, 820, 0.88, { expr: 'neutral', hr: [-100, -250] }) + sitPerson(neoAt(AGE), 740, 820, 0.88, { expr: 'neutral', hl: [100, -250], lx: 1 }) + G('translate(960,640) rotate(-6)', R(-160, -100, 320, 200, 10, '#8E5A9A', 7) + R(-140, -80, 120, 160, 4, '#F4EAD8', 0) + R(20, -80, 120, 160, 4, '#F4EAD8', 0));
+  return sc('maeSalaNoite', g, drift(t, d, [960, 540, 1.0], [960, 560, 1.1])); };
+// 67 — choraram e riram da foto dela dançando em 1978
+S[67] = (t, d) => { const aR = at(67, /riram/), aF = at(67, /foto/);
+  let g = sitPerson(LUCIA, 1180, 820, 0.88, { expr: t > aR ? 'laugh' : 'sad', hr: [-100, -250] }) + sitPerson(neoAt(AGE), 740, 820, 0.88, { expr: t > aR ? 'laugh' : 'sad', hl: [100, -250], lx: 1 });
+  if (t < aR) g += tears(1180, 440, t, 0.5) + tears(740, 440, t, 0.5);
+  if (t > aF) g += polaAvo(960, 360, 0.9 * pop1(t, aF), -4);
+  return sc('maeSalaNoite', g, drift(t, d, [960, 540, 1.0], [960, 500, 1.08])); };
+// 68 — felicidade e saudade, as duas em 100%
+S[68] = (t, d) => { const aS = at(68, /saudade/, 0, 0.1);
+  let g = rays(t, '#3B4F8A', '#F0A070') + meterBig(960, 330, 0.9, 100, t);
+  if (t > aS) g += meterBig(960, 620, 0.9 * pop1(t, aS), 100, t, 'SAUDADE', '#3F86CF');
+  for (let i = 0; i < 5; i++) { const k = ((t * 0.4 + i / 5) % 1); g += heart(560 + i * 200, 1000 - k * 260, 0.8 * (1 - k)); }
+  return sc(null, g, [960, 540, 1.0]); };
+// 69 — CTA
+S[69] = (t, d) => { let g = rays(t, '#3B4F8A', '#F0A070') + pp(LUCIA, { x: 1150, y: 1010, s: 0.9, sx: -1, expr: 'happy' }) + NEO25({ x: 780, y: 1010, s: 0.9, expr: 'happy', smile: true });
+  for (let i = 0; i < 5; i++) { const k = ((t * 0.45 + i / 5) % 1); g += heart(880 + i * 40, 560 - k * 300, 0.8 * (1 - k)); }
+  return sc(null, g, [960, 540, 1.0]); };
+
+function titleOverlay(t) {
+  if (t > 9) return '';
+  const k = back(prog(t, 0, 0.3)), out = 1 - prog(t, 8.6, 9);
+  return G(`translate(960,860) scale(${k * out})`, R(-640, -80, 1280, 160, 40, 'rgba(26,18,16,0.92)', 0) + T(0, -22, 'E SE A SUA FELICIDADE', 50, '#FFFFFF') + T(0, 44, 'DOBRASSE TODO DIA?', 60, '#FFE14D'));
+}
+function ctaOverlay(t) {
+  const a = TL.lines[69].start - 0.1;
+  if (t < a) return '';
+  const k = back(prog(t, a, a + 0.35));
+  return G(`translate(960,170) scale(${k})`, R(-720, -110, 1440, 220, 40, 'rgba(26,18,16,0.94)', 0) + T(0, -36, 'VOCÊ TROCARIA A SUA TRISTEZA', 50, '#FFFFFF') + T(0, 48, 'POR FELICIDADE INFINITA?', 64, '#FFE14D'));
+}
