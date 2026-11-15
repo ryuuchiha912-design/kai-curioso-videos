@@ -1,6 +1,6 @@
 function sitPerson(d, x, y, s, o) {
   let g = '';
   for (const sd of [-1, 1]) g += limb(x + sd * 40 * s, y - 10 * s, x + sd * 46 * s, y + 160 * s, d.pants, 56 * s, 7) + E(x + sd * 52 * s, y + 175 * s, 50 * s, 26 * s, d.shoe);
-  g += person(Object.assign({}, d, { x, y: y + 196 * 0.92 * s, s, legs: false }, o));
+  g += person(Object.assign({}, d, { x, y: y + (196 + (d.legX || 0)) * 0.92 * s, s, legs: false }, o));
   return g;
 }
