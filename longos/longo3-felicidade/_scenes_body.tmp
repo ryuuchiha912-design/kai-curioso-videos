@@ -42,7 +42,7 @@ function meterPill(x, y, v, t, label = 'FELICIDADE', col = null) {
 }
 let LASTF = null;
 function levelHud(i, t) {
-  if (i < 2 || i > 68) return '';
+  if (i < 2 || i > 68 || (i >= 50 && i <= 52)) return '';
   const d = dayLbl(t), v = felAt(t);
   let g = '';
   if (d) g += G('translate(70,62)', R(0, 0, d === 'HOJE' ? 190 : 210, 74, 26, '#1A1210', 6) + T(d === 'HOJE' ? 95 : 105, 49, d === 'HOJE' ? 'HOJE' : `DIA ${d}`, 44, '#FFFFFF'));
