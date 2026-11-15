@@ -1,0 +1,371 @@
+// ================= SÉRIE "30 DIAS PRESO NO AEROPORTO" — PARTE 1 =================
+for (const n of ['portao', 'portaoEscuro', 'praca', 'saguao', 'pista', 'metro', 'velorio', 'ruaCidade']) { if (BGIMG[n]) continue; BG_NAMES.push(n); const im = document.createElement('img'); im.src = 'bg/' + n + '.png'; im.style.cssText = 'position:absolute;left:-192px;top:-108px;width:2304px;height:1296px;display:none;filter:blur(1.1px) saturate(1.12)'; BGI.appendChild(im); BGIMG[n] = im; }
+const JORGE = xt({ skin: '#C88F66', shirt: '#26324A', inner: '#DDE3EA', stripe: '#F2B636', hair: 'buzz', hairCol: '#1B1716', stubble: true, iris: '#3A2A1A', legX: 75 });
+const CIDA = xt({ skin: '#EAC9AC', shirt: '#D9A43A', inner: '#F4EAD8', stripe: '#B5842A', hair: 'curly', hairCol: '#F2F0F4', old: true, iris: '#3A5A6A', skirt: '#6E2A3A', pants: '#EAC9AC', earring: '#F4F1EA', legX: 30 });
+const LIA = xt({ skin: '#D9A47A', shirt: '#E04B3C', hair: 'pony', hairCol: '#2A1C14', iris: '#4A3A2A', skirt: '#2C3E66', pants: '#D9A47A', hs: 1.22, legX: 0, torsoX: 0 });
+const MARCOS = xt({ skin: '#F1C7A0', shirt: '#3E9B4A', hair: 'side', hairCol: '#8A3A22', stubble: true, iris: '#3A5A3A' });
+const PAX = [xt({ skin: '#8A5A3A', shirt: '#7A5AC8', hair: 'afro', hairCol: '#1B1716', iris: '#3A2A1A' }), xt({ skin: '#F5D2B0', shirt: '#C2577A', hair: 'wavy', hairCol: '#C7782E', iris: '#3A6A8A', skirt: '#2E3442', pants: '#F5D2B0' }), xt({ skin: '#E8B98F', shirt: '#5A6070', hair: 'short', hairCol: '#9A948E', old: true, iris: '#4A4A4A' }), xt({ skin: '#C88F66', shirt: '#2C6F5A', hair: 'bob', hairCol: '#1B1716', iris: '#5A3A22', earring: '#E0B13A', skirt: '#3A3F4B', pants: '#C88F66' }), xt({ skin: '#F1C7A0', shirt: '#E07B2E', hair: 'spiky', hairCol: '#2A211C', iris: '#3A4A6A' }), xt({ skin: '#D9A47A', shirt: '#3F86CF', hair: 'buzz', hairCol: '#2A211C', iris: '#3A2A1A', stubble: true })];
+const AGE = 25;
+const NEOS = (o) => NEOp(AGE, Object.assign({ s: 0.92 }, o));
+const wg = (L, re, n = 0) => { const ws = TL.lines[L].words; let c = 0; for (const w of ws) if (re.test(w.text.toLowerCase())) { if (c === n) return w.start; c++; } return TL.lines[L].start; };
+const at = (L, re, n = 0, pre = 0.25) => wg(L, re, n) - TL.lines[L].start - pre;
+// ---------- HUD: dia + hora
+const DAYS = [[3, '1'], [9, '2'], [14, '3'], [18, '4'], [24, '5'], [32, '6'], [36, '7'], [41, '8'], [46, '9'], [49, '10'], [55, '11'], [62, '12']];
+function dayLbl(T) { let d = ''; for (const [L, v] of DAYS) if (T >= TL.lines[L].start - 0.15) d = v; return d; }
+const HORAS = { 21: '18:00', 29: '02:40', 30: '02:41', 36: '15:00', 55: '04:02', 62: '03:17', 63: '03:17', 64: '03:18', 65: '03:19', 66: '03:21', 67: '03:21', 68: '03:22', 69: '03:22', 70: '03:22' };
+function levelHud(i, t) {
+  if (i < 3 || i > 70) return '';
+  const d = dayLbl(t); let g = '';
+  if (d) g += G('translate(70,62)', R(0, 0, 210, 74, 26, '#1A1210', 6) + T(105, 49, `DIA ${d}`, 44, '#FFFFFF'));
+  if (HORAS[i]) g += G('translate(296,62)', R(0, 0, 190, 74, 26, '#C62A2A', 6) + T(95, 49, HORAS[i], 42, '#FFFFFF'));
+  return g;
+}
+// ---------- efeitos de clima / terror
+function fog(t, a = 0.85, y0 = 0, h = 1080, seed = 2) { const id = 'fg' + (ZID++); let g = `<defs><radialGradient id="${id}"><stop offset="0" stop-color="#F4F7F9" stop-opacity="${a}"/><stop offset="1" stop-color="#F4F7F9" stop-opacity="0"/></radialGradient></defs>`; const r = rng(seed); for (let i = 0; i < 9; i++) { const x = ((r() * 2400 + t * (20 + r() * 30)) % 2600) - 340, y = y0 + r() * h; g += E(x, y, 380 + r() * 260, 160 + r() * 120, `url(#${id})`, 0); } return g; }
+const vig = (a = 0.6) => { const id = 'vg' + (ZID++); return `<defs><radialGradient id="${id}" cx="50%" cy="50%" r="70%"><stop offset="0.45" stop-color="#05060A" stop-opacity="0"/><stop offset="1" stop-color="#05060A" stop-opacity="${a}"/></radialGradient></defs>` + R(-200, -200, 2320, 1480, 0, `url(#${id})`, 0); };
+const flick = (t, a = 0.5) => (Math.sin(t * 37) > 0.93 || Math.sin(t * 23 + 1) > 0.97) ? R(-200, -200, 2320, 1480, 0, `rgba(5,6,10,${a})`, 0) : '';
+function shadowFig(x, y, s, a) { return G(`translate(${x},${y}) scale(${s})`, `<g opacity="${a}">` + E(0, -560, 70, 90, '#2A3040', 0) + P('M-90,-470 Q-110,-200 -70,0 L70,0 Q110,-200 90,-470 Q0,-500 -90,-470Z', '#2A3040', 0) + P('M-90,-450 L-150,-180 M90,-450 L150,-180', 'none', 0) + Ln(-90, -440, -140, -160, '#2A3040', 34) + Ln(90, -440, 140, -160, '#2A3040', 34) + '</g>'); }
+function handPrint(x, y, s, a = 1) { return G(`translate(${x},${y}) scale(${s})`, `<g opacity="${a}" fill="rgba(70,80,96,0.55)">` + E(0, 40, 70, 80, 'rgba(70,80,96,0.55)', 0) + [[-62, -70, -14], [-24, -110, -4], [16, -116, 4], [54, -96, 12], [86, 10, 40]].map(([fx, fy, r]) => G(`rotate(${r} ${fx} ${fy + 50})`, E(fx, fy, 18, 52, 'rgba(70,80,96,0.55)', 0))).join('') + '</g>'); }
+function board(x, y, s, rows, t, off = false) { let g = R(-420, -260, 840, 520, 20, '#141A28', 8) + R(-420, -260, 840, 70, 20, '#F2B636', 0) + T(0, -212, 'PARTIDAS', 40, '#1A1210'); if (!off) rows.forEach((r, i) => { const k = r[3] === undefined ? 1 : r[3]; if (k <= 0) return; g += `<g opacity="${k}">` + T(-300, -130 + i * 72, r[0], 34, '#DDE3EA') + T(-80, -130 + i * 72, r[1], 34, '#DDE3EA') + T(240, -130 + i * 72, r[2], 34, r[2] === 'CHEGOU' ? '#5BE38A' : '#FF4A4A') + '</g>'; }); else g += R(-400, -180, 800, 420, 10, '#0A0D14', 0); return G(`translate(${x},${y}) scale(${s})`, g); }
+function phoneChat(x, y, s, t, msgs, title = 'MÃE', bars = 0) { let g = R(-180, -330, 360, 660, 44, '#1A1A20', 8) + R(-160, -300, 320, 600, 26, '#ECE5DD', 0) + R(-160, -300, 320, 80, 26, '#2E7D5A', 0) + C(-110, -260, 26, '#F4F1EA', 0) + T(-110, -250, title[0], 30, '#2E7D5A') + T(10, -250, title, 30, '#FFFFFF');
+  for (let b = 0; b < 4; b++) g += R(100 + b * 14, -248 - b * 7, 9, 10 + b * 7, 2, b < bars ? '#FFFFFF' : 'rgba(255,255,255,0.3)', 0);
+  msgs.forEach((m, i) => { const k = m.k === undefined ? 1 : m.k; if (k <= 0) return; const me = !m.in, yy = -170 + i * 92; g += G(`translate(0,${yy}) scale(${k})`, R(me ? -60 : -150, -34, 210, 68, 18, me ? '#DCF8C6' : '#FFFFFF', 4) + C(me ? -26 : -116, 0, 16, me ? '#2E7D5A' : '#2C6FB6', 0) + P(me ? 'M-31,-8 L-18,0 L-31,8Z' : 'M-121,-8 L-108,0 L-121,8Z', '#FFFFFF', 0) + Ln(me ? 0 : -90, 0, me ? 110 : 20, 0, '#9AA6B8', 5) + (me ? (m.sent ? T(130, 24, '✓✓', 18, '#3F86CF') : G('translate(132,16)', C(0, 0, 9, 'none', 3) + Ln(0, 0, 0, -6, O, 3) + Ln(0, 0, 4, 2, O, 3))) : '')); });
+  return G(`translate(${x},${y}) scale(${s})`, g); }
+function rulesBoard(x, y, s, t, ks) { let g = R(-380, -300, 760, 600, 16, '#FFFFFF', 8) + R(-380, -300, 760, 80, 16, '#C62A2A', 0) + T(0, -246, 'REGRAS', 50, '#FFFFFF'); ['1. COMIDA DIVIDIDA IGUAL', '2. LUZES APAGAM ÀS 22H', '3. NINGUÉM SAI PELA PORTA'].forEach((l, i) => { const k = ks[i]; if (k > 0) g += `<g opacity="${k}">` + T(0, -120 + i * 130, l, 40, i === 2 ? '#C62A2A' : '#1A1210') + '</g>'; }); return G(`translate(${x},${y}) scale(${s}) rotate(-2)`, g); }
+function notebook(x, y, s, t, erased = 0) { let g = R(-360, -260, 720, 520, 14, '#FFF8E6', 8) + Ln(0, -260, 0, 260, 'rgba(120,90,60,0.4)', 6); for (let i = 0; i < 8; i++) { const cx = (i % 4) * 160 - 270 + (i % 4 > 1 ? 40 : 0), cy = Math.floor(i / 4) * 230 - 90; const gone = i < erased; g += `<g opacity="${gone ? 0.12 : 1}">` + C(cx, cy - 50, 30, 'none', 6) + Ln(cx, cy - 20, cx, cy + 50, O, 6) + Ln(cx - 36, cy + 5, cx + 36, cy + 5, O, 6) + Ln(cx, cy + 50, cx - 26, cy + 100, O, 6) + Ln(cx, cy + 50, cx + 26, cy + 100, O, 6) + '</g>'; if (gone) g += rp(`M${cx - 50},${cy - 60} q30,40 60,10 t60,30`, 'rgba(150,140,130,0.35)', 22); } return G(`translate(${x},${y}) scale(${s}) rotate(-3)`, g); }
+function paperBoat(x, y, s) { return G(`translate(${x},${y}) scale(${s})`, P('M-90,0 L90,0 L60,40 L-60,40Z', '#F4F7FA', 6) + P('M-30,0 L0,-80 L30,0Z', '#DDE6F0', 6) + T(0, 26, 'GATE 12', 14, '#5A6070')); }
+function rope(x1, y1, x2, y2, t, cut = false) { const mx = (x1 + x2) / 2, my = (y1 + y2) / 2 + 60 + Math.sin(t * 3) * 10; return rp(`M${x1},${y1} Q${mx},${my} ${x2},${y2}`, '#8A5A33', 16) + rp(`M${x1},${y1} Q${mx},${my} ${x2},${y2}`, '#C9A06A', 10) + (cut ? G(`translate(${x2},${y2})`, rp('M0,0 l14,-10 l-4,14 l16,-4 l-12,14', '#C9A06A', 6)) : ''); }
+function glassDoor(x, y, s, open = 0) { return G(`translate(${x},${y}) scale(${s})`, R(-220, -560, 440, 560, 6, '#5A6070', 9) + R(-200, -540, 200 - open * 160, 540, 0, 'rgba(230,240,246,0.55)', 4) + R(open * 160, -540, 200 - open * 160, 540, 0, 'rgba(230,240,246,0.55)', 4) + R(-160, -620, 320, 56, 10, '#2C6FB6', 0) + T(0, -582, 'SAÍDA', 34, '#FFFFFF')); }
+function cereal(x, y, s, parts = 1) { let g = ''; for (let i = 0; i < parts; i++) g += G(`translate(${(i - (parts - 1) / 2) * 70},0)`, R(-30, -22, 60, 44, 8, '#C98A4B', 5) + Ln(-20, -6, 20, -6, '#8A5A33', 4) + Ln(-20, 8, 20, 8, '#8A5A33', 4)); return G(`translate(${x},${y}) scale(${s})`, g); }
+function headCircle(x, y, n, t, a0) { let g = ''; for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2; g += G(`translate(${x + Math.cos(a) * 360},${y + Math.sin(a) * 120})`, C(0, 0, 34, '#E8E4F0', 5)); } return g; }
+function planeLights(x, y, t, k) { return G(`translate(${x},${y})`, `<g opacity="${k}">` + C(-60, 0, 26 + 6 * Math.sin(t * 6), '#FFF6C8', 0) + C(60, 0, 26 + 6 * Math.sin(t * 6 + 1), '#FFF6C8', 0) + C(-60, 0, 80, 'rgba(255,246,200,0.25)', 0) + C(60, 0, 80, 'rgba(255,246,200,0.25)', 0) + '</g>'); }
+function stairs(x, y, k, h = 180) { if (k <= 0) return ''; let g = ''; for (let i = 0; i < 6; i++) g += R(-60 - i * 4, -i * (h / 6) * k, 120 + i * 8, 16, 4, '#9AA3AD', 4); return G(`translate(${x},${y})`, Ln(-70, 0, -60, -h * k, '#6A7280', 8) + Ln(70, 0, 60, -h * k, '#6A7280', 8) + g); }
+const rp = (d, col, w, op = 1) => `<path d="${d}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round" opacity="${op}"/>`;
+const scF = (bg, g, cam) => sc(bg, ((bg === 'portao' || bg === 'portaoEscuro') ? fogWin(TNOW, bg === 'portaoEscuro') : '') + g, cam);
+function fogWin(t, dark) { const id = 'fw' + (ZID++); let g = `<defs><radialGradient id="${id}"><stop offset="0" stop-color="${dark ? '#C8D2DE' : '#F4F7F9'}" stop-opacity="${dark ? 0.55 : 0.85}"/><stop offset="1" stop-color="#F4F7F9" stop-opacity="0"/></radialGradient></defs>`; const r = rng(31); for (let i = 0; i < 8; i++) { const x = ((r() * 2400 + t * (20 + r() * 30)) % 2600) - 340, y = 200 + r() * 260; g += E(x, y, 380 + r() * 200, 110 + r() * 60, `url(#${id})`, 0); } return g; }
+const NEOH = (o) => head(Object.assign(neoAt(AGE), { hs: 1 }, o));
+
+const S = [];
+// 0 — gancho: todos os voos cancelados; portão 12
+S[0] = (t, d) => { const aP = at(0, /portão/, 0, 0.3);
+  let g = board(1300, 400, 0.7, [['10:05', 'LISBOA', 'CANCELADO'], ['10:20', 'RECIFE', 'CANCELADO'], ['10:40', 'TÓQUIO', 'CANCELADO'], ['11:00', 'MIAMI', 'CANCELADO'], ['11:15', 'SALVADOR', 'CANCELADO']], t);
+  g += sitPerson(neoAt(AGE), 640, 820, 0.95, { expr: t > aP ? 'worried' : 'neutral', lx: 1 }) + vig(0.5);
+  return scF('portao', g, drift(t, d, [960, 540, 1.12], [960, 540, 1.0])); };
+// 1 — a névoa: não se vê nem a asa
+S[1] = (t, d) => { let g = fog(t * 1.5, 0.95, -100, 1300, 4) + fog(t, 0.8, 0, 1080, 7) + vig(0.55);
+  return sc('pista', g, drift(t, d, [960, 540, 1.0], [960, 540, 1.1])); };
+// 2 — ninguém sabe quando vai embora; primeiro dia
+S[2] = (t, d) => { const aU = at(2, /último/, 0, 0.5);
+  let g = NEOS({ x: 960, y: FY + 380, s: 1.6, expr: 'worried' }) + vig(0.6);
+  if (t > aU) g += bigTxt(960, 230, pop1(t, aU), 'E NÃO VAI SER', 'O ÚLTIMO', '#FFFFFF', '#FF6A6A', 54, 80);
+  return scF('portao', g, drift(t, d, [960, 420, 1.0], [960, 380, 1.12])); };
+// 3 — dia 1: aniversário da mãe; cachecol na mochila
+S[3] = (t, d) => { const aC = at(3, /cachecol/);
+  let g = NEOS({ x: 700, y: FY, expr: 'happy', smile: true, hr: [150, -260], lx: 1 }) + memPanel(1100, 200, 600, 420, pop1(t, 1.2), R(0, 0, 600, 420, 0, '#F6E7C8', 0) + G('translate(300,420) scale(0.55)', person(Object.assign({}, LUCIA, { x: 0, y: 0, s: 1, expr: 'happy' }))) + cake(130, 330, 0.35), 1, 3);
+  if (t > aC) g += G(`translate(980,640) scale(${pop1(t, aC)})`, R(-110, -40, 220, 80, 20, '#C62A2A', 6) + Ln(-80, -40, -80, 40, '#E8E4F0', 8) + Ln(-40, -40, -40, 40, '#E8E4F0', 8) + R(60, 40, 50, 70, 10, '#C62A2A', 6));
+  return scF('portao', g, drift(t, d, [960, 540, 1.0], [1000, 520, 1.06])); };
+// 4 — o painel fica vermelho: cancelado
+S[4] = (t, d) => { const ks = [0, 1, 2].map(n => at(4, /cancelado/, n, 0.2));
+  const rows = [['12:00', 'SÃO LUÍS', 'CANCELADO', pop1(t, ks[0])], ['12:30', 'PORTO ALEGRE', 'CANCELADO', pop1(t, ks[1])], ['13:00', 'BUENOS AIRES', 'CANCELADO', pop1(t, ks[2])], ['13:30', 'FORTALEZA', 'CANCELADO', pop1(t, ks[2] + 0.6)], ['14:00', 'MÃE ❤', 'CANCELADO', pop1(t, ks[2] + 1.0)]];
+  let g = board(960, 520, 1.15, rows, t) + vig(0.5);
+  return sc('saguao', g, drift(t, d, [960, 520, 1.0], [960, 520, 1.08])); };
+// 5 — todo mundo reclama
+S[5] = (t, d) => { let g = '';
+  [[0, 300, 'angry', [220, -330]], [1, 520, 'angry', [200, -300]], [2, 1460, 'tired', null], [3, 1680, 'worried', null]].forEach(([p, x, e, hr]) => { g += pp(PAX[p], { x, y: FY + 10, s: 0.84, sx: x > 960 ? -1 : 1, expr: e, ...(hr ? { hr } : {}) }); });
+  g += say(200, 140, 520, 'CADÊ O GERENTE?!', 44, 'left', '#FFFFFF', t, 0.3) + lying(Object.assign({}, PAX[4], { hs: 1, expr: 'sleep' }), 1100, 900, 0.45) + NEOS({ x: 900, y: FY, expr: 'tired' }) + tears(1460, 420, t, 0.5);
+  return sc('saguao', g, drift(t, d, [960, 540, 1.0], [960, 520, 1.05])); };
+// 6 — celular sem sinal
+S[6] = (t, d) => { let g = NEOS({ x: 640, y: FY, expr: 'worried', hr: [140, -300], lx: 1 }) + phoneChat(1300, 540, 0.95, t, [], 'MÃE', 0) + G(`translate(1300,560) scale(${pop1(t, 1.0)})`, R(-140, -40, 280, 80, 20, '#C62A2A', 0) + T(0, 14, 'SEM SINAL', 36, '#FFFFFF'));
+  return scF('portao', g, drift(t, d, [960, 540, 1.0], [1100, 520, 1.08])); };
+// 7 — grava o áudio "eu vou chegar. prometo."
+S[7] = (t, d) => { const aF = at(7, /feliz/, 0, 0.1);
+  let g = NEOS({ x: 640, y: FY, expr: 'happy', smile: true, hr: [130, -330], lx: 1 }) + phoneChat(1300, 540, 0.95, t, [{ k: pop1(t, aF + 2.5) }], 'MÃE', 0);
+  if (t > aF) g += say(160, 150, 620, 'EU VOU CHEGAR. PROMETO.', 42, 'left', '#FFF6C8', t, aF + 1.2);
+  return scF('portao', g, [960, 540, 1.0]); };
+// 8 — não envia (reloginho)
+S[8] = (t, d) => { let g = phoneChat(960, 540, 1.4, t, [{ k: 1 }], 'MÃE', 0) + G(`translate(1250,380) scale(${pop1(t, 1.2)})`, R(-110, -36, 220, 72, 18, '#1A1210', 0) + T(0, 12, 'NÃO ENVIA', 32, '#FFFFFF')) + vig(0.6);
+  return scF('portao', g, drift(t, d, [960, 540, 1.0], [1060, 440, 1.25])); };
+// 9 — dia 2: Guarulhos, 100 mil por dia; ninguém sai
+S[9] = (t, d) => { const aC = at(9, /cem/), aN = at(9, /nenhuma/);
+  let g = R(-200, -200, 2320, 1480, 0, '#2C3550', 0) + fog(t, 0.6, 0, 1080, 9);
+  if (t > aC) { for (let i = 0; i < 60; i++) g += C(260 + (i % 15) * 100, 360 + Math.floor(i / 15) * 100, 26, '#E8E4F0', 4); g += G(`translate(960,240) scale(${pop1(t, aC)})`, T(0, 0, '+100 MIL PESSOAS POR DIA', 64, '#FFE14D', 12)); }
+  if (t > aN) g += G(`translate(960,860) scale(${pop1(t, aN)})`, R(-360, -60, 720, 120, 30, '#C62A2A', 7) + T(0, 18, 'NINGUÉM CONSEGUE SAIR', 46, '#FFFFFF'));
+  return sc(null, g, [960, 540, 1.0]); };
+// 10 — praça de alimentação: pão de queijo e café acabando
+S[10] = (t, d) => { const aP = at(10, /pão/), aC = at(10, /café/, 0, 0.1);
+  let g = '';
+  for (let i = 0; i < 5; i++) g += pp(PAX[i], { x: 300 + i * 330, y: FY + 20, s: 0.8, sx: i % 2 ? -1 : 1, expr: i % 2 ? 'angry' : 'worried', ...(i % 2 ? { hr: [200, -330] } : {}) });
+  if (t > aP) g += badgeB(560, 260, pop1(t, aP + 1.0), 'PÃO DE QUEIJO: ESGOTADO', '#C62A2A', '#FFFFFF', 34, -4);
+  if (t > aC) g += badgeB(1360, 260, pop1(t, aC + 0.6), 'CAFÉ: ESGOTADO', '#C62A2A', '#FFFFFF', 34, 4);
+  return sc('praca', g, drift(t, d, [960, 540, 1.0], [960, 520, 1.06])); };
+// 11 — Mehran Karimi Nasseri: 18 anos no aeroporto de Paris
+S[11] = (t, d) => { const aM = at(11, /mehran/), aD = at(11, /dezoito/);
+  let g = rays(t, '#1E2A5A', '#3C5A8A');
+  if (t > aM) g += memPanel(260, 220, 620, 560, pop1(t, aM), sepia(R(0, 0, 620, 560, 0, '#E8E2D8', 0) + G('translate(310,560) scale(0.62)', person(Object.assign({}, xt({ skin: '#D9A47A', shirt: '#6A5A4A', hair: 'side', hairCol: '#5A5048', stubble: true, old: true, iris: '#3A2A1A' }), { x: 0, y: 0, s: 1, expr: 'neutral' }))) + R(40, 420, 540, 100, 10, '#2C6FB6', 6)), 1, -3) + T(570, 860, 'MEHRAN KARIMI NASSERI', 38, '#FFFFFF', 8);
+  if (t > aD) g += G(`translate(1360,420) scale(${pop1(t, aD)})`, T(0, 0, '18 ANOS', 140, '#FFE14D', 18) + T(0, 110, 'NO AEROPORTO DE PARIS', 44, '#FFFFFF', 10) + T(0, 170, '1988 – 2006', 40, '#BFC8DA', 8));
+  return sc(null, g, [960, 540, 1.0]); };
+// 12 — dormindo num banco, banho na pia
+S[12] = (t, d) => { const aB = at(12, /banho/);
+  let g = t < aB ? memPanel(260, 160, 1400, 760, 1, sepia(R(0, 0, 1400, 760, 0, '#E8E2D8', 0) + R(300, 420, 800, 60, 10, '#2C6FB6', 6) + lying(Object.assign({}, xt({ skin: '#D9A47A', hair: 'side', hairCol: '#5A5048', stubble: true, old: true }), { hs: 1, expr: 'sleep' }), 700, 380, 0.6) + G('translate(1150,640)', clockBig(0, 0, 70, -1, 1))), 2) :
+    memPanel(260, 160, 1400, 760, 1, sepia(R(0, 0, 1400, 760, 0, '#DCE6EA', 0) + R(400, 380, 600, 80, 30, '#F4F7FA', 7) + C(700, 330, 30, '#9AA3AD', 5) + Ln(700, 300, 700, 360, '#9AA3AD', 10) + G('translate(700,560) scale(0.45)', person(Object.assign({}, xt({ skin: '#D9A47A', shirt: '#6A5A4A', hair: 'side', hairCol: '#5A5048', stubble: true, old: true }), { x: 0, y: 0, s: 1, expr: 'tired', hl: [-100, -300], hr: [100, -300] })))), 3);
+  return sc(null, R(-200, -200, 2320, 1480, 0, '#2C3550', 0) + g, drift(t, d, [960, 540, 1.0], [960, 540, 1.06])); };
+// 13 — o seu banco no portão 12; medo
+S[13] = (t, d) => { const aM = at(13, /medo/, 0, 0.3);
+  let g = NEOS({ x: 960, y: FY + 40, s: 1.0, expr: t > aM ? 'worried' : 'neutral' }) + (t > aM ? sweatLines(960, 400, t) + vig(0.7) : vig(0.4));
+  return scF('portao', g, drift(t, d, [960, 540, 1.0], [960, 500, 1.14])); };
+// 14 — dia 3: o Jorge e o quadro
+S[14] = (t, d) => { let g = rulesBoard(1300, 420, 0.8, t, [0, 0, 0]) + pp(JORGE, { x: 1300, y: FY - 60, s: 0.92, sx: -1, expr: 'neutral', hr: [-60, -470] }) + G('translate(1300,FY)'.replace('FY', FY), chair(0, 0, 0.6)) + NEOS({ x: 520, y: FY, expr: 'neutral', lx: 1 });
+  return scF('portao', g, drift(t, d, [960, 540, 1.0], [1100, 520, 1.06])); };
+// 15 — regras 1 e 2
+S[15] = (t, d) => { const k1 = pop1(t, at(15, /um/)), k2 = pop1(t, at(15, /dois/));
+  let g = rulesBoard(960, 520, 1.25, t, [k1, k2, 0]) + vig(0.4);
+  return scF('portao', g, drift(t, d, [960, 520, 1.0], [960, 470, 1.06])); };
+// 16 — regra 3: ninguém entra na névoa
+S[16] = (t, d) => { let g = rulesBoard(960, 520, 1.25, t, [1, 1, pop1(t, 0.2)]) + vig(0.65) + flick(t, 0.25);
+  return scF('portao', g, drift(t, d, [960, 470, 1.06], [960, 600, 1.25])); };
+// 17 — "porque a gente ouviu coisas lá fora"
+S[17] = (t, d) => { const aP = at(17, /porque/, 0, 0.1);
+  let g = shadowFig(1650, 640, 0.6, t > aP + 1.4 ? 0.18 * prog(t, aP + 1.4, aP + 2.4) : 0) + pp(JORGE, { x: 1180, y: FY, s: 0.95, sx: -1, expr: 'worried' }) + NEOS({ x: 640, y: FY, expr: 'worried', lx: 1 });
+  if (t > aP) g += say(900, 160, 820, 'PORQUE A GENTE OUVIU COISAS LÁ FORA.', 38, 'right', '#FFFFFF', t, aP);
+  return scF('portao', g + vig(0.6), drift(t, d, [960, 540, 1.0], [1060, 500, 1.12])); };
+// 18 — dia 4: a Lia
+S[18] = (t, d) => { let g = pp(LIA, { x: 1150, y: FY, s: 0.8, sx: -1, expr: 'happy', hr: [-200, -260] }) + NEOS({ x: 700, y: FY, expr: 'happy', smile: true, lx: 1 });
+  g += G(`translate(1300,330) scale(${pop1(t, 1.6)})`, R(-90, -40, 180, 80, 20, '#FFFFFF', 6) + T(0, 14, 'LIA, 8', 36, '#E04B3C'));
+  return scF('portao', g, drift(t, d, [960, 540, 1.0], [960, 520, 1.06])); };
+// 19 — adedonha e barquinho de papel
+S[19] = (t, d) => { const aB = at(19, /barquinho/);
+  let g = sitPerson(LIA, 1150, 820, 0.8, { expr: 'laugh' }) + sitPerson(neoAt(AGE), 760, 820, 0.88, { expr: 'happy', lx: 1 });
+  g += t < aB ? G('translate(960,300)', R(-260, -80, 520, 160, 20, '#FFF8E6', 7) + T(0, -20, 'ADEDONHA: LETRA M', 36, '#1A1210') + T(0, 40, 'MÃE · MANGA · MIAMI', 30, '#5A6070')) : paperBoat(960, 320, 1.3 * pop1(t, aB));
+  return scF('portao', g, drift(t, d, [960, 540, 1.0], [960, 520, 1.08])); };
+// 20 — o caderno: pra ninguém ser esquecido
+S[20] = (t, d) => { const aE = at(20, /esquecido/, 0, 0.5);
+  let g = notebook(960, 500, 1.1, t, 0) + (t > aE ? bigTxt(960, 900, pop1(t, aE), 'PRA NINGUÉM SER', 'ESQUECIDO', '#FFFFFF', '#FFE14D', 44, 56) : '');
+  return sc(null, R(-200, -200, 2320, 1480, 0, '#3A2A40', 0) + g, drift(t, d, [960, 540, 1.0], [960, 540, 1.06])); };
+// 21 — 18h: a senhora no portão 12
+S[21] = (t, d) => { const aS = at(21, /senhora/);
+  let g = R(-200, -200, 2320, 1480, 0, 'rgba(255,170,90,0.12)', 0);
+  if (t > aS) g += sitPerson(CIDA, 1250, 820, 0.88, { expr: 'neutral', lx: -1 }) ;
+  g += NEOS({ x: 520, y: FY, expr: 'neutral', lx: 1 });
+  return scF('portao', g + vig(0.5), drift(t, d, [960, 540, 1.0], [1150, 520, 1.12])); };
+// 22 — Dona Cida, o filho, voo 777
+S[22] = (t, d) => { const aV = at(22, /voo/);
+  let g = sitPerson(CIDA, 1150, 820, 0.88, { expr: 'happy', lx: -1 }) + sitPerson(neoAt(AGE), 760, 820, 0.88, { expr: 'neutral', lx: 1 });
+  if (t > aV) g += badgeB(1150, 260, pop1(t, aV), 'VOO 777', '#1A1210', '#FFE14D', 56);
+  return scF('portao', g + vig(0.4), drift(t, d, [960, 540, 1.0], [960, 520, 1.06])); };
+// 23 — o 777 não existe no painel
+S[23] = (t, d) => { const aN = at(23, /lugar/, 0, 0.5);
+  let g = board(960, 520, 1.15, [['15:00', 'BELÉM', 'CANCELADO'], ['15:20', 'NATAL', 'CANCELADO'], ['15:40', 'SANTIAGO', 'CANCELADO'], ['16:00', 'MANAUS', 'CANCELADO'], ['16:30', 'CUIABÁ', 'CANCELADO']], t);
+  if (t > aN) g += G(`translate(960,860) scale(${pop1(t, aN)})`, R(-300, -50, 600, 100, 26, '#1A1210', 6) + T(0, 16, 'VOO 777: NÃO EXISTE', 42, '#FF6A6A')) + vig(0.7);
+  return sc('saguao', g, drift(t, d, [960, 520, 1.0], [960, 560, 1.1])); };
+// 24 — dia 5: o Marcos vai buscar ajuda
+S[24] = (t, d) => { let g = pp(MARCOS, { x: 1200, y: FY, s: 0.92, sx: -1, expr: 'angry', hr: [210, -330] }) + NEOS({ x: 620, y: FY, expr: 'worried', lx: 1 }) + pp(JORGE, { x: 300, y: FY + 10, s: 0.86, expr: 'worried' });
+  g += say(1000, 160, 640, 'EU VOU BUSCAR AJUDA!', 46, 'right', '#FFFFFF', t, 1.0);
+  return sc('saguao', g, drift(t, d, [960, 540, 1.0], [1060, 520, 1.06])); };
+// 25 — a corda e a névoa
+S[25] = (t, d) => { const aE = at(25, /entra/, 0, 0.2);
+  const mx = t < aE ? 1100 : 1100 + (t - aE) * 260;
+  let g = glassDoor(1400, FY, 1.0, 0.7) + fog(t, 0.95, 380, 560, 8) + rope(780, 760, mx, 800, t) + (mx < 1700 ? pp(MARCOS, { x: mx, y: FY, s: 0.9, expr: 'worried', back: t > aE }) : '') + fog(t + 3, 0.6 + prog(t, aE, aE + 2) * 0.35, 300, 700, 11) + NEOS({ x: 520, y: FY, expr: 'worried', lx: 1 });
+  return sc('saguao', g + vig(0.55), drift(t, d, [960, 540, 1.0], [1150, 540, 1.08])); };
+// 26 — a corda sendo puxada devagar
+S[26] = (t, d) => { let g = R(-200, -200, 2320, 1480, 0, '#C9D2D9', 0) + fog(t, 0.95, 0, 1080, 12) + rope(-100, 560, 2100, 600 + Math.sin(t * 2) * 30, t) + G('translate(1700,140)', clockBig(0, 0, 70, -Math.PI / 2 + t * 0.4, -Math.PI / 2 + t * 3)) + T(1700, 260, '10 MIN', 40, '#1A1210', 8) + vig(0.6);
+  return sc(null, g, drift(t, d, [960, 540, 1.0], [1100, 560, 1.1])); };
+// 27 — depois, ela para
+S[27] = (t, d) => { let g = R(-200, -200, 2320, 1480, 0, '#C9D2D9', 0) + fog(t * 0.2, 0.95, 0, 1080, 12) + rope(-100, 560, 2100, 640, 0) + vig(0.8);
+  return sc(null, g, drift(t, d, [1100, 560, 1.1], [1500, 600, 1.4])); };
+// 28 — a corda volta sem ninguém
+S[28] = (t, d) => { const aS = at(28, /sem/, 0, 0.2);
+  let g = glassDoor(1400, FY, 1.0, 0.7) + fog(t, 0.95, 380, 560, 8) + rope(780, 760, t > aS ? 1000 : 1500 - t * 120, 860, t, t > aS) + pp(JORGE, { x: 520, y: FY, s: 0.92, expr: 'surprised', hl: [-120, -260], hr: [120, -260] }) + NEOS({ x: 820, y: FY, expr: 'surprised' });
+  return sc('saguao', g + vig(0.7) + flick(t, 0.3), drift(t, d, [960, 540, 1.0], [1000, 640, 1.25])); };
+// 29 — à noite: algo andando na pista
+S[29] = (t, d) => { let g = fog(t, 0.6, 140, 480, 13) + shadowFig(1500 - (t % 6) * 120, 690, 0.55, 0.25) + headCircle(960, 900, 0, t, 0) + sitPerson(neoAt(AGE), 700, 820, 0.88, { expr: 'worried', lx: 1 }) + sitPerson(LIA, 1000, 820, 0.78, { expr: 'worried', lx: 1 });
+  return scF('portaoEscuro', g + vig(0.8), drift(t, d, [960, 540, 1.0], [1150, 520, 1.12])); };
+// 30 — passos, indo e voltando
+S[30] = (t, d) => { const x = 960 + Math.sin(t * 0.9) * 600;
+  let g = R(-200, -200, 2320, 1480, 0, '#1C2433', 0) + fog(t, 0.45, 200, 600, 14) + shadowFig(x, 900, 1.1, 0.5) + vig(0.9) + flick(t, 0.4);
+  ['PASSOS', 'PASSOS'].forEach((l, i) => { const k = ((t * 0.5 + i * 0.5) % 1); g += T(x + (i ? 160 : -160), 980 - k * 80, '• •', 40, `rgba(220,226,234,${1 - k})`); });
+  return sc(null, g, [960, 540, 1.0]); };
+// 31 — de manhã: marca de mão no vidro, altura do rosto
+S[31] = (t, d) => { const aR = at(31, /rosto/, 0, 0.4);
+  let g = handPrint(1180, 380, 1.4, prog(t, 0.8, 2.0)) + NEOS({ x: 700, y: FY, expr: t > aR ? 'surprised' : 'worried', lx: 1 });
+  return scF('portao', g + vig(0.6), drift(t, d, [960, 540, 1.0], [1180, 430, 1.4])); };
+// 32 — dia 6: barra de cereal em quatro
+S[32] = (t, d) => { const aQ = at(32, /quatro/, 0, 0.3);
+  let g = pp(JORGE, { x: 1250, y: FY, s: 0.92, sx: -1, expr: 'tired', hr: [-40, -300] }) + cereal(1100, 560, 1.2, t > aQ ? 4 : 1) + NEOS({ x: 600, y: FY, expr: 'tired', lx: 1 }) + pp(LIA, { x: 820, y: FY, s: 0.78, expr: 'worried' });
+  return sc('praca', g, drift(t, d, [960, 540, 1.0], [1060, 520, 1.1])); };
+// 33 — você dá o seu pedaço; ela devolve a metade
+S[33] = (t, d) => { const aD = at(33, /devolve/);
+  let g = sitPerson(LIA, 1120, 820, 0.8, { expr: t > aD ? 'happy' : 'surprised' }) + sitPerson(neoAt(AGE), 780, 820, 0.88, { expr: 'happy', lx: 1 }) + cereal(950, 560, 1.4, t > aD ? 2 : 1);
+  if (t > aD) for (let i = 0; i < 3; i++) { const k = ((t * 0.45 + i / 3) % 1); g += heart(900 + i * 60, 460 - k * 200, 0.7 * (1 - k)); }
+  return scF('portao', g, drift(t, d, [960, 540, 1.0], [960, 500, 1.12])); };
+// 34 — os áudios de toda noite
+S[34] = (t, d) => { let g = NEOS({ x: 640, y: FY, expr: 'tired', hr: [130, -330], lx: 1 }) + phoneChat(1300, 540, 0.95, t, [{ k: 1 }, { k: 1 }, { k: 1 }, { k: pop1(t, 2.0) }], 'MÃE', 0);
+  g += say(120, 150, 720, 'TÔ BEM, MÃE.', 46, 'left', '#FFF6C8', t, at(34, /tô/, 0, 0.2));
+  return scF('portaoEscuro', g + vig(0.6), [960, 540, 1.0]); };
+// 35 — nenhum envia
+S[35] = (t, d) => { let g = phoneChat(960, 540, 1.4, t, [{ k: 1 }, { k: 1 }, { k: 1 }, { k: 1 }, { k: 1 }], 'MÃE', 0) + vig(0.7);
+  return scF('portaoEscuro', g, drift(t, d, [960, 540, 1.0], [960, 460, 1.2])); };
+// 36 — dia 7: as luzes apagam às 3 da tarde
+S[36] = (t, d) => { const aT = at(36, /três/, 0, 0.3), off = t > 0.9;
+  let g = NEOS({ x: 960, y: FY + 40, s: 1.0, expr: off ? 'surprised' : 'neutral' });
+  return scF(off ? 'portaoEscuro' : 'portao', g + (off ? vig(0.8) + flick(t, 0.6) : ''), drift(t, d, [960, 540, 1.0], [960, 520, 1.08])); };
+// 37 — o gerador parou; só a luz da névoa
+S[37] = (t, d) => { let g = R(-200, -200, 2320, 1480, 0, 'rgba(230,240,246,0.06)', 0) + sitPerson(neoAt(AGE), 700, 820, 0.88, { expr: 'worried', lx: 1 }) + sitPerson(LIA, 1000, 820, 0.78, { expr: 'worried', lx: 1 });
+  return scF('portaoEscuro', g + vig(0.85), drift(t, d, [960, 540, 1.0], [960, 540, 1.08])); };
+// 38 — telões apagam; esteiras param; dá pra ouvir a névoa
+S[38] = (t, d) => { const aO = at(38, /ouvir/, 0, 0.3);
+  let g = board(960, 480, 1.0, [], t, true) + vig(0.85);
+  if (t > aO) g += fog(t, 0.5 * prog(t, aO, aO + 2), 0, 1080, 17) + G(`translate(960,920) scale(${pop1(t, aO)})`, T(0, 0, 'shhhhhhh…', 50, '#BFC8DA', 8));
+  return sc('saguao', R(-200, -200, 2320, 1480, 0, 'rgba(10,12,20,0.6)', 0) + g, drift(t, d, [960, 540, 1.0], [960, 540, 1.1])); };
+// 39 — a Lia: "a névoa tá chegando mais perto, né?"
+S[39] = (t, d) => { const aA = at(39, /névoa/, 0, 0.2);
+  let g = sitPerson(LIA, 1060, 820, 0.8, { expr: 'worried', lx: -1, hl: [140, -150] }) + sitPerson(neoAt(AGE), 820, 820, 0.88, { expr: 'worried', lx: 1, hr: [-120, -150] });
+  if (t > aA) g += say(1120, 170, 620, 'A NÉVOA TÁ CHEGANDO MAIS PERTO, NÉ?', 34, 'left', '#FFFFFF', t, aA);
+  return scF('portaoEscuro', g + vig(0.85), drift(t, d, [960, 540, 1.0], [960, 500, 1.16])); };
+// 40 — você diz que não; ela sabe que é mentira
+S[40] = (t, d) => { const aM = at(40, /mentira/, 0, 0.5);
+  let g = sitPerson(LIA, 1060, 820, 0.8, { expr: t > aM ? 'sad' : 'worried', lx: -1 }) + sitPerson(neoAt(AGE), 820, 820, 0.88, { expr: 'happy', smile: true, lx: 1 });
+  g += say(220, 170, 360, 'NÃO.', 52, 'left', '#FFF6C8', t, 0.2);
+  return scF('portaoEscuro', g + vig(0.85), drift(t, d, [960, 500, 1.16], [960, 520, 1.22])); };
+// 41 — dia 8: conversar com a Dona Cida
+S[41] = (t, d) => { let g = sitPerson(CIDA, 1300, 820, 0.88, { expr: 'neutral', lx: 1 }) + NEOS({ x: 640, y: FY, expr: 'worried', lx: 1 });
+  return scF('portaoEscuro', g + vig(0.6), drift(t, d, [960, 540, 1.0], [1100, 520, 1.08])); };
+// 42 — senta do lado dela
+S[42] = (t, d) => { let g = sitPerson(CIDA, 1120, 820, 0.88, { expr: 'neutral', lx: 1 }) + sitPerson(neoAt(AGE), 800, 820, 0.88, { expr: 'neutral', lx: 1 });
+  g += say(300, 150, 700, 'DESDE QUANDO A SENHORA ESPERA?', 36, 'left', '#FFFFFF', t, 0.8);
+  return scF('portaoEscuro', g + vig(0.6), drift(t, d, [960, 540, 1.0], [960, 520, 1.06])); };
+// 43 — "desde antes da névoa. muito antes."
+S[43] = (t, d) => { const aM = at(43, /muito/, 0, 0.2);
+  let g = sitPerson(CIDA, 960, 860, 1.25, { expr: 'happy', lx: -1 });
+  g += say(1060, 150, 640, t > aM ? 'MUITO ANTES.' : 'DESDE ANTES DA NÉVOA, MEU FILHO.', 38, 'left', '#FFF6E0', t, 0.4);
+  return scF('portaoEscuro', g + vig(0.75) + (t > aM ? flick(t, 0.35) : ''), drift(t, d, [960, 480, 1.05], [960, 440, 1.25])); };
+// 44 — "filho que promete, chega"
+S[44] = (t, d) => { const aF = at(44, /filho/, 0, 0.2);
+  let g = sitPerson(CIDA, 1120, 820, 0.88, { expr: 'happy', lx: -1 }) + sitPerson(neoAt(AGE), 800, 820, 0.88, { expr: 'worried', lx: 1 });
+  if (t > aF) g += say(1000, 150, 780, 'E FILHO QUE PROMETE, CHEGA.', 42, 'right', '#FFF6E0', t, aF);
+  return scF('portaoEscuro', g + vig(0.6), drift(t, d, [960, 540, 1.0], [1000, 500, 1.1])); };
+// 45 — você lembra do seu áudio: "eu vou chegar. prometo."
+S[45] = (t, d) => { let g = NEOS({ x: 960, y: FY + 380, s: 1.6, expr: 'sad' }) + think(1160, 260, 600, 'EU VOU CHEGAR. PROMETO.', 36, t, 0.8);
+  return scF('portaoEscuro', g + vig(0.7), drift(t, d, [960, 420, 1.0], [960, 380, 1.1])); };
+// 46 — dia 9: pergunta pro Jorge
+S[46] = (t, d) => { let g = pp(JORGE, { x: 1250, y: FY, s: 0.95, sx: -1, expr: t > 3.5 ? 'sus' : 'neutral' }) + NEOS({ x: 640, y: FY, expr: 'worried', lx: 1, hr: [180, -260] });
+  g += say(300, 150, 660, 'E A DONA CIDA? DO PORTÃO 12?', 36, 'left', '#FFFFFF', t, 0.6);
+  return sc('saguao', R(-200, -200, 2320, 1480, 0, 'rgba(10,12,20,0.35)', 0) + g + vig(0.6), drift(t, d, [960, 540, 1.0], [1050, 520, 1.06])); };
+// 47 — "que senhora? o portão 12 tá vazio desde o primeiro dia"
+S[47] = (t, d) => { const aP = at(47, /portão/, 0, 0.2);
+  let g = pp(JORGE, { x: 1250, y: FY, s: 0.95, sx: -1, expr: 'sus' }) + NEOS({ x: 640, y: FY, expr: t > aP + 1 ? 'surprised' : 'worried', lx: 1 });
+  g += say(820, 150, 960, t > aP ? 'O PORTÃO 12 TÁ VAZIO DESDE O PRIMEIRO DIA.' : 'QUE SENHORA?', t > aP ? 32 : 50, 'right', '#FFFFFF', t, 0.2);
+  return sc('saguao', R(-200, -200, 2320, 1480, 0, 'rgba(10,12,20,0.35)', 0) + g + vig(0.7) + (t > aP + 1 ? flick(t, 0.3) : ''), drift(t, d, [960, 540, 1.0], [880, 520, 1.12])); };
+// 48 — a cadeira vazia, ainda quente
+S[48] = (t, d) => { const aQ = at(48, /quente/, 0, 0.3);
+  let g = G('translate(1150,1000)', R(-90, -110, 180, 30, 8, '#2C4A7A', 6) + R(-90, -330, 180, 220, 12, '#2C4A7A', 6));
+  if (t > aQ) for (let i = 0; i < 3; i++) { const k = ((t * 0.5 + i / 3) % 1); g += rp(`M${1110 + i * 40},${880 - k * 160} q16,-20 0,-40 q-16,-20 0,-40`, `rgba(255,150,90,${0.7 * (1 - k)})`, 8); }
+  g += NEOS({ x: 640, y: FY, expr: 'surprised', lx: 1, hl: [-140, -230] });
+  return scF('portaoEscuro', g + vig(0.8), drift(t, d, [960, 540, 1.0], [1150, 700, 1.4])); };
+// 49 — dia 10: contar as pessoas; milhares → 32
+S[49] = (t, d) => { const aT = at(49, /trinta/, 0, 0.2);
+  const n = t < aT ? 12480 : Math.max(32, Math.round(12480 * Math.pow(32 / 12480, prog(t, aT, aT + 1.0))));
+  let g = R(-200, -200, 2320, 1480, 0, '#141A28', 0);
+  const dots = t < aT ? 120 : 32; for (let i = 0; i < dots; i++) g += C(200 + (i % 20) * 80, 300 + Math.floor(i / 20) * 80, 22, '#E8E4F0', 4);
+  g += G('translate(960,180)', R(-320, -70, 640, 140, 40, '#1A1210', 7) + T(0, 24, `PESSOAS: ${n.toLocaleString('pt-BR')}`, 56, n < 100 ? '#FF6A6A' : '#FFFFFF'));
+  return sc(null, g + vig(0.6), [960, 540, 1.0]); };
+// 50 — ninguém viu ninguém ir embora
+S[50] = (t, d) => { let g = '';
+  [[0, 320], [1, 560], [2, 1360], [3, 1600]].forEach(([p, x], i) => { const k = 1 - prog(t, 1.0 + i * 0.7, 1.8 + i * 0.7); if (k > 0) g += `<g opacity="${k}">` + pp(PAX[p], { x, y: FY + 10, s: 0.82, sx: x > 960 ? -1 : 1, expr: 'sleep' }) + '</g>'; });
+  g += NEOS({ x: 960, y: FY, expr: 'worried' });
+  return scF('portaoEscuro', g + vig(0.75), drift(t, d, [960, 540, 1.0], [960, 520, 1.06])); };
+// 51 — o caderno: os desenhos apagados
+S[51] = (t, d) => { const aA = at(51, /apagados/, 0, 0.6);
+  let g = notebook(960, 500, 1.1, t, t > aA ? 5 : Math.floor(prog(t, 1.4, aA) * 5)) + vig(0.8) + (t > aA ? flick(t, 0.4) : '');
+  return sc(null, R(-200, -200, 2320, 1480, 0, '#2A1E30', 0) + g, drift(t, d, [960, 540, 1.0], [960, 540, 1.14])); };
+// 52 — dormir em roda, de mãos dadas
+S[52] = (t, d) => { let g = pp(JORGE, { x: 1500, y: FY, s: 0.9, sx: -1, expr: 'neutral', hr: [220, -300] }) + say(1000, 150, 680, 'NINGUÉM DORME SOZINHO.', 42, 'right', '#FFFFFF', t, 0.4);
+  for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2; g += lying(Object.assign({}, i === 0 ? LIA : i === 4 ? neoAt(AGE) : PAX[i % 6], { hs: 1, expr: 'sleep' }), 820 + Math.cos(a) * 380, 830 + Math.sin(a) * 120, 0.33); }
+  return sc('saguao', R(-200, -200, 2320, 1480, 0, 'rgba(10,12,20,0.45)', 0) + g + vig(0.7), drift(t, d, [960, 540, 1.0], [960, 560, 1.06])); };
+// 53 — a Lia e o senhor que ronca; você ri
+S[53] = (t, d) => { const aR = at(53, /ri\.?$/, 0, 0.3);
+  let g = lying(Object.assign({}, LIA, { hs: 1, expr: 'sleep' }), 640, 820, 0.55) + lying(Object.assign(neoAt(AGE), { hs: 1, expr: t > aR ? 'laugh' : 'neutral' }), 960, 820, 0.55) + lying(Object.assign({}, PAX[2], { hs: 1, expr: 'sleep' }), 1300, 820, 0.55) + G('translate(1380,620)', T(0, 0, 'ZZZRRRR', 40 + 6 * Math.sin(t * 6), '#FFFFFF', 8));
+  return sc('saguao', R(-200, -200, 2320, 1480, 0, 'rgba(10,12,20,0.45)', 0) + g + vig(0.6), drift(t, d, [960, 640, 1.0], [960, 700, 1.12])); };
+// 54 — "se eu sumir, você me desenha de novo?"
+S[54] = (t, d) => { let g = lying(Object.assign({}, LIA, { hs: 1, expr: 'sad' }), 820, 760, 0.8) + lying(Object.assign(neoAt(AGE), { hs: 1, expr: 'sad' }), 1180, 760, 0.8);
+  g += say(500, 170, 920, 'SE EU SUMIR, VOCÊ ME DESENHA DE NOVO?', 38, 'left', '#FFFFFF', t, at(54, /se/, 0, 0.1));
+  return sc('saguao', R(-200, -200, 2320, 1480, 0, 'rgba(10,12,20,0.55)', 0) + g + vig(0.75), drift(t, d, [960, 640, 1.1], [960, 680, 1.22])); };
+// 55 — dia 11: madrugada, o celular vibra
+S[55] = (t, d) => { const sh = Math.sin(t * 50) * 6;
+  let g = R(-200, -200, 2320, 1480, 0, '#0C0F18', 0) + G(`translate(${960 + sh},560) scale(1.2)`, R(-180, -330, 360, 660, 44, '#1A1A20', 8) + R(-160, -300, 320, 600, 26, '#2C3550', 0) + T(0, -20, '04:02', 80, '#FFFFFF')) + T(960 - 300, 560, ')))', 60, '#FFFFFF') + T(960 + 300, 560, '(((', 60, '#FFFFFF');
+  return sc(null, g + vig(0.6), drift(t, d, [960, 540, 1.0], [960, 520, 1.1])); };
+// 56 — uma barrinha. três segundos.
+S[56] = (t, d) => { const aT = at(56, /três/, 0, 0.3);
+  let g = R(-200, -200, 2320, 1480, 0, '#0C0F18', 0) + phoneChat(960, 540, 1.3, t, [{ k: 1 }, { k: 1 }, { k: 1 }], 'MÃE', 1);
+  if (t > aT) g += G('translate(1460,300)', C(0, 0, 70, '#C62A2A', 0) + T(0, 24, String(Math.max(1, 3 - Math.floor(t - aT))), 72, '#FFFFFF'));
+  return sc(null, g, drift(t, d, [960, 540, 1.0], [1060, 320, 1.4])); };
+// 57 — os 11 áudios são enviados
+S[57] = (t, d) => { let g = R(-200, -200, 2320, 1480, 0, '#0C0F18', 0) + phoneChat(960, 540, 1.3, t, [0, 1, 2, 3, 4].map(i => ({ k: 1, sent: t > 0.6 + i * 0.25 })), 'MÃE', 1) + badgeB(1460, 300, pop1(t, 2.2), '11 ENVIADAS ✓✓', '#2E7D5A', '#FFFFFF', 40);
+  return sc(null, g, drift(t, d, [960, 540, 1.0], [960, 540, 1.06])); };
+// 58 — chega uma resposta: o play com a mão tremendo
+S[58] = (t, d) => { const aP = at(58, /play/, 0, 0.3);
+  let g = R(-200, -200, 2320, 1480, 0, '#0C0F18', 0) + G(`translate(${Math.sin(t * 30) * 4},0)`, phoneChat(960, 540, 1.3, t, [{ k: 1, sent: true }, { k: 1, sent: true }, { k: pop1(t, 0.8), in: true }], 'MÃE', 1));
+  if (t > aP) g += G('translate(960,720)', C(0, 0, 60, '#2E7D5A', 0) + P('M-14,-24 L26,0 L-14,24Z', '#FFFFFF', 0));
+  return sc(null, g + vig(0.6), drift(t, d, [960, 540, 1.0], [960, 600, 1.15])); };
+// 59 — a voz da mãe: "eu tô esperando você"
+S[59] = (t, d) => { let g = R(-200, -200, 2320, 1480, 0, '#141A28', 0) + fog(t, 0.6, 0, 1080, 22) + memPanel(560, 160, 800, 640, 1, R(0, 0, 800, 640, 0, '#2A3352', 0) + fog(t, 0.7, 0, 640, 23) + G('translate(400,640) scale(0.7)', person(Object.assign({}, LUCIA, { x: 0, y: 0, s: 1, expr: 'worried', hr: [110, -470] }))), 24);
+  for (let i = 0; i < 24; i++) g += R(560 + i * 34, 900 - (8 + 30 * Math.abs(Math.sin(t * 6 + i))), 18, 2 * (8 + 30 * Math.abs(Math.sin(t * 6 + i))), 6, '#5BE38A', 0);
+  return sc(null, g + vig(0.6), drift(t, d, [960, 540, 1.0], [960, 500, 1.08])); };
+// 60 — "não confia na senhora do portão 12"
+S[60] = (t, d) => { const aN = at(60, /não/, 0, 0.1);
+  let g = R(-200, -200, 2320, 1480, 0, '#08090E', 0) + (t > aN ? bigTxt(960, 480, pop1(t, aN), 'NÃO CONFIA NA SENHORA', 'DO PORTÃO 12', '#FFFFFF', '#FF4A4A', 60, 84) : '') + vig(0.8) + (t > aN + 1.5 ? flick(t, 0.6) : '');
+  return sc(null, g, drift(t, d, [960, 540, 1.0], [960, 520, 1.12])); };
+// 61 — o sinal some
+S[61] = (t, d) => { let g = R(-200, -200, 2320, 1480, 0, '#0C0F18', 0) + phoneChat(960, 540, 1.3, t, [{ k: 1, sent: true }, { k: 1, in: true }], 'MÃE', t > 0.5 ? 0 : 1) + G(`translate(960,560) scale(${pop1(t, 0.6)})`, R(-170, -40, 340, 80, 20, '#C62A2A', 0) + T(0, 14, 'SEM SINAL', 38, '#FFFFFF'));
+  return sc(null, g + vig(0.7), [960, 540, 1.0]); };
+// 62 — dia 12, 03:17
+S[62] = (t, d) => { let g = R(-200, -200, 2320, 1480, 0, '#08090E', 0) + G(`translate(960,500) scale(${pop1(t, 0.2)})`, T(0, 0, '03:17', 220, '#FF4A4A', 22)) + vig(0.8);
+  return sc(null, g, drift(t, d, [960, 540, 1.0], [960, 520, 1.1])); };
+// 63 — barulho de turbina acorda o aeroporto
+S[63] = (t, d) => { const aT = at(63, /turbina/, 0, 0.3);
+  let g = lying(Object.assign({}, LIA, { hs: 1, expr: t > 1.2 ? 'surprised' : 'sleep' }), 640, 820, 0.55) + lying(Object.assign(neoAt(AGE), { hs: 1, expr: t > 1.2 ? 'surprised' : 'sleep' }), 960, 820, 0.55) + lying(Object.assign({}, PAX[2], { hs: 1, expr: t > 1.2 ? 'surprised' : 'sleep' }), 1300, 820, 0.55);
+  if (t > aT) g += G(`translate(${960 + Math.sin(t * 40) * 6},300) scale(${pop1(t, aT)})`, T(0, 0, 'VRUUUUUUMMM', 90, '#FFFFFF', 14));
+  return sc('saguao', R(-200, -200, 2320, 1480, 0, 'rgba(10,12,20,0.55)', 0) + g + vig(0.7), drift(t, d, [960, 640, 1.0], [960, 600, 1.08])); };
+// 64 — corre pra janela: duas luzes descendo
+S[64] = (t, d) => { const aL = at(64, /luzes/, 0, 0.3);
+  let g = R(-200, -200, 2320, 1480, 0, '#C9D2D9', 0) + fog(t, 0.9, 0, 1080, 24) + planeLights(960 + (t - aL) * 20, 200 + Math.max(0, t - aL) * 60, t, pop1(t, aL)) + fog(t + 2, 0.6, 200, 700, 25);
+  return sc(null, g + vig(0.6), drift(t, d, [960, 540, 1.0], [960, 540, 1.1])); };
+// 65 — o avião pousa sozinho
+S[65] = (t, d) => { const k = eout(prog(t, 0, d * 0.7));
+  let g = fog(t, 0.95 - k * 0.3, 0, 1080, 26) + fog(t + 3, 0.7, 300, 500, 27) + planeLights(1700 - k * 200, 560, t, 1 - k);
+  return sc('pista', g + vig(0.55), drift(t, d, [1400, 540, 1.3], [960, 540, 1.0])); };
+// 66 — para em frente ao portão 12
+S[66] = (t, d) => { let g = fog(t, 0.85, 200, 760, 28) + R(-200, -200, 2320, 1480, 0, 'rgba(20,26,40,0.35)', 0) + NEOS({ x: 600, y: FY + 120, s: 1.0, expr: 'surprised', back: true }) + pp(LIA, { x: 820, y: FY + 120, s: 0.85, back: true });
+  return scF('portaoEscuro', g + vig(0.6), drift(t, d, [960, 540, 1.0], [960, 520, 1.1])); };
+// 67 — o painel acende: voo 777 — chegou
+S[67] = (t, d) => { const aC = at(67, /chegou/, 0, 0.3);
+  let g = board(960, 520, 1.15, [['', '', '', 0], ['03:22', 'VOO 777', t > aC ? 'CHEGOU' : '', pop1(t, at(67, /voo/, 0, 0.2))]], t) + vig(0.8);
+  return sc('saguao', R(-200, -200, 2320, 1480, 0, 'rgba(8,10,16,0.75)', 0) + g, drift(t, d, [960, 520, 1.0], [960, 470, 1.25])); };
+// 68 — Dona Cida de pé, sorrindo
+S[68] = (t, d) => { const aS = at(68, /sorrindo/, 0, 0.4);
+  let g = pp(CIDA, { x: 960, y: FY + 60, s: 1.05, expr: t > aS ? 'happy' : 'neutral' }) + (t > aS ? flick(t, 0.35) : '');
+  return scF('portaoEscuro', g + vig(0.8), drift(t, d, [960, 540, 1.0], [960, 420, 1.35])); };
+// 69 — a porta se abre; a escada desce; uma voz chama o seu nome
+S[69] = (t, d) => { const aP = at(69, /porta/), aE = at(69, /escada/), aV = at(69, /voz/, 0, 0.2);
+  const open = prog(t, aP, aP + 1.2);
+  let g = G(`translate(1572,540)`, R(-60, -108, 120, 216, 6, '#2A3142', 0) + (open > 0 ? R(-60, -108, 120 * open, 216, 6, `rgba(255,240,200,${0.85 * open})`, 0) + C(0, 0, 160 * open, `rgba(255,240,200,${0.12 * open})`, 0) : '')) + stairs(1572, 830, prog(t, aE, aE + 1.0), 210) + fog(t, 0.6, 400, 680, 29);
+  if (t > aV) g += G(`translate(1572,330) scale(${pop1(t, aV)})`, T(0, 0, '"…?"', 70, '#FFF6C8', 10));
+  return sc('pista', g + vig(0.7), drift(t, d, [960, 540, 1.0], [1560, 580, 1.7])); };
+// 70 — uma voz que você conhece desde que nasceu
+S[70] = (t, d) => { let g = NEOS({ x: 960, y: FY + 380, s: 1.6, expr: 'surprised' }) + tears(960, 330, t, 0.9 * prog(t, 1.5, 2.5)) + R(-200, -200, 2320, 1480, 0, `rgba(255,240,200,${0.15 + 0.1 * Math.sin(t * 3)})`, 0);
+  return scF('portaoEscuro', g + vig(0.8), drift(t, d, [960, 420, 1.0], [960, 380, 1.16])); };
+// 71 — CTA: você entraria nesse avião? parte 2
+S[71] = (t, d) => { let g = fog(t, 0.6, 400, 680, 30) + G('translate(1572,540)', R(-60, -108, 120, 216, 6, 'rgba(255,240,200,0.85)', 0) + C(0, 0, 160, 'rgba(255,240,200,0.12)', 0)) + stairs(1572, 830, 1, 210);
+  g += G(`translate(1000,760) scale(${pop1(t, 2.5)})`, R(-260, -60, 520, 120, 30, '#C62A2A', 7) + T(0, 18, 'PARTE 2 EM BREVE', 46, '#FFFFFF'));
+  return sc('pista', g + vig(0.6), [1400, 560, 1.3]); };
+
+function titleOverlay(t) {
+  if (t > 8) return '';
+  const k = back(prog(t, 0, 0.3)), out = 1 - prog(t, 7.6, 8);
+  return G(`translate(960,860) scale(${k * out})`, R(-620, -80, 1240, 160, 40, 'rgba(26,18,16,0.92)', 0) + T(0, -22, '30 DIAS PRESO NO AEROPORTO', 50, '#FFFFFF') + T(0, 44, 'PARTE 1', 60, '#FF6A6A'));
+}
+function ctaOverlay(t) {
+  const a = TL.lines[71].start - 0.1;
+  if (t < a) return '';
+  const k = back(prog(t, a, a + 0.35));
+  return G(`translate(960,170) scale(${k})`, R(-640, -110, 1280, 220, 40, 'rgba(26,18,16,0.94)', 0) + T(0, -36, 'VOCÊ ENTRARIA', 52, '#FFFFFF') + T(0, 48, 'NESSE AVIÃO?', 70, '#FFE14D'));
+}
