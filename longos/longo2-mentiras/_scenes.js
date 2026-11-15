@@ -1,0 +1,409 @@
+// ================= LONGO 1 — "E se você ficasse 1 ano MAIS NOVO todo dia?" (16:9) =================
+// ---------- fundo 3D: imagens pré-carregadas atrás do SVG, com a mesma câmera
+const BG_NAMES = ['restaurante', 'loja', 'hospital', 'hospitalQuarto', 'banheiro', 'quarto', 'quartoNoite', 'sala', 'escritorio', 'banco', 'mercado', 'consultorio', 'infancia', 'infanciaNoite', 'maeSala', 'maeSalaNoite', 'maeCozinha', 'escola', 'rua', 'ruaTarde'];
+const BGW = document.createElement('div');
+BGW.style.cssText = 'position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;background:#000;z-index:0';
+const BGI = document.createElement('div'); BGI.style.cssText = 'position:absolute;left:0;top:0;transform-origin:0 0'; BGW.appendChild(BGI);
+const BGIMG = {};
+for (const n of BG_NAMES) { const im = document.createElement('img'); im.src = 'bg/' + n + '.png'; im.style.cssText = 'position:absolute;left:-192px;top:-108px;width:2304px;height:1296px;display:none;filter:blur(1.1px) saturate(1.12)'; BGI.appendChild(im); BGIMG[n] = im; }
+document.body.insertBefore(BGW, document.body.firstChild);
+document.getElementById('s').style.cssText = 'position:absolute;left:0;top:0;z-index:1';
+let BGCUR = null;
+function applyBg(name, cam, punch) {
+  if (BGCUR !== name) { if (BGCUR && BGIMG[BGCUR]) BGIMG[BGCUR].style.display = 'none'; if (name && BGIMG[name]) BGIMG[name].style.display = 'block'; BGCUR = name; }
+  if (name) BGI.style.transform = `translate(960px,540px) scale(${cam[2] * punch}) translate(${-cam[0]}px,${-cam[1]}px)`;
+}
+window.bgReady = () => Promise.all(Object.values(BGIMG).map(i => i.complete ? 1 : new Promise(r => { i.onload = r; i.onerror = r; })));
+
+// ---------- personagens
+const pp = (d, o) => person(Object.assign({}, d, o));
+const pop1 = (t, at, d = 0.25) => back(prog(t, at, at + d));
+function neoAt(age, o = {}) {
+  const K = [[30, 1.0, 0.85, 150, 70], [21, 0.97, 0.9, 136, 62], [16, 0.92, 0.98, 110, 50], [12, 0.82, 1.08, 80, 35], [8, 0.72, 1.2, 50, 20], [4, 0.58, 1.38, 15, 5], [2, 0.48, 1.5, 0, 0], [0, 0.4, 1.6, 0, 0]];
+  let i = 0; while (i < K.length - 2 && age < K[i + 1][0]) i++;
+  const [a0, s0, h0, l0, t0] = K[i], [a1, s1, h1, l1, t1] = K[i + 1], k = clamp((a0 - age) / (a0 - a1));
+  return Object.assign({}, NEO, { s: lerp(s0, s1, k), hs: lerp(h0, h1, k), legX: lerp(l0, l1, k), torsoX: lerp(t0, t1, k) }, o);
+}
+const NEOp = (age, o) => person(neoAt(age, o));
+// elenco próprio do canal (olhos de anime, cabelos e roupas que não existem no canal do Kai)
+const LUCIA = { skin: '#F3CDB0', shirt: '#3E8A8A', inner: '#F6EAD8', stripe: '#2E6A6A', skirt: '#5A4A6A', pants: '#6A5A7A', shoe: '#4A2E22', hair: 'bob', hairCol: '#CFCBD6', anime: true, iris: '#8A5A3A', old: true, specs: '#6A4A3A', earring: '#F4F1EA', legX: 50, torsoX: 24, hs: 0.95 };
+const LUCIA_J = Object.assign({}, LUCIA, { hairCol: '#3A2418', shirt: '#E08A5A', stripe: '#B5603A', old: false, specs: null, skirt: '#2C3E66', pants: '#F3CDB0' });   // a mãe 30 anos atrás
+const xt = (o) => Object.assign({ anime: true, tie: null, shoe: '#2B2B2B', pants: '#2E3442', legX: 60, torsoX: 25, hs: 0.95 }, o);
+const CHEFE = xt({ skin: '#E8B98F', shirt: '#2C3550', tie: '#C62A2A', hair: 'side', hairCol: '#4A4A55', stubble: true, iris: '#5A4A3A', legX: 70 });
+const MOCA = xt({ skin: '#D9A47A', shirt: '#2C6F5A', inner: '#F4F4F4', stripe: '#F4F4F4', hair: 'pony', hairCol: '#8A3A22', iris: '#3E8A6A', earring: '#E0B13A' });
+const GERENTE = xt({ skin: '#F1C7A0', shirt: '#5A6070', tie: '#2C6FB6', hair: 'side', hairCol: '#1B1716', specs: '#2A2A33', iris: '#3A4A6A' });
+const COLEGA1 = xt({ skin: '#F5D2B0', shirt: '#7A5AC8', hair: 'spiky', hairCol: '#C7782E', iris: '#4A8A3A' });
+const COLEGA2 = xt({ skin: '#C88F66', shirt: '#E07B9A', hair: 'wavy', hairCol: '#2A1C14', iris: '#6A3A2A', earring: '#F2B636', skirt: '#2E3442', pants: '#C88F66' });
+const CAIXA = xt({ skin: '#C88F66', shirt: '#3E9B4A', apron: '#C62A2A', hair: 'buzz', hairCol: '#2A211C', iris: '#4A3A2A', stubble: true });
+const MEDICO = xt({ skin: '#F5D2B0', shirt: '#FFFFFF', longCoat: true, inner: '#9FC7E8', stripe: '#DDE3EA', hair: 'side', hairCol: '#B8B4AE', specs: '#3A3F4B', iris: '#3A5A7A', legX: 70 });
+const KID1 = xt({ skin: '#E8B98F', shirt: '#2C6FB6', hair: 'spiky', hairCol: '#3A2418', iris: '#5A3A22', hs: 1.2, legX: 0, torsoX: 0 });
+const KID2 = xt({ skin: '#F1C7A0', shirt: '#F28FB0', hair: 'pony', hairCol: '#E0B13A', iris: '#3A7AC8', skirt: '#2C3E66', pants: '#F1C7A0', hs: 1.2, legX: 0, torsoX: 0 });
+const PAIV = xt({ skin: '#E8B98F', shirt: '#5A6070', hair: 'side', hairCol: '#2A211C' });
+const MAEESC = xt({ skin: '#D9A47A', shirt: '#C2A04A', hair: 'wavy', hairCol: '#6A4A2A', iris: '#5A3A22', skirt: '#3A3F4B', pants: '#D9A47A' });
+// ---------- utilidades de cena
+const sc = (bg, g, cam = [960, 540, 1]) => ({ bg, g, cam });
+const drift = (t, d, a, b) => { const k = eio(prog(t, 0, d)); return [lerp(a[0], b[0], k), lerp(a[1], b[1], k), lerp(a[2], b[2], k)]; };
+function rays(t, c1, c2) { const id = 'bg' + (ZID++); let g = `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient>` + R(-200, -200, 2320, 1480, 0, `url(#${id})`, 0); g += `<radialGradient id="${id}g"><stop offset="0" stop-color="#FFF0D2" stop-opacity="0.35"/><stop offset="1" stop-color="#FFF0D2" stop-opacity="0"/></radialGradient>` + C(960, 600, 700, `url(#${id}g)`, 0); const r = rng(11); for (let i = 0; i < 26; i++) { const x = r() * 1920, y = ((r() * 1080 - t * (20 + r() * 30)) % 1080 + 1080) % 1080; g += C(x, y, 3 + r() * 4, `rgba(255,250,230,${0.35 + 0.3 * Math.sin(t * 2 + i)})`, 0); } return g; }
+const dark = (a = 0.55) => R(-200, -200, 2320, 1480, 0, `rgba(10,8,20,${a})`, 0);
+function badgeB(x, y, k, txt, bg = '#1A1210', fg = '#FFE14D', size = 64, rot = -3) { if (k <= 0) return ''; const w = txt.length * size * 0.62 + 70; return G(`translate(${x},${y}) scale(${k}) rotate(${rot})`, R(-w / 2, -size * 0.85, w, size * 1.7, size * 0.5, bg, 7) + T(0, 6, txt, size, fg)); }
+function bigTxt(x, y, k, l1, l2, c1 = '#FFFFFF', c2 = '#FFE14D', s1 = 70, s2 = 86) { if (k <= 0) return ''; return G(`translate(${x},${y}) scale(${k})`, T(0, -s2 * 0.55, l1, s1, c1, 14) + (l2 ? T(0, s1 * 0.75, l2, s2, c2, 16) : '')); }
+function mirror2d(x, y, w, h, inner) { return R(x - w / 2 - 18, y - h / 2 - 18, w + 36, h + 36, 30, '#8FA4B3', 7) + clipG(`<rect x="${x - w / 2}" y="${y - h / 2}" width="${w}" height="${h}" rx="20"/>`, R(x - w / 2, y - h / 2, w, h, 0, '#CFE9F5', 0) + inner + `<path d="M${x - w * 0.35},${y + h * 0.1} L${x - w * 0.05},${y - h * 0.45}" stroke="rgba(255,255,255,0.55)" stroke-width="26"/>`); }
+const neoHead = (age, o = {}) => head(Object.assign(neoAt(age), { hs: 1 }, o));
+function phoneB(x, y, s, title, lines = [], t = 0, ring = 0) { const sh = ring ? Math.sin(t * 40) * 5 : 0; let g = R(-150, -280, 300, 560, 40, '#1A1A20', 8) + R(-132, -250, 264, 500, 24, '#F4F6FA', 0) + R(-132, -250, 264, 70, 24, '#2E7D5A', 0) + T(0, -212, title, 32, '#FFFFFF'); lines.forEach((l, i) => { const k = l[1]; if (k <= 0) return; g += G(`translate(${l[2] ? 20 : -20},${-130 + i * 110}) scale(${k})`, R(-110, -40, 220, 84, 18, l[2] ? '#DCF8C6' : '#FFFFFF', 4) + T(0, 4, l[0], 24, '#1A1210')); }); return G(`translate(${x + sh},${y}) scale(${s})`, g); }
+function idCard(x, y, s, age) { return G(`translate(${x},${y}) scale(${s})`, R(-220, -140, 440, 280, 24, '#BFE3C8', 7) + R(-200, -120, 160, 200, 12, '#FFFFFF', 5) + clipG('<rect x="-200" y="-120" width="160" height="200" rx="12"/>', G('translate(-120,-10) scale(0.62)', neoHead(age, { expr: 'neutral' }))) + T(90, -80, 'IDENTIDADE', 30, '#2C6F5A') + R(0, -40, 190, 18, 6, '#8FB59A', 0) + R(0, 0, 160, 18, 6, '#8FB59A', 0) + R(0, 40, 180, 18, 6, '#8FB59A', 0) + T(90, 100, `${age} ANOS`, 30, '#1A1210')); }
+function polaroid(x, y, s, rot, age, lab) { return G(`translate(${x},${y}) rotate(${rot}) scale(${s})`, R(-130, -150, 260, 300, 10, '#FFFFFF', 6) + R(-110, -130, 220, 200, 4, '#CFE6F2', 0) + clipG('<rect x="-110" y="-130" width="220" height="200"/>', G('translate(0,-20) scale(0.7)', neoHead(age, { expr: 'neutral' }))) + T(0, 110, lab, 34, '#1A1210')); }
+function note(x, y, s, rot, lines, child = false) { let g = R(-330, -400, 660, 800, 14, '#FFF8E6', 7) + R(-330, -400, 660, 800, 14, 'url(#vol)', 0) + Ln(-250, -400, -250, 400, 'rgba(220,80,80,0.4)', 4); for (let i = 0; i < 11; i++) g += Ln(-320, -300 + i * 64, 320, -300 + i * 64, 'rgba(120,150,200,0.45)', 3); lines.forEach((l, i) => { if (!l) return; g += T(child ? 0 : -230, -318 + i * 64, l, child ? 50 : 36, child ? '#3A3FAA' : '#2C3E66', 0, child ? `transform="rotate(${(i % 2 ? 2 : -2)} 0 ${-318 + i * 64})"` : 'text-anchor="start"'); }); return G(`translate(${x},${y}) rotate(${rot}) scale(${s})`, g); }
+function pills(x, y, s) { let g = ''; [['#E04B3C', -70], ['#2C6FB6', 0], ['#F2B636', 70]].forEach(([c, dx]) => { g += R(dx - 26, -80, 52, 80, 10, '#FFFFFF', 5) + R(dx - 28, -100, 56, 26, 8, c, 5); }); return G(`translate(${x},${y}) scale(${s})`, g); }
+function xray(x, y, s, t) { let g = R(-260, -300, 520, 600, 20, '#101826', 8) + C(0, -190, 70, 'none', 0, 'stroke="#BFE8FF" stroke-width="10"'); g += `<g stroke="#BFE8FF" stroke-width="10" fill="none" opacity="${0.75 + 0.25 * Math.sin(t * 4)}"><path d="M0,-120 L0,120 M-90,-90 L90,-90 M-60,-50 L60,-50 M-60,-10 L60,-10 M-60,30 L60,30 M-90,-90 L-150,60 M90,-90 L150,60 M0,120 L-60,280 M0,120 L60,280"/></g>`; return G(`translate(${x},${y}) scale(${s})`, g); }
+function boneIcon(x, y, s) { return G(`translate(${x},${y}) scale(${s})`, C(-110, -26, 34, '#FFF8E6', 6) + C(-110, 26, 34, '#FFF8E6', 6) + C(110, -26, 34, '#FFF8E6', 6) + C(110, 26, 34, '#FFF8E6', 6) + R(-110, -24, 220, 48, 10, '#FFF8E6', 0) + Ln(-110, -24, 110, -24, O, 5) + Ln(-110, 24, 110, 24, O, 5)); }
+function tooth(x, y, s, milk = false) { return G(`translate(${x},${y}) scale(${s})`, P('M-50,-60 Q0,-80 50,-60 Q70,0 40,30 L30,90 Q20,100 10,60 L0,40 L-10,60 Q-20,100 -30,90 L-40,30 Q-70,0 -50,-60Z', milk ? '#FFFDF5' : '#F2EBD8', 7) + E(-20, -40, 14, 8, 'rgba(255,255,255,0.8)', 0)); }
+function brainIco(x, y, s, fade = 0) { let g = P('M-120,0 C-150,-100 -40,-150 0,-110 C40,-150 150,-100 120,0 C150,80 60,130 0,100 C-60,130 -150,80 -120,0Z', '#F4A3B8', 8) + P('M0,-110 L0,100 M-80,-40 Q-40,-60 -20,-20 M80,-40 Q40,-60 20,-20 M-90,40 Q-50,30 -30,60 M90,40 Q50,30 30,60', 'none', 7); return G(`translate(${x},${y}) scale(${s})`, `<g opacity="${1 - fade}">${g}</g>`); }
+function babyHeld(x, y, s, sleep = false) { let g = E(0, 40, 150, 90, '#F4E6D8', 7) + E(0, 40, 150, 90, 'url(#vol)', 0) + G('translate(-80,-10) scale(0.62)', head(Object.assign(neoAt(0), { hs: 1, expr: sleep ? 'sleep' : 'neutral', blink: false }))); return G(`translate(${x},${y}) scale(${s})`, g); }
+function notes(t, x, y) { let g = ''; for (let i = 0; i < 4; i++) { const k = ((t * 0.35 + i / 4) % 1); g += G(`translate(${x + Math.sin(k * 6 + i) * 40 + i * 30},${y - k * 300})`, `<g opacity="${1 - k}">` + C(0, 0, 14, '#FFF6C8', 4) + Ln(12, 0, 12, -50, O, 6) + Ln(12, -50, 36, -40, O, 6) + '</g>'); } return g; }
+function sweatLines(x, y, t) { let g = ''; for (const sd of [-1, 1]) for (let i = 0; i < 3; i++) g += Ln(x + sd * (40 + i * 6), y - 20 + i * 26, x + sd * (66 + i * 6), y - 26 + i * 26, '#FFFFFF', 7); return g; }
+function doorIn(x, y) { return ''; }
+// chão onde os personagens pisam (frente)
+const FY = 1030;
+
+// ================= LONGO 2 — "E se você ganhasse R$100 toda vez que alguém MENTISSE pra você?" =================
+const DAVI = xt({ skin: '#8A5A3A', shirt: '#E0B13A', hair: 'afro', hairCol: '#1B1716', iris: '#4A2E1A' });
+const GARCOM = xt({ skin: '#F1C7A0', shirt: '#FFFFFF', apron: '#2A2A33', hair: 'side', hairCol: '#2A211C', stubble: true, iris: '#3A5A7A' });
+const PORTEIRO = xt({ skin: '#D9A47A', shirt: '#3E6A8A', hair: 'buzz', hairCol: '#9A948E', old: true, iris: '#5A3A22' });
+const VENDEDORA = xt({ skin: '#F5D2B0', shirt: '#C2577A', hair: 'pony', hairCol: '#1B1716', earring: '#F2B636', skirt: '#2E3442', pants: '#F5D2B0', iris: '#5A3A6A' });
+const AGE = 25;
+const NEO25 = (o) => NEOp(AGE, o);
+// ---------- eventos de dinheiro (cada "plim" = +R$100)
+const EV = [];
+TL.lines.forEach((l, li) => l.words.forEach((w, wi) => { const tx = w.text.toLowerCase(); if (/^plim/.test(tx) && !(wi > 0 && /nenhum/.test(l.words[wi - 1].text.toLowerCase()))) EV.push({ t: w.start, add: 100 }); }));
+const wg = (L, re, n = 0) => { const ws = TL.lines[L].words; let c = 0; for (const w of ws) if (re.test(w.text.toLowerCase())) { if (c === n) return w.start; c++; } return TL.lines[L].start; };
+EV.push({ t: wg(0, /recebeu/), add: 100 }, { t: wg(1, /outra/, 0), add: 100 }, { t: wg(1, /outra/, 1), add: 100 }, { t: wg(23, /^cem/), add: 100, mae: true }, { t: wg(56, /^cem/), add: 100, mae: true });
+EV.push({ t: wg(7, /oitocentos/), set: 1100 }, { t: wg(16, /doze/), set: 12000 }, { t: wg(22, /cinquenta/), set: 50000 }, { t: wg(42, /cinquenta/), set: 58000 }, { t: wg(42, /pagou/) + 0.3, set: 0, pay: true });
+EV.sort((a, b) => a.t - b.t);
+function saldoAt(T) { let s = 0; for (const e of EV) { if (e.t > T) break; if (e.set !== undefined) s = e.set; else s += e.add; } return s; }
+const brl = (v) => 'R$ ' + v.toLocaleString('pt-BR');
+const DAYS = [[3, '1'], [8, '2'], [12, '3'], [16, '7'], [19, '10'], [23, '11'], [24, '12'], [35, '15'], [42, '16'], [49, '20'], [54, 'HOJE']];
+function dayLbl(T) { let d = ''; for (const [L, v] of DAYS) if (T >= TL.lines[L].start - 0.15) d = v; return d; }
+function levelHud(i, t) {
+  if (i > 56) return '';
+  const d = dayLbl(t), s = saldoAt(t), last = [...EV].reverse().find(e => e.t <= t && (e.add || e.pay));
+  const k = last ? 1 + 0.15 * (1 - prog(t, last.t, last.t + 0.4)) : 1;
+  let g = '';
+  if (d) g += G('translate(70,62)', R(0, 0, d === 'HOJE' ? 190 : 210, 74, 26, '#1A1210', 6) + T(d === 'HOJE' ? 95 : 105, 40, d === 'HOJE' ? 'HOJE' : `DIA ${d}`, 44, '#FFFFFF'));
+  g += G(`translate(${d ? 296 : 70},62)`, R(0, 0, 400, 74, 26, '#2E7D5A', 6) + G(`translate(200,40) scale(${k})`, T(0, 0, `SALDO ${brl(s)}`, 40, '#FFFFFF')));
+  return g + notif(t);
+}
+/** notificação do banco que desce no canto a cada mentira */
+function notif(t) {
+  const e = [...EV].reverse().find(x => x.add && x.t <= t && t < x.t + 1.7); if (!e) return '';
+  const k = eout(prog(t, e.t - 0.05, e.t + 0.25)) * (1 - prog(t, e.t + 1.4, e.t + 1.7));
+  return G(`translate(1380,${-90 + 190 * k})`, R(0, 0, 500, 110, 26, '#FFFFFF', 6) + C(56, 55, 36, '#2E7D5A', 0) + T(56, 60, '$', 44, '#FFFFFF') + T(290, 42, '+R$ 100', 40, '#2E7D5A') + T(290, 84, e.mae ? 'Mentira detectada · origem: MÃE' : 'Mentira detectada', 24, e.mae ? '#C62A2A' : '#5A6070'));
+}
+// ---------- objetos 2D
+function bills(t, n = 18, seed = 3) { let g = ''; const r = rng(seed); for (let i = 0; i < n; i++) { const x = r() * 1920, sp = 120 + r() * 160, y = ((r() * 1300 + t * sp) % 1300) - 150, a = Math.sin(t * 2 + i) * 30; g += G(`translate(${x},${y}) rotate(${a})`, R(-50, -24, 100, 48, 6, '#7BC67E', 4) + C(0, 0, 14, '#4E9A52', 0) + T(0, 4, '100', 16, '#1F4D22')); } return g; }
+function tv2d(x, y, s, inner) { return G(`translate(${x},${y}) scale(${s})`, R(-300, -180, 600, 360, 18, '#1A1A20', 8) + R(-280, -162, 560, 324, 8, '#2C3E66', 0) + clipG('<rect x="-280" y="-162" width="560" height="324"/>', inner) + R(-60, 180, 120, 20, 6, '#2A2A33', 0)); }
+function burger(x, y, s, ugly) { return G(`translate(${x},${y}) scale(${s})`, E(0, 40, 120, 30, ugly ? '#B58A4A' : '#E8B66A', 6) + (ugly ? E(10, 10, 110, 14, '#5A3A22', 0) + E(-10, 0, 90, 8, '#7A9A4A', 0) : E(0, 14, 130, 22, '#7A4A2A', 6) + E(0, -6, 136, 14, '#5FAE58', 0) + E(0, -18, 130, 12, '#E04B3C', 0) + E(0, -30, 128, 12, '#F2B636', 0)) + P(ugly ? 'M-110,-10 Q0,-40 110,-6 L110,4 L-110,4Z' : 'M-120,-36 Q0,-130 120,-36Z', ugly ? '#B58A4A' : '#E8A050', 6)); }
+function catScreen(x, y, s, t) { return G(`translate(${x},${y}) scale(${s})`, R(-160, -100, 320, 200, 10, '#BFE3F5', 6) + C(0, 10, 60, '#F2B636', 5) + P('M-50,-30 L-40,-80 L-12,-48Z', '#F2B636', 5) + P('M50,-30 L40,-80 L12,-48Z', '#F2B636', 5) + C(-20, 0, 8, O, 0) + C(20, 0, 8, O, 0) + P('M-8,20 Q0,28 8,20', 'none', 4) + T(0, 80, '▶ GATINHO FOFO', 20, '#1A1210')); }
+function mapPhone(x, y, s, t, at) { const k = prog(t, at, at + 0.6); return phoneB(x, y, s, 'MOTORISTA', [[k > 0 ? '20 MIN' : '2 MIN', 1, 0]], t) + (k > 0 ? G(`translate(${x},${y - 130 * s}) scale(${s})`, Ln(-80, 0, 80, 0, '#C62A2A', 10)) : ''); }
+function pkg(x, y, s) { return G(`translate(${x},${y}) scale(${s})`, R(-80, -70, 160, 120, 8, '#C98A4B', 6) + Ln(-80, -20, 80, -20, '#8A5A33', 6) + R(-20, -70, 40, 120, 0, 'rgba(255,255,255,0.25)', 0)); }
+function people10(x, y, n6, k) { let g = ''; for (let i = 0; i < 10; i++) { const hl = i < n6 && k > 0; g += G(`translate(${x + (i % 5) * 110},${y + Math.floor(i / 5) * 150})`, C(0, -40, 26, hl ? '#FF6B5E' : '#E8E4F0', 5) + P('M-34,40 Q-34,-12 0,-12 Q34,-12 34,40Z', hl ? '#FF6B5E' : '#E8E4F0', 5)); } return g; }
+function umbrella2(x, y, s) { return G(`translate(${x},${y}) scale(${s})`, P('M-120,0 Q-120,-110 0,-116 Q120,-110 120,0 Q90,-18 60,0 Q30,-18 0,0 Q-30,-18 -60,0 Q-90,-18 -120,0Z', '#3F86CF', 6) + Ln(0, -116, 0, 140, O, 8) + P('M0,140 q0,24 -22,24', 'none', 7)); }
+function goods(x, y, t, at) { let g = ''; [['📱', 'CELULAR'], ['👟', 'TÊNIS'], ['🏠', 'ALUGUEL 12x']].forEach(([_, l], i) => { const k = pop1(t, at + i * 0.6); if (k > 0) g += G(`translate(${x + i * 330},${y}) scale(${k}) rotate(${i % 2 ? 4 : -4})`, R(-140, -80, 280, 160, 22, '#FFFFFF', 7) + T(0, 6, l, 38, '#2E7D5A') + R(-140, 60, 280, 34, 0, '#2E7D5A', 0) + T(0, 84, 'PAGO ✓', 22, '#FFFFFF')); }); return g; }
+function billsPile(x, y, s) { let g = ''; for (let i = 0; i < 6; i++) g += G(`translate(${x + (i % 3) * 20},${y - i * 18}) rotate(${(i % 2 ? 4 : -5)}) scale(${s})`, R(-110, -60, 220, 120, 6, '#FFFFFF', 5) + Ln(-80, -30, 80, -30, '#9AA6B8', 5) + Ln(-80, 0, 60, 0, '#9AA6B8', 5) + T(40, 40, 'VENCIDA', 22, '#C62A2A')); return g; }
+function hospPaper(x, y, s, k) { return G(`translate(${x},${y}) scale(${s}) rotate(-3)`, R(-240, -320, 480, 640, 10, '#FFFFFF', 7) + R(-240, -320, 480, 90, 10, '#2C6F8A', 0) + T(0, -262, 'HOSPITAL', 44, '#FFFFFF') + T(0, -150, 'CIRURGIA', 58, '#1A1210') + Ln(-180, -70, 180, -70, '#9AA6B8', 6) + Ln(-180, -20, 140, -20, '#9AA6B8', 6) + Ln(-180, 30, 160, 30, '#9AA6B8', 6) + (k > 0 ? G(`translate(0,170) rotate(-12) scale(${k})`, R(-190, -60, 380, 120, 12, 'none', 0, 'stroke="#C62A2A" stroke-width="10"') + T(0, 6, 'ADIADA', 70, '#C62A2A')) : '')); }
+function cake(x, y, s) { return G(`translate(${x},${y}) scale(${s})`, E(0, 60, 190, 30, '#FFFFFF', 6) + R(-160, -80, 320, 140, 20, '#F28FB0', 7) + R(-130, -170, 260, 100, 20, '#F7D0DC', 7) + P('M-160,-40 Q-120,-10 -80,-40 Q-40,-10 0,-40 Q40,-10 80,-40 Q120,-10 160,-40', 'none', 7) + R(-8, -230, 16, 60, 4, '#3F86CF', 4) + P('M0,-232 q10,-20 0,-34 q-10,14 0,34', '#F2B636', 3)); }
+function coughLines(x, y) { return `<path d="M${x},${y} l40,-14 M${x + 6},${y + 26} l46,0 M${x},${y + 52} l40,14" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"/>`; }
+function clockBig(x, y, r, a1, a2) { return C(x, y, r, '#FFFFFF', 9) + Ln(x, y, x + Math.cos(a1) * r * 0.5, y + Math.sin(a1) * r * 0.5, O, 12) + Ln(x, y, x + Math.cos(a2) * r * 0.8, y + Math.sin(a2) * r * 0.8, O, 8) + C(x, y, 10, O, 0); }
+function silentPhone(x, y, s) { return G(`translate(${x},${y}) scale(${s})`, R(-150, -280, 300, 560, 40, '#1A1A20', 8) + R(-132, -250, 264, 500, 24, '#F4F6FA', 0) + C(0, -40, 70, '#DDE3EA', 0) + T(0, -30, '🔕'.replace('🔕', ''), 10, '#000') + P('M-40,-20 Q-40,-90 0,-90 Q40,-90 40,-20 L52,10 L-52,10Z', '#9AA3AD', 5) + Ln(-70, -110, 70, 30, '#C62A2A', 10) + T(0, 120, 'SEM NOTIFICAÇÕES', 26, '#5A6070')); }
+
+const S = [];
+// 0 — gancho: notificação "mentira detectada"
+S[0] = (t, d) => { const aM = wg(0, /mentira/) - TL.lines[0].start - 0.3;
+  let g = lying(Object.assign(neoAt(AGE), { hs: 1, expr: t > 2 ? 'surprised' : 'sleep' }), 1560, 760, 0.55);
+  g += phoneB(820, 560, 1.35, 'BANCO', [['VOCÊ RECEBEU R$100', pop1(t, 1.0)], ['MOTIVO:', pop1(t, aM - 0.8)], ['MENTIRA DETECTADA', pop1(t, aM), 1]], t, t < 1.2 ? 1 : 0);
+  return sc('quarto', g, drift(t, d, [960, 540, 1.0], [900, 520, 1.1])); };
+// 1 — outra, e mais outra
+S[1] = (t, d) => { let g = sitPerson(neoAt(AGE), 1450, 820, 0.95, { expr: 'surprised', hr: [120, -330], hl: [-140, -250] });
+  [0, 1, 2].forEach(i => { const k = pop1(t, 0.3 + i * 1.3); if (k > 0) g += G(`translate(700,${300 + i * 170}) scale(${k})`, R(-330, -60, 660, 120, 26, '#FFFFFF', 6) + C(-270, 0, 36, '#2E7D5A', 0) + T(-270, 6, '$', 40, '#FFFFFF') + T(20, -12, '+R$ 100', 40, '#2E7D5A') + T(20, 30, 'Mentira detectada', 26, '#5A6070')); });
+  return sc('quarto', g, [960, 540, 1.0]); };
+// 2 — a regra
+S[2] = (t, d) => { const aD = wg(2, /descobrir/) - TL.lines[2].start - 0.2;
+  let g = rays(t, '#123A2A', '#2E7D5A') + bills(t, 22);
+  g += G(`translate(960,330) scale(${pop1(t, 0.2)})`, R(-520, -110, 1040, 220, 40, '#FFFFFF', 9) + T(-120, 8, 'MENTIRA = ', 90, '#1A1210') + T(290, 8, '+R$100', 90, '#2E7D5A'));
+  g += bigTxt(960, 720, pop1(t, aD), 'QUEM MAIS MENTE', 'PRA VOCÊ?', '#FFFFFF', '#FFE14D', 66, 84);
+  return sc(null, g, [960, 540, 1.0]); };
+// 3 — o chefe: "ficou ótima"
+S[3] = (t, d) => { const aF = wg(3, /ficou/) - TL.lines[3].start - 0.2;
+  let g = G('translate(960,300)', R(-260, -150, 520, 300, 10, '#FFFFFF', 7) + T(0, -90, 'APRESENTAÇÃO', 34, '#2C3E66') + R(-200, -40, 90, 140, 0, '#E04B3C', 0) + R(-90, 10, 90, 90, 0, '#F2B636', 0) + R(20, -10, 90, 110, 0, '#3F86CF', 0) + T(150, 60, '???', 40, '#9AA3AD'));
+  g += pp(CHEFE, { x: 1320, y: FY, s: 0.92, sx: -1, expr: 'sus', hr: [210, -300] }) + NEO25({ x: 600, y: FY, s: 0.92, expr: 'neutral', lx: 1 });
+  g += say(1140, 470, 500, 'FICOU ÓTIMA.', 52, 'right', '#FFFFFF', t, aF);
+  return sc('escritorio', g, [960, 540, 1.0]); };
+// 4 — o colega: "já tô terminando" (vendo vídeo de gato)
+S[4] = (t, d) => { const aO = wg(4, /olha/) - TL.lines[4].start - 0.2;
+  let g = sitPerson(COLEGA1, 1180, 820, 0.85, { expr: 'happy', hl: [-120, -250], hr: [120, -250] }) + NEO25({ x: 520, y: FY, s: 0.92, expr: t > aO + 1 ? 'sus' : 'neutral', lx: 1 });
+  g += say(1060, 160, 600, 'JÁ TÔ TERMINANDO!', 46, 'right', '#FFFFFF', t, 0.3);
+  if (t > aO) g += catScreen(1180, 470, 1.3 * pop1(t, aO), t);
+  return sc('escritorio', g, [960, 540, 1.0]); };
+// 5 — o garçom: peixe fresquinho
+S[5] = (t, d) => { let g = pp(GARCOM, { x: 1200, y: FY, s: 0.92, sx: -1, expr: 'happy', hr: [230, -330] }) + G('translate(1010,690)', E(0, 0, 120, 26, '#FFFFFF', 6) + E(0, -14, 90, 34, '#9AB0A0', 6) + P('M80,-14 L130,-44 L130,16Z', '#9AB0A0', 6) + C(-50, -20, 6, O, 0)) + NEO25({ x: 560, y: FY, s: 0.92, expr: 'sus', lx: 1 });
+  for (let i = 0; i < 3; i++) g += fly(980 + Math.sin(t * 3 + i) * 60, 600 + Math.cos(t * 2 + i) * 30, 0.6, t, 0);
+  g += say(1060, 170, 640, 'FRESQUINHO, DE HOJE!', 46, 'right', '#FFFFFF', t, 0.4);
+  return sc('restaurante', g, [960, 540, 1.0]); };
+// 6 — o motorista: "2 minutos" (eram 20)
+S[6] = (t, d) => { const aV = wg(6, /vinte/) - TL.lines[6].start - 0.3;
+  let g = NEO25({ x: 700, y: FY, s: 0.92, expr: t > aV ? 'tired' : 'neutral', hl: [-90, -150], hr: [120, -420] }) + mapPhone(1250, 520, 1.1, t, aV);
+  return sc('ruaTarde', g, drift(t, d, [960, 540, 1.0], [1000, 520, 1.06])); };
+// 7 — fim do 1º dia: +800 e desconfiança
+S[7] = (t, d) => { let g = NEO25({ x: 960, y: FY + 40, s: 1.0, expr: 'sus', hl: [-90, -150], hr: [90, -150] }) + badgeB(960, 220, pop1(t, 0.5), '+R$ 800 EM 1 DIA', '#2E7D5A', '#FFFFFF', 64);
+  return sc('quartoNoite', g, drift(t, d, [960, 540, 1.0], [960, 500, 1.12])); };
+// 8 — dia 2: o porteiro e o pacote escondido
+S[8] = (t, d) => { const aE = wg(8, /escondido/) - TL.lines[8].start - 0.3;
+  let g = pp(PORTEIRO, { x: 1000, y: 900, s: 0.78, expr: t > aE ? 'worried' : 'neutral', hr: [140, -330] }) + NEO25({ x: 520, y: FY, s: 0.95, expr: 'sus', lx: 1 });
+  g += say(1050, 170, 560, 'NÃO CHEGOU NADA.', 46, 'right', '#FFFFFF', t, wg(8, /não/) - TL.lines[8].start - 0.3);
+  if (t > aE) g += pkg(1260, 640, 1.0 * pop1(t, aE)) + sparkle(1330, 560, 1.0);
+  return sc('banco', g, [960, 540, 1.0]); };
+// 9 — a pesquisa: 1–2 mentiras por dia; 6 em 10 em 10 minutos
+S[9] = (t, d) => { const aO = wg(9, /outro/) - TL.lines[9].start - 0.2;
+  let g = rays(t, '#1E2A5A', '#3C5A8A');
+  if (t < aO) g += bigTxt(960, 420, pop1(t, 1.0), 'EM MÉDIA', '1 A 2 MENTIRAS POR DIA', '#FFFFFF', '#FFE14D', 70, 84);
+  else { g += people10(740, 380, 6, 1) + G(`translate(960,240) scale(${pop1(t, aO)})`, T(0, 0, '6 EM CADA 10', 84, '#FFE14D', 14)) + G(`translate(1500,460) scale(${pop1(t, aO + 1.5)})`, clockBig(0, 0, 90, -1.57, -1.57 + 1.05) + T(0, 140, '10 MIN', 50, '#FFFFFF', 10)); }
+  return sc(null, g, [960, 540, 1.0]); };
+// 10 — mentirinhas sociais → rico
+S[10] = (t, d) => { const ks = ['agradar', 'briga', 'magoar'].map(w => wg(10, new RegExp(w)) - TL.lines[10].start - 0.2), aR = wg(10, /rico/) - TL.lines[10].start - 0.3;
+  let g = rays(t, '#2A2340', '#5A4A8A');
+  ['PRA AGRADAR', 'PRA EVITAR BRIGA', 'PRA NÃO MAGOAR'].forEach((l, i) => { g += badgeB(480 + i * 480, 360, pop1(t, ks[i]), l, '#FFFFFF', '#1A1210', 44, i % 2 ? 3 : -3); });
+  if (t > aR) g += bills(t, 30, 7) + bigTxt(960, 720, pop1(t, aR), 'VOCÊ VAI', 'FICAR RICO', '#FFFFFF', '#7BE38A', 70, 96);
+  return sc(null, g, [960, 540, 1.0]); };
+// 11 — caçar mentira
+S[11] = (t, d) => { let g = NEO25({ x: 960, y: FY + 30, s: 0.98, expr: 'sus', smile: true, hl: [-160, -330], hr: [160, -330] }) + badgeB(960, 210, pop1(t, wg(11, /caçar/) - TL.lines[11].start - 0.3), 'CAÇADOR DE MENTIRAS', '#C62A2A', '#FFFFFF', 64);
+  return sc('quarto', g, drift(t, d, [960, 540, 1.0], [960, 500, 1.08])); };
+// 12 — dia 3: propagandas na TV
+S[12] = (t, d) => { const aH = wg(12, /hambúrguer/) - TL.lines[12].start - 0.3;
+  const inner = t < aH ? R(-280, -162, 560, 324, 0, '#7A90C8', 0) + R(-200, 20, 400, 90, 20, '#FFFFFF', 6) + T(0, -80, 'O MELHOR COLCHÃO', 40, '#FFFFFF', 8) + T(0, -30, 'DO MUNDO!', 44, '#FFE14D', 8)
+    : R(-280, -162, 560, 324, 0, '#F2B636', 0) + burger(-130, 30, 0.9, false) + T(-130, -120, 'NA FOTO', 30, '#1A1210') + burger(150, 50, 0.9, true) + T(150, -120, 'DE VERDADE', 30, '#C62A2A');
+  let g = tv2d(1200, 420, 1.05, inner) + sitPerson(neoAt(AGE), 480, 820, 0.95, { expr: 'sus', smile: true, hr: [140, -260] });
+  return sc('sala', g, [960, 540, 1.0]); };
+// 13 — o moço do tempo: "amanhã não chove"
+S[13] = (t, d) => { const aP = wg(13, /pega/) - TL.lines[13].start - 0.2;
+  const inner = R(-280, -162, 560, 324, 0, '#3F86CF', 0) + sun(-100, -20, 60, t) + T(100, -10, 'AMANHÃ:', 36, '#FFFFFF', 8) + T(100, 50, 'SEM CHUVA', 40, '#FFE14D', 8);
+  let g = tv2d(1200, 420, 1.05, inner) + NEO25({ x: 520, y: FY, s: 0.92, expr: 'sus', smile: true, hr: [180, -330] });
+  if (t > aP) g += umbrella2(650, 700, 0.9 * pop1(t, aP));
+  return sc('sala', g, [960, 540, 1.0]); };
+// 14 — redes sociais: "acordei assim", "vida perfeita"
+S[14] = (t, d) => { const aE = wg(14, /^em$/) - TL.lines[14].start - 0.3;
+  let g = phoneB(1250, 520, 1.25, 'FEED', [['#ACORDEIASSIM ✨', pop1(t, 0.4)], ['#VIDAPERFEITA', pop1(t, 1.6)], ['+R$100 +R$100 +R$100', pop1(t, aE), 1]], t);
+  g += lying(Object.assign(neoAt(AGE), { hs: 1, expr: 'sus', smile: true }), 560, 860, 0.6);
+  if (t > aE) g += bills(t, 14, 9);
+  return sc('quarto', g, [960, 540, 1.0]); };
+// 15 — loja: "ficou lindo", "última peça" (tinha 20)
+S[15] = (t, d) => { const aU = wg(15, /última/) - TL.lines[15].start - 0.3, aV = wg(15, /vinte/) - TL.lines[15].start - 0.3;
+  let g = pp(VENDEDORA, { x: 1300, y: FY, s: 0.9, sx: -1, expr: 'happy', hr: [220, -360] }) + NEO25({ x: 620, y: FY, s: 0.92, expr: 'sus', shirt: '#E07B39', inner: '#7A5AC8' });
+  g += say(1050, 160, 560, 'FICOU LINDO EM VOCÊ!', 44, 'right', '#FFFFFF', t, 0.3);
+  if (t > aU) g += say(1050, 360, 560, 'É A ÚLTIMA PEÇA!', 46, 'right', '#FFFFFF', t, aU);
+  if (t > aV) g += badgeB(420, 300, pop1(t, aV), 'ESTOQUE: 20', '#C62A2A', '#FFFFFF', 54);
+  return sc('loja', g, [960, 540, 1.0]); };
+// 16 — dia 7: 12 mil
+S[16] = (t, d) => { let g = rays(t, '#123A2A', '#2E7D5A') + bills(t, 30, 5) + G(`translate(960,430) scale(${pop1(t, 0.4)})`, T(0, 0, 'R$ 12.000', 180, '#7BE38A', 20)) + NEO25({ x: 960, y: 1240, s: 0.9, expr: 'happy', hl: [-200, -460], hr: [200, -460] });
+  return sc(null, g, [960, 540, 1.0]); };
+// 17 — compras
+S[17] = (t, d) => { let g = goods(630, 330, t, 0.4) + NEO25({ x: 960, y: FY + 40, s: 0.95, expr: 'happy', hr: [200, -380] });
+  return sc('sala', g, [960, 540, 1.0]); };
+// 18 — pede demissão: "vai sentir minha falta?" "muito." plim
+S[18] = (t, d) => { const aV = wg(18, /^você$/, 1) - TL.lines[18].start - 0.2, aM = wg(18, /muito/) - TL.lines[18].start - 0.2;
+  let g = pp(CHEFE, { x: 1300, y: FY, s: 0.92, sx: -1, expr: 'neutral' }) + NEO25({ x: 620, y: FY, s: 0.92, expr: 'sus', smile: true, hl: [-60, -200], hr: [60, -200] }) + pkg(620, FY - 0.92 * 0.92 * 300, 0.9);
+  g += say(160, 160, 620, 'VAI SENTIR A MINHA FALTA?', 40, 'left', '#FFFFFF', t, aV) + say(1100, 330, 400, 'MUITO.', 60, 'right', '#FFFFFF', t, aM);
+  return sc('escritorio', g, [960, 540, 1.0]); };
+// 19 — dia 10: especialista em perguntas
+S[19] = (t, d) => { const aC = wg(19, /gostou/) - TL.lines[19].start - 0.2, aE = wg(19, /engordei/) - TL.lines[19].start - 0.3;
+  let g = pp(COLEGA2, { x: 600, y: FY, s: 0.9, expr: 'happy', hr: [200, -380] }) + pp(xt({ skin: '#F1C7A0', shirt: '#3E8A8A', hair: 'spiky', hairCol: '#3A2418', iris: '#5A3A22' }), { x: 1420, y: FY, s: 0.9, sx: -1, expr: 'happy' }) + NEO25({ x: 1000, y: FY, s: 0.92, expr: 'sus', smile: true });
+  g += say(100, 160, 620, 'GOSTOU DO MEU CABELO?', 40, 'left', '#FFFFFF', t, aC) + say(1180, 160, 520, 'EU ENGORDEI?', 46, 'right', '#FFFFFF', t, aE);
+  return sc('sala', g, [960, 540, 1.0]); };
+// 20 — o Davi: "tô sem tempo"
+S[20] = (t, d) => { const aD = wg(20, /diz/) - TL.lines[20].start - 0.2;
+  let g = NEO25({ x: 560, y: FY, s: 0.92, expr: 'sad', hr: [140, -440] }) + phoneB(1250, 520, 1.2, 'DAVI', [['BORA JOGAR HOJE?', 1, 1], ['E AÍ, DAVI?', pop1(t, 0.8), 1], ['TÔ SEM TEMPO, MANO', pop1(t, aD)]], t) + G('translate(1250,190) scale(0.42)', head(Object.assign({}, DAVI, { expr: 'neutral' })));
+  return sc('quartoNoite', g, [960, 540, 1.0]); };
+// 21 — sozinho
+S[21] = (t, d) => { const k = prog(t, 0, d);
+  let g = pp(COLEGA2, { x: lerp(1500, 1750, k), y: FY, s: 0.85, sx: 1, back: true }) + pp(COLEGA1, { x: lerp(1300, 1600, k), y: FY, s: 0.85, back: true }) + NEO25({ x: 700, y: FY, s: 0.92, expr: 'sad' });
+  return sc('ruaTarde', `<g style="filter:saturate(0.5)">${g}</g>`, drift(t, d, [960, 540, 1.0], [800, 560, 1.1])); };
+// 22 — 50 mil
+S[22] = (t, d) => { const aC = wg(22, /cinquenta/) - TL.lines[22].start - 0.3;
+  let g = rays(t, '#123A2A', '#2E7D5A') + bills(t, 36, 4) + G(`translate(960,430) scale(${pop1(t, aC)})`, T(0, 0, 'R$ 50.000', 180, '#7BE38A', 20)) + NEO25({ x: 960, y: 1240, s: 0.9, expr: 'neutral', smile: true, hl: [-160, -200], hr: [160, -200] });
+  return sc(null, g, [960, 540, 1.0]); };
+// 23 — dia 11: notificação "origem: mãe"
+S[23] = (t, d) => { const aO = wg(23, /origem/) - TL.lines[23].start - 0.2, aM = wg(23, /mensagem/) - TL.lines[23].start - 0.2;
+  let g = NEO25({ x: 560, y: FY, s: 0.92, expr: t > aO + 0.6 ? 'surprised' : 'neutral', hr: [140, -440] });
+  g += phoneB(1250, 520, 1.25, 'BANCO', [['+R$ 100', pop1(t, 0.4)], ['ORIGEM: MÃE', pop1(t, aO), 1], ['"TÔ BEM, FILHO."', pop1(t, aM)], ['"NÃO PRECISA VIR."', pop1(t, aM + 1.2)]], t);
+  return sc('quartoNoite', g, drift(t, d, [960, 540, 1.0], [1080, 520, 1.08])); };
+// 24 — re-gancho: foi ver com os próprios olhos
+S[24] = (t, d) => { const k = prog(t, 0, d);
+  let g = NEO25({ x: lerp(300, 1500, k), y: FY - Math.abs(Math.sin(k * 16)) * 10, s: 0.92, expr: 'worried' }) + bigTxt(960, 230, pop1(t, wg(24, /aconteceu/) - TL.lines[24].start - 0.2), 'E AÍ ACONTECEU', 'O QUE ELE NÃO ESPERAVA', '#FFFFFF', '#FFE14D', 56, 66);
+  return sc('rua', g, [960, 540, 1.0]); };
+// 25 — almoço na casa da mãe
+S[25] = (t, d) => { const k = prog(t, 0, d * 0.7);
+  let g = pp(LUCIA, { x: 1300, y: FY, s: 0.95, sx: -1, expr: 'surprised', hr: [200, -360] }) + NEO25({ x: lerp(200, 700, eio(k)), y: FY, s: 0.92, expr: 'neutral' });
+  g += badgeB(960, 200, pop1(t, wg(25, /meses/) - TL.lines[25].start - 0.3), 'MESES SEM APARECER', '#1A1210', '#FFE14D', 48);
+  return sc('maeSala', g, [960, 540, 1.0]); };
+// 26 — "eu tô ótima" plim
+S[26] = (t, d) => { const aT = wg(26, /tô/) - TL.lines[26].start - 0.3;
+  let g = pp(LUCIA, { x: 1200, y: FY, s: 0.95, sx: -1, expr: 'happy', hr: [230, -420], hl: [-150, -300] }) + NEO25({ x: 700, y: FY, s: 0.92, expr: 'happy' });
+  g += say(1000, 160, 760, 'QUE BOM QUE VOCÊ VEIO!', 42, 'right', '#FFFFFF', t, 0.3) + say(1160, 360, 460, 'EU TÔ ÓTIMA.', 48, 'right', '#FFE9F0', t, aT);
+  return sc('maeSala', g, [960, 540, 1.0]); };
+// 27 — achou graça
+S[27] = (t, d) => { let g = pp(LUCIA, { x: 1200, y: FY, s: 0.95, sx: -1, expr: 'happy' }) + NEO25({ x: 700, y: FY, s: 0.92, expr: 'happy', smile: true }) + badgeB(700, 300, pop1(t, 0.5), '+R$ 100 KKK', '#2E7D5A', '#FFFFFF', 50);
+  return sc('maeSala', g, [900, 540, 1.04]); };
+// 28 — "eu já comi, filho" (um prato só)
+S[28] = (t, d) => { const aJ = wg(28, /já/) - TL.lines[28].start - 0.3;
+  let g = E(3200 * 0 + 1180, 790, 120, 26, '#FFFFFF', 6) + E(1180, 776, 80, 16, '#E8B66A', 0) + sitPerson(neoAt(AGE), 1450, 820, 0.88, { expr: 'happy', hr: [-60, -250] }) + pp(LUCIA, { x: 760, y: FY, s: 0.95, expr: 'happy', hl: [-150, -150], hr: [150, -150] });
+  g += say(220, 160, 520, 'EU JÁ COMI, FILHO.', 44, 'right', '#FFE9F0', t, aJ) + badgeB(760, 480, pop1(t, aJ + 1.2), 'SEM PRATO', '#C62A2A', '#FFFFFF', 36, -4);
+  return sc('maeCozinha', g, [960, 540, 1.0]); };
+// 29 — a tosse: "não é nada"
+S[29] = (t, d) => { const aN = wg(29, /não/) - TL.lines[29].start - 0.3;
+  let g = pp(LUCIA, { x: 900, y: FY, s: 0.95, expr: t < aN ? 'tired' : 'happy', hl: [-40, -470], hr: [150, -150] }) + (t < aN ? coughLines(1020, 360) : '') + sitPerson(neoAt(AGE), 1450, 820, 0.88, { expr: 'worried', lx: -1 });
+  g += say(240, 160, 480, 'NÃO É NADA.', 50, 'right', '#FFE9F0', t, aN);
+  return sc('maeCozinha', g, [960, 540, 1.0]); };
+// 30 — "de nada, filho. tá tudo bem." plim plim
+S[30] = (t, d) => { const aD = wg(30, /^de$/) - TL.lines[30].start - 0.3;
+  let g = pp(LUCIA, { x: 900, y: FY, s: 0.95, expr: 'happy', hr: [230, -330] }) + sitPerson(neoAt(AGE), 1450, 820, 0.88, { expr: 'worried', lx: -1 });
+  g += say(200, 160, 760, 'DE NADA, FILHO. TÁ TUDO BEM.', 40, 'right', '#FFE9F0', t, aD);
+  return sc('maeCozinha', g, drift(t, d, [960, 540, 1.0], [960, 520, 1.06])); };
+// 31 — mãe > internet inteira
+S[31] = (t, d) => { const aI = wg(31, /internet/) - TL.lines[31].start - 0.3;
+  let g = rays(t, '#3B2A6A', '#C9708A');
+  const h1 = 380 * eout(prog(t, 0.3, 1.5)), h2 = 260 * eout(prog(t, aI, aI + 1));
+  g += R(560, 860 - h1, 280, h1, 16, '#F28FB0', 7) + T(700, 920, 'MÃE (1 TARDE)', 40, '#FFFFFF', 10) + R(1080, 860 - h2, 280, h2, 16, '#3F86CF', 7) + T(1220, 920, 'INTERNET', 40, '#FFFFFF', 10) + Ln(480, 860, 1440, 860, '#FFFFFF', 8);
+  return sc(null, g, [960, 540, 1.0]); };
+// 32 — o extrato: todos com o nome dela
+S[32] = (t, d) => { const aT = wg(32, /todos/) - TL.lines[32].start - 0.3;
+  let g = lying(Object.assign(neoAt(AGE), { hs: 1, expr: 'sad' }), 560, 860, 0.6);
+  const rows = []; for (let i = 0; i < 6; i++) rows.push([t > aT ? '+R$ 100 · MÃE' : '+R$ 100', pop1(t, 0.5 + i * 0.6), 0]);
+  g += phoneB(1250, 540, 1.3, 'EXTRATO', rows.slice(0, 4), t);
+  return sc('quartoNoite', g, drift(t, d, [960, 540, 1.0], [1100, 520, 1.1])); };
+// 33 — ela mentia pra você não se preocupar
+S[33] = (t, d) => { const aP = wg(33, /preocupar/) - TL.lines[33].start - 0.5;
+  let g = rays(t, '#2A3352', '#5A6488') + NEO25({ x: 960, y: 1180, s: 1.1, expr: 'sad' }) + bigTxt(960, 230, pop1(t, aP), 'ELA MENTIA PRA VOCÊ', 'NÃO SE PREOCUPAR', '#FFFFFF', '#FFE14D', 56, 70);
+  return sc(null, g, drift(t, d, [960, 540, 1.0], [960, 560, 1.06])); };
+// 34 — re-gancho: o pior ainda tava por vir
+S[34] = (t, d) => { let g = rays(t, '#0E0C16', '#221C36') + bigTxt(960, 470, pop1(t, 0.3), 'O PIOR', 'AINDA TAVA POR VIR', '#FFFFFF', '#FF5A4E', 90, 80);
+  return sc(null, g, drift(t, d, [960, 540, 1.0], [960, 540, 1.1])); };
+// 35 — dia 15: contas atrasadas e papel do hospital
+S[35] = (t, d) => { const aC = wg(35, /contas/) - TL.lines[35].start - 0.3, aH = wg(35, /hospital/) - TL.lines[35].start - 0.3;
+  let g = dark(0.35) + NEO25({ x: 560, y: FY, s: 0.92, expr: t > aH ? 'surprised' : 'worried', lx: 1 });
+  if (t > aC) g += billsPile(3200 * 0 + 1240, 760, 0.8 * pop1(t, aC));
+  if (t > aH) g += G(`translate(1500,700) scale(${0.35 * pop1(t, aH)}) rotate(6)`, hospPaper(0, 0, 1, 0)) + C(1500, 700, 140 + Math.sin(t * 4) * 8, 'rgba(255,240,170,0.25)', 0);
+  return sc('maeCozinha', g, [960, 540, 1.0]); };
+// 36 — a cirurgia adiada
+S[36] = (t, d) => { const aA = wg(36, /adiando/) - TL.lines[36].start - 0.3;
+  let g = rays(t, '#2A3352', '#5A6488') + hospPaper(960, 540, 1.3, pop1(t, aA)) + badgeB(1520, 820, pop1(t, wg(36, /pagar/) - TL.lines[36].start - 0.3), 'SEM DINHEIRO', '#C62A2A', '#FFFFFF', 44, 6);
+  return sc(null, g, [960, 540, 1.0]); };
+// 37 — "isso aí? não é nada." plim
+S[37] = (t, d) => { const aI = wg(37, /isso/) - TL.lines[37].start - 0.3;
+  let g = pp(LUCIA, { x: 1250, y: FY, s: 0.95, sx: -1, expr: 'happy', hr: [140, -460], hl: [-150, -300] }) + NEO25({ x: 640, y: FY, s: 0.92, expr: 'sad', hr: [170, -320] }) + G('translate(790,620) rotate(-8) scale(0.22)', hospPaper(0, 0, 1, 0));
+  g += say(1000, 160, 640, 'ISSO AÍ? NÃO É NADA.', 46, 'right', '#FFE9F0', t, aI);
+  return sc('maeCozinha', g, [960, 540, 1.0]); };
+// 38 — "bem pouquinho" (mais que 1 ano de salário)
+S[38] = (t, d) => { const aB = wg(38, /bem/) - TL.lines[38].start - 0.3, aE = wg(38, /^era/) - TL.lines[38].start - 0.3;
+  let g = pp(LUCIA, { x: 1250, y: FY, s: 0.95, sx: -1, expr: 'happy', hr: [120, -200] }) + NEO25({ x: 640, y: FY, s: 0.92, expr: 'sad' });
+  g += say(1060, 170, 540, 'BEM POUQUINHO.', 48, 'right', '#FFE9F0', t, aB) + badgeB(640, 260, pop1(t, aE), '> 1 ANO DE SALÁRIO', '#C62A2A', '#FFFFFF', 46);
+  return sc('maeCozinha', g, [960, 540, 1.0]); };
+// 39 — a mentira mais cara
+S[39] = (t, d) => { let g = rays(t, '#3A0E14', '#8A2230') + G(`translate(960,420) scale(${pop1(t, 0.2)})`, T(0, 0, '+R$ 100', 200, '#7BE38A', 20)) + bigTxt(960, 760, pop1(t, 1.0), 'A MENTIRA', 'MAIS CARA', '#FFFFFF', '#FFE14D', 60, 84);
+  return sc(null, g, [960, 540, 1.0]); };
+// 40 — todas as outras: a vida inteira (lembranças)
+S[40] = (t, d) => { const cues = [/comi/, /cansada/, /baratinho/, /chorei/].map(r => wg(40, r) - TL.lines[40].start - 0.5);
+  const labs = ['EU JÁ COMI.', 'NÃO TÔ CANSADA.', 'FOI BARATINHO.', 'FOI UM CISCO.'];
+  const inner = [
+    R(0, 0, 420, 300, 0, '#F6E7C8', 0) + E(150, 230, 70, 16, '#FFFFFF', 4) + pp(LUCIA_J, { x: 300, y: 300, s: 0.38, expr: 'happy' }) + person(neoAt(6, { x: 140, y: 300, s: 0.42, expr: 'happy' })),
+    R(0, 0, 420, 300, 0, '#2A3352', 0) + C(360, 50, 26, '#F4F1EA', 0) + sitPerson(LUCIA_J, 210, 170, 0.38, { expr: 'tired', hl: [-60, -200], hr: [60, -200] }),
+    R(0, 0, 420, 300, 0, '#F0DCC0', 0) + R(140, 160, 120, 90, 8, '#C62A2A', 5) + R(190, 160, 20, 90, 0, '#F2B636', 0) + pp(LUCIA_J, { x: 330, y: 300, s: 0.38, sx: -1, expr: 'happy' }) + person(neoAt(10, { x: 90, y: 300, s: 0.42, expr: 'happy' })),
+    R(0, 0, 420, 300, 0, '#E6D2C0', 0) + pp(LUCIA_J, { x: 210, y: 300, s: 0.42, expr: 'sad', hr: [40, -460] }) + tears(210, 140, t, 0.4),
+  ];
+  let g = R(-200, -200, 2320, 1480, 0, '#B98C6A', 0);
+  inner.forEach((ins, i) => { const k = pop1(t, cues[i], 0.3); if (k <= 0) return; const x = 120 + i * 430, y = 300 + (i % 2) * 80; g += memPanel(x, y, 420, 300, k, ins, 'L' + i, i % 2 ? 2 : -2) + G(`translate(${x + 210},${y + 360})`, T(0, 0, labs[i], 34, '#1A1210')); });
+  return sc(null, sepia(g), [960, 540, 1.0]); };
+// 41 — 30 anos mentindo; nenhuma pra te enganar
+S[41] = (t, d) => { const aN = wg(41, /nenhuma/) - TL.lines[41].start - 0.3;
+  let g = pp(LUCIA, { x: 1150, y: FY, s: 0.95, sx: -1, expr: 'happy' }) + NEO25({ x: 760, y: FY, s: 0.92, expr: 'sad', lx: 1 }) + badgeB(960, 200, pop1(t, 0.4), '30 ANOS DE MENTIRAS', '#1A1210', '#FFE14D', 52) + badgeB(960, 330, pop1(t, aN), 'TODAS DE AMOR', '#C2577A', '#FFFFFF', 52, 3);
+  for (let i = 0; i < 4; i++) { const k = ((t * 0.4 + i / 4) % 1); g += heart(900 + i * 50, 700 - k * 300, 0.8 * (1 - k)); }
+  return sc('maeSala', g, [960, 540, 1.0]); };
+// 42 — paga a cirurgia: 58 mil → zero
+S[42] = (t, d) => { const aP = wg(42, /pagou/) - TL.lines[42].start;
+  let g = NEO25({ x: 600, y: FY, s: 0.92, expr: 'neutral', lx: 1, hr: [150, -420] }) + phoneB(1250, 520, 1.2, 'TRANSFERIR', [['R$ 58.000', 1], ['→ HOSPITAL', pop1(t, 1.0)], ['ENVIADO ✓', pop1(t, aP), 1]], t);
+  return sc('quarto', g, [960, 540, 1.0]); };
+// 43 — "filho… eu tô com medo"
+S[43] = (t, d) => { const aF = wg(43, /filho/) - TL.lines[43].start - 0.3;
+  let g = pp(LUCIA, { x: 1060, y: FY, s: 0.95, sx: -1, expr: 'sad', hr: [250, -200] }) + NEO25({ x: 800, y: FY, s: 0.92, expr: 'sad', hr: [190, -200] });
+  g += say(1000, 170, 640, 'FILHO… EU TÔ COM MEDO.', 44, 'right', '#FFE9F0', t, aF);
+  return sc('hospital', g, drift(t, d, [960, 540, 1.0], [960, 500, 1.1])); };
+// 44 — nenhum plim
+S[44] = (t, d) => { let g = rays(t, '#1E2A3A', '#3C5A6A') + silentPhone(960, 540, 1.3);
+  return sc(null, g, [960, 540, 1.0]); };
+// 45 — pela primeira vez, a verdade
+S[45] = (t, d) => { let g = pp(LUCIA, { x: 1060, y: FY, s: 0.95, sx: -1, expr: 'sad', hr: [250, -200] }) + tears(1060, FY - 0.95 * 0.92 * 520, t, 0.9) + NEO25({ x: 800, y: FY, s: 0.92, expr: 'sad', hr: [190, -200] }) + badgeB(960, 200, pop1(t, wg(45, /verdade/) - TL.lines[45].start - 0.3), 'VERDADE', '#FFFFFF', '#1A1210', 70);
+  return sc('hospital', g, [930, 520, 1.12]); };
+// 46 — duas horas
+S[46] = (t, d) => { const k = prog(t, 0, d);
+  let g = NEO25({ x: lerp(500, 1300, (Math.sin(t * 0.9) + 1) / 2), y: FY, s: 0.92, expr: 'worried' }) + G('translate(1600,330)', clockBig(0, 0, 120, -Math.PI / 2 + k * 2, -Math.PI / 2 + k * 24)) + badgeB(1600, 520, pop1(t, 0.5), '2 HORAS', '#1A1210', '#FFE14D', 50);
+  return sc('hospital', g, [960, 540, 1.0]); };
+// 47 — deu certo
+S[47] = (t, d) => { let g = pp(MEDICO, { x: 1250, y: FY, s: 0.92, sx: -1, expr: 'happy', hr: [230, -420] }) + NEO25({ x: 700, y: FY, s: 0.92, expr: t > 0.8 ? 'happy' : 'worried' }) + badgeB(960, 220, pop1(t, 0.6), 'DEU CERTO!', '#2E7D5A', '#FFFFFF', 70);
+  return sc('hospital', g, [960, 540, 1.0]); };
+// 48 — "você não precisava ter vindo." plim, e riram
+S[48] = (t, d) => { const aV = wg(48, /você$/i, 0), aN = wg(48, /precisava/) - TL.lines[48].start - 0.6, aR = wg(48, /riram/) - TL.lines[48].start - 0.3;
+  let g = lying(Object.assign({}, LUCIA, { expr: t > aR ? 'happy' : 'neutral', hs: 1 }), 1500, 770, 0.55) + sitPerson(neoAt(AGE), 900, 820, 0.88, { expr: t > aR ? 'happy' : 'sad', lx: 1 });
+  g += say(1100, 170, 720, 'VOCÊ NÃO PRECISAVA TER VINDO.', 38, 'right', '#FFE9F0', t, aN);
+  return sc('hospitalQuarto', g, [960, 540, 1.0]); };
+// 49 — dia 20: o Davi e o pai doente
+S[49] = (t, d) => { const aP = wg(49, /pai/) - TL.lines[49].start - 0.4;
+  let g = pp(DAVI, { x: 1180, y: FY, s: 0.92, sx: -1, expr: t > aP ? 'sad' : 'neutral' }) + NEO25({ x: 720, y: FY, s: 0.92, expr: 'worried', lx: 1 });
+  if (t > aP) g += say(1060, 170, 600, 'MEU PAI TÁ DOENTE…', 44, 'right', '#FFFFFF', t, aP);
+  return sc('restaurante', g, [960, 540, 1.0]); };
+// 50 — conversaram até tarde, sem plim
+S[50] = (t, d) => { let g = pp(DAVI, { x: 1100, y: FY, s: 0.92, sx: -1, expr: 'happy', hr: [200, -330] }) + NEO25({ x: 800, y: FY, s: 0.92, expr: 'happy', hr: [180, -330] }) + dark(0.2);
+  return sc('restaurante', g, drift(t, d, [960, 540, 1.0], [960, 520, 1.06])); };
+// 51 — perguntas diferentes
+S[51] = (t, d) => { let g = rays(t, '#2C6F5A', '#9FD3B8');
+  ['VOCÊ COMEU?', 'COMO FOI SEU DIA?', 'TÁ TUDO BEM MESMO?'].forEach((l, i) => { g += badgeB(480 + i * 480, 360 + (i % 2) * 120, pop1(t, 2.5 + i * 0.8), l, '#FFFFFF', '#2C6F5A', 40, i % 2 ? 3 : -3); });
+  g += NEO25({ x: 960, y: 1250, s: 0.9, expr: 'happy', smile: true });
+  return sc(null, g, [960, 540, 1.0]); };
+// 52 — "mãe, você comeu hoje?" "comi, filho." verdade
+S[52] = (t, d) => { const aC = wg(52, /comi/) - TL.lines[52].start - 0.3, aV = wg(52, /verdade/) - TL.lines[52].start - 0.3;
+  let g = pp(LUCIA, { x: 1200, y: FY, s: 0.95, sx: -1, expr: 'happy' }) + NEO25({ x: 700, y: FY, s: 0.92, expr: 'neutral', lx: 1 });
+  g += say(160, 160, 620, 'MÃE, VOCÊ COMEU HOJE?', 42, 'left', '#FFFFFF', t, 0.2) + say(1100, 360, 460, 'COMI, FILHO.', 48, 'right', '#FFE9F0', t, aC);
+  g += badgeB(960, 230, pop1(t, aV), '✓ VERDADE', '#2E7D5A', '#FFFFFF', 46);
+  return sc('maeCozinha', g, [960, 540, 1.0]); };
+// 53 — "você tá feliz, mãe?" "agora tô."
+S[53] = (t, d) => { const aA = wg(53, /agora/) - TL.lines[53].start - 0.3;
+  let g = pp(LUCIA, { x: 1200, y: FY, s: 0.95, sx: -1, expr: t > aA ? 'happy' : 'neutral' }) + NEO25({ x: 700, y: FY, s: 0.92, expr: 'happy', smile: true, lx: 1 });
+  g += say(160, 160, 600, 'VOCÊ TÁ FELIZ, MÃE?', 44, 'left', '#FFFFFF', t, 0.2) + say(1120, 360, 420, 'AGORA TÔ.', 52, 'right', '#FFE9F0', t, aA);
+  if (t > aA) for (let i = 0; i < 5; i++) { const k = ((t * 0.45 + i / 5) % 1); g += heart(880 + i * 60, 700 - k * 380, 0.9 * (1 - k)); }
+  return sc('maeCozinha', g, [960, 540, 1.04]); };
+// 54 — todo domingo, o jantar; o celular quieto
+S[54] = (t, d) => { let g = sitPerson(LUCIA, 1250, 820, 0.88, { expr: 'happy', hr: [-60, -250] }) + sitPerson(neoAt(AGE), 700, 820, 0.88, { expr: 'happy', hl: [60, -250], lx: 1 }) + E(960, 760, 110, 24, '#FFFFFF', 6) + E(960, 746, 70, 14, '#E8B66A', 0);
+  return sc('maeCozinha', g, drift(t, d, [960, 540, 1.0], [960, 520, 1.06])); };
+// 55 — nunca se sentiu tão rico
+S[55] = (t, d) => { const aR = wg(55, /rico/) - TL.lines[55].start - 0.4;
+  let g = rays(t, '#C9708A', '#F7C99A') + G('translate(960,240)', R(-260, -60, 520, 120, 30, '#2E7D5A', 6) + T(0, 8, 'SALDO PARADO', 50, '#FFFFFF')) + bigTxt(960, 560, pop1(t, aR), 'MAS VOCÊ NUNCA SE', 'SENTIU TÃO RICO', '#FFFFFF', '#FFE14D', 60, 84);
+  for (let i = 0; i < 6; i++) { const k = ((t * 0.4 + i / 6) % 1); g += heart(700 + i * 100, 1000 - k * 300, 1.0 * (1 - k)); }
+  return sc(null, g, [960, 540, 1.0]); };
+// 56 — o bolo "fiz rapidinho" (a tarde inteira)
+S[56] = (t, d) => { const aF = wg(56, /fiz/) - TL.lines[56].start - 0.3, aT = wg(56, /tarde/) - TL.lines[56].start - 0.4;
+  let g = pp(LUCIA, { x: 1150, y: FY, s: 0.95, sx: -1, expr: 'happy', hr: [220, -330], hl: [-150, -330] }) + cake(960, 700, 0.6) + NEO25({ x: 600, y: FY, s: 0.92, expr: t > aT ? 'happy' : 'surprised', lx: 1 });
+  g += say(1000, 160, 600, 'FIZ RAPIDINHO, FILHO.', 44, 'right', '#FFE9F0', t, aF);
+  if (t > aT) g += G(`translate(1600,560) scale(${pop1(t, aT)})`, clockBig(0, 0, 90, -Math.PI / 2 + 2.6, -Math.PI / 2 + 6) + T(0, 150, '14H → 19H', 40, '#FFFFFF', 10));
+  return sc('maeCozinha', g, [960, 540, 1.0]); };
+// 57 — CTA
+S[57] = (t, d) => { let g = rays(t, '#3B4F8A', '#F0A070') + pp(LUCIA, { x: 1150, y: 1010, s: 0.9, sx: -1, expr: 'happy' }) + NEO25({ x: 780, y: 1010, s: 0.9, expr: 'happy', smile: true });
+  for (let i = 0; i < 5; i++) { const k = ((t * 0.45 + i / 5) % 1); g += heart(880 + i * 40, 560 - k * 300, 0.8 * (1 - k)); }
+  return sc(null, g, [960, 540, 1.0]); };
+
+function titleOverlay(t) {
+  if (t > 7) return '';
+  const k = back(prog(t, 0, 0.3)), out = 1 - prog(t, 6.6, 7);
+  return G(`translate(960,800) scale(${k * out})`, R(-700, -80, 1400, 160, 40, 'rgba(26,18,16,0.92)', 0) + T(0, -22, 'E SE VOCÊ GANHASSE R$100', 50, '#FFFFFF') + T(0, 44, 'TODA VEZ QUE ALGUÉM MENTISSE?', 56, '#FFE14D'));
+}
+function ctaOverlay(t) {
+  const a = TL.lines[57].start - 0.1;
+  if (t < a) return '';
+  const k = back(prog(t, a, a + 0.35));
+  return G(`translate(960,170) scale(${k})`, R(-700, -110, 1400, 220, 40, 'rgba(26,18,16,0.94)', 0) + T(0, -36, 'QUAL FOI A MENTIRA MAIS BONITA', 52, '#FFFFFF') + T(0, 48, 'QUE JÁ TE CONTARAM?', 66, '#FFE14D'));
+}

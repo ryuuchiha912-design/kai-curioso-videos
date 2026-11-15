@@ -16,7 +16,8 @@ import { rand } from "../kit/anim";
 type V3 = [number, number, number];
 export type FundoId =
   | "banheiro" | "quarto" | "quartoNoite" | "sala" | "escritorio" | "banco" | "mercado" | "consultorio"
-  | "infancia" | "infanciaNoite" | "maeSala" | "maeSalaNoite" | "maeCozinha" | "escola" | "rua" | "ruaTarde";
+  | "infancia" | "infanciaNoite" | "maeSala" | "maeSalaNoite" | "maeCozinha" | "escola" | "rua" | "ruaTarde"
+  | "restaurante" | "loja" | "hospital" | "hospitalQuarto";
 
 // ------------------------------------------------------------------ texturas
 const tx = (t: THREE.Texture, rx: number, ry: number) => {
@@ -226,6 +227,40 @@ const SETS: Record<FundoId, { cam?: { pos: V3; target: V3; fov?: number }; night
       <group position={[0, 0, -2.5]}><Box s={[4.2, 1.6, 0.06]} p={[0, 1.75, 0]} c="#2f5a46" /><Box s={[4.4, 0.08, 0.15]} p={[0, 0.95, 0.06]} c="#b9874f" /><Sign text="2 + 2 = 4" p={[-0.8, 2.0, 0.05]} w={1.6} h={0.5} bg="#2f5a46" fg="#ffffff" /></group>
       <Window p={[-4.3, 1.9, -2.5]} w={1.4} /><Window p={[4.3, 1.9, -2.5]} w={1.4} /><Clock p={[2.6, 2.75, -2.52]} />
       {[-2.6, 0, 2.6].map((x) => (x === 0 ? [-1.0] : [-1.0, 0.6]).map((z) => <group key={`${x}${z}`}><group position={[x, 0, z]}><Box s={[1.0, 0.06, 0.6]} p={[0, 0.72, 0]} c="#d9a46a" />{[[-0.42, -0.24], [0.42, -0.24], [-0.42, 0.24], [0.42, 0.24]].map(([a, b], i) => <Box key={i} s={[0.05, 0.72, 0.05]} p={[a, 0.36, b]} c="#5a6070" />)}</group><Chair p={[x, 0, z + 0.55]} c="#3878be" ry={Math.PI} /></group>))}
+    </Room>) },
+  restaurante: { bg: "#f2dcc0", scene: () => (
+    <Room wall="#e9cfa8" wall2="#dcbf94" wallTex={tx(stripesV("#ecd4ae", "#e2c79c"), 10, 1)} floor={tx(tiles("#8a5a3a", "#6b4426"), 8, 5)}>
+      <Sign text="RESTAURANTE" p={[0, 2.85, -2.52]} w={2.8} h={0.55} bg="#7a2e3a" fg="#ffe9b0" />
+      <Box s={[2.2, 1.2, 0.05]} p={[2.6, 1.9, -2.52]} c="#2a2f3a" /><Sign text="PRATO DO DIA" p={[2.6, 2.25, -2.48]} w={1.8} h={0.32} bg="#2a2f3a" fg="#ffffff" /><Sign text="PEIXE R$ 49" p={[2.6, 1.8, -2.48]} w={1.8} h={0.32} bg="#2a2f3a" fg="#ffe14d" />
+      <Window p={[-2.6, 1.9, -2.5]} w={2.0} curtain="#7a2e3a" />
+      {[-3.4, 0, 3.4].map((x, i) => <group key={i} position={[x, 0, -1.2]}><mesh position={[0, 0.75, 0]} castShadow><cylinderGeometry args={[0.55, 0.55, 0.06, 28]} /><M c="#f4f4f4" /></mesh><Box s={[0.08, 0.75, 0.08]} p={[0, 0.37, 0]} c="#3a3f4b" /><Chair p={[-0.75, 0, 0]} c="#7a2e3a" ry={Math.PI / 2} /><Chair p={[0.75, 0, 0]} c="#7a2e3a" ry={-Math.PI / 2} /></group>)}
+      <Plant p={[-4.8, 0, -2.0]} s={1.1} /><Plant p={[4.8, 0, -2.0]} s={1.1} />
+      {[-2, 0, 2].map((x, i) => <mesh key={i} position={[x, 3.0, -1.0]}><sphereGeometry args={[0.16, 16, 12]} /><meshStandardMaterial color="#ffe9b0" emissive="#ffcf70" emissiveIntensity={0.9} /></mesh>)}
+    </Room>) },
+  loja: { bg: "#f6eef2", scene: () => (
+    <Room wall="#f6eef2" wall2="#ecdfe6" floor={tx(tiles("#efe8ee", "#d8ccd4"), 8, 5)} ceil="#ffffff">
+      <Sign text="MODA" p={[0, 2.85, -2.52]} w={2.0} h={0.55} bg="#c2577a" fg="#ffffff" />
+      {[-3.4, 3.4].map((x, i) => <group key={i} position={[x, 0, -2.2]}><Box s={[2.2, 0.05, 0.05]} p={[0, 1.9, 0]} c="#9aa3ad" />{Array.from({ length: 7 }).map((_, k) => <Box key={k} s={[0.26, 0.9, 0.3]} p={[-0.9 + k * 0.3, 1.4, 0]} c={["#e04b3c", "#3f86cf", "#f2b636", "#3e9b4a", "#8e6cc8", "#ffffff", "#2a2f3a"][(k + i) % 7]} />)}</group>)}
+      <group position={[0, 0, -2.3]}><Box s={[0.9, 1.9, 0.06]} p={[0, 1.0, 0]} c="#c4ccd6" /><Box s={[0.8, 1.8, 0.065]} p={[0, 1.0, 0.003]} c="#e6f3f8" e="#e6f3f8" ei={0.2} /></group>
+      <Counter p={[1.4, 0, -1.2]} w={1.6} c="#ffffff" top="#c2577a" /><Box s={[1.4, 0.3, 0.8]} p={[-1.6, 0.15, -1.0]} c="#c2577a" />
+      {Array.from({ length: 5 }).map((_, k) => <Box key={k} s={[0.5, 0.08, 0.4]} p={[-1.6, 0.34 + k * 0.08, -1.0]} c={["#3f86cf", "#f2b636", "#e04b3c", "#3e9b4a", "#ffffff"][k]} />)}
+      <Plant p={[-4.8, 0, -1.2]} />
+    </Room>) },
+  hospital: { bg: "#e9f2f4", scene: () => (
+    <Room wall="#e9f2f4" wall2="#d8e6ea" floor={tx(tiles("#dfe8ea", "#c6d3d6"), 8, 5)} ceil="#ffffff">
+      <Box s={[14, 1.0, 0.03]} p={[0, 0.5, -2.56]} c="#7fb8c8" />
+      {[-3.2, 0, 3.2].map((x, i) => <group key={i}><Box s={[1.2, 2.2, 0.06]} p={[x, 1.1, -2.55]} c="#b8d4dc" /><Box s={[0.4, 0.3, 0.04]} p={[x, 1.6, -2.5]} c="#cfe6f2" /><Sign text={["101", "102", "103"][i]} p={[x, 2.45, -2.5]} w={0.5} h={0.25} bg="#2c6f8a" fg="#ffffff" /></group>)}
+      <Sign text="CENTRO CIRÚRGICO" p={[0, 2.95, -2.52]} w={2.6} h={0.42} bg="#2c6f8a" fg="#ffffff" />
+      {[-1.6, -0.9, 1.4, 2.1].map((x, i) => <Chair key={i} p={[x, 0, -1.9]} c="#3f86cf" />)}
+      <Plant p={[4.8, 0, -1.8]} />
+    </Room>) },
+  hospitalQuarto: { bg: "#e9f2f4", scene: () => (
+    <Room wall="#e6eef0" wall2="#d6e2e6" floor={tx(tiles("#dfe8ea", "#c6d3d6"), 8, 5)} ceil="#ffffff">
+      <Window p={[-1.2, 1.9, -2.5]} w={1.8} curtain="#9fc7e8" />
+      <group position={[1.6, 0, -1.4]}><Box s={[1.1, 0.5, 2.1]} p={[0, 0.45, 0]} c="#ffffff" /><Box s={[1.15, 0.12, 2.15]} p={[0, 0.74, 0]} c="#9fc7e8" /><Box s={[0.8, 0.16, 0.4]} p={[0, 0.85, -0.8]} c="#ffffff" /><Box s={[1.1, 0.7, 0.08]} p={[0, 0.7, -1.05]} c="#c4ccd6" /></group>
+      <group position={[3.2, 0, -1.9]}><Box s={[0.05, 1.8, 0.05]} p={[0, 0.9, 0]} c="#9aa3ad" /><Box s={[0.25, 0.35, 0.1]} p={[0, 1.7, 0]} c="#cfe6f2" /></group>
+      <group position={[-3.4, 0, -2.2]}><Box s={[0.7, 0.5, 0.4]} p={[0, 1.2, 0]} c="#1a2330" /><Box s={[0.6, 0.38, 0.41]} p={[0, 1.2, 0.003]} c="#1f3a2a" e="#3cc46a" ei={0.3} /><Box s={[0.08, 1.0, 0.08]} p={[0, 0.5, 0]} c="#9aa3ad" /></group>
+      <Chair p={[-0.2, 0, -1.2]} c="#3f86cf" ry={-0.5} /><Plant p={[-4.8, 0, -1.6]} s={0.9} />
     </Room>) },
   rua: { bg: "#a9dcff", scene: () => <Rua /> },
   ruaTarde: { bg: "#f6b585", scene: () => <Rua tarde /> },

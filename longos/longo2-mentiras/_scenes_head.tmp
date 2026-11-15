@@ -1,0 +1,67 @@
+// ================= LONGO 1 — "E se você ficasse 1 ano MAIS NOVO todo dia?" (16:9) =================
+// ---------- fundo 3D: imagens pré-carregadas atrás do SVG, com a mesma câmera
+const BG_NAMES = ['restaurante', 'loja', 'hospital', 'hospitalQuarto', 'banheiro', 'quarto', 'quartoNoite', 'sala', 'escritorio', 'banco', 'mercado', 'consultorio', 'infancia', 'infanciaNoite', 'maeSala', 'maeSalaNoite', 'maeCozinha', 'escola', 'rua', 'ruaTarde'];
+const BGW = document.createElement('div');
+BGW.style.cssText = 'position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;background:#000;z-index:0';
+const BGI = document.createElement('div'); BGI.style.cssText = 'position:absolute;left:0;top:0;transform-origin:0 0'; BGW.appendChild(BGI);
+const BGIMG = {};
+for (const n of BG_NAMES) { const im = document.createElement('img'); im.src = 'bg/' + n + '.png'; im.style.cssText = 'position:absolute;left:-192px;top:-108px;width:2304px;height:1296px;display:none;filter:blur(1.1px) saturate(1.12)'; BGI.appendChild(im); BGIMG[n] = im; }
+document.body.insertBefore(BGW, document.body.firstChild);
+document.getElementById('s').style.cssText = 'position:absolute;left:0;top:0;z-index:1';
+let BGCUR = null;
+function applyBg(name, cam, punch) {
+  if (BGCUR !== name) { if (BGCUR && BGIMG[BGCUR]) BGIMG[BGCUR].style.display = 'none'; if (name && BGIMG[name]) BGIMG[name].style.display = 'block'; BGCUR = name; }
+  if (name) BGI.style.transform = `translate(960px,540px) scale(${cam[2] * punch}) translate(${-cam[0]}px,${-cam[1]}px)`;
+}
+window.bgReady = () => Promise.all(Object.values(BGIMG).map(i => i.complete ? 1 : new Promise(r => { i.onload = r; i.onerror = r; })));
+
+// ---------- personagens
+const pp = (d, o) => person(Object.assign({}, d, o));
+const pop1 = (t, at, d = 0.25) => back(prog(t, at, at + d));
+function neoAt(age, o = {}) {
+  const K = [[30, 1.0, 0.85, 150, 70], [21, 0.97, 0.9, 136, 62], [16, 0.92, 0.98, 110, 50], [12, 0.82, 1.08, 80, 35], [8, 0.72, 1.2, 50, 20], [4, 0.58, 1.38, 15, 5], [2, 0.48, 1.5, 0, 0], [0, 0.4, 1.6, 0, 0]];
+  let i = 0; while (i < K.length - 2 && age < K[i + 1][0]) i++;
+  const [a0, s0, h0, l0, t0] = K[i], [a1, s1, h1, l1, t1] = K[i + 1], k = clamp((a0 - age) / (a0 - a1));
+  return Object.assign({}, NEO, { s: lerp(s0, s1, k), hs: lerp(h0, h1, k), legX: lerp(l0, l1, k), torsoX: lerp(t0, t1, k) }, o);
+}
+const NEOp = (age, o) => person(neoAt(age, o));
+// elenco próprio do canal (olhos de anime, cabelos e roupas que não existem no canal do Kai)
+const LUCIA = { skin: '#F3CDB0', shirt: '#3E8A8A', inner: '#F6EAD8', stripe: '#2E6A6A', skirt: '#5A4A6A', pants: '#6A5A7A', shoe: '#4A2E22', hair: 'bob', hairCol: '#CFCBD6', anime: true, iris: '#8A5A3A', old: true, specs: '#6A4A3A', earring: '#F4F1EA', legX: 50, torsoX: 24, hs: 0.95 };
+const LUCIA_J = Object.assign({}, LUCIA, { hairCol: '#3A2418', shirt: '#E08A5A', stripe: '#B5603A', old: false, specs: null, skirt: '#2C3E66', pants: '#F3CDB0' });   // a mãe 30 anos atrás
+const xt = (o) => Object.assign({ anime: true, tie: null, shoe: '#2B2B2B', pants: '#2E3442', legX: 60, torsoX: 25, hs: 0.95 }, o);
+const CHEFE = xt({ skin: '#E8B98F', shirt: '#2C3550', tie: '#C62A2A', hair: 'side', hairCol: '#4A4A55', stubble: true, iris: '#5A4A3A', legX: 70 });
+const MOCA = xt({ skin: '#D9A47A', shirt: '#2C6F5A', inner: '#F4F4F4', stripe: '#F4F4F4', hair: 'pony', hairCol: '#8A3A22', iris: '#3E8A6A', earring: '#E0B13A' });
+const GERENTE = xt({ skin: '#F1C7A0', shirt: '#5A6070', tie: '#2C6FB6', hair: 'side', hairCol: '#1B1716', specs: '#2A2A33', iris: '#3A4A6A' });
+const COLEGA1 = xt({ skin: '#F5D2B0', shirt: '#7A5AC8', hair: 'spiky', hairCol: '#C7782E', iris: '#4A8A3A' });
+const COLEGA2 = xt({ skin: '#C88F66', shirt: '#E07B9A', hair: 'wavy', hairCol: '#2A1C14', iris: '#6A3A2A', earring: '#F2B636', skirt: '#2E3442', pants: '#C88F66' });
+const CAIXA = xt({ skin: '#C88F66', shirt: '#3E9B4A', apron: '#C62A2A', hair: 'buzz', hairCol: '#2A211C', iris: '#4A3A2A', stubble: true });
+const MEDICO = xt({ skin: '#F5D2B0', shirt: '#FFFFFF', longCoat: true, inner: '#9FC7E8', stripe: '#DDE3EA', hair: 'side', hairCol: '#B8B4AE', specs: '#3A3F4B', iris: '#3A5A7A', legX: 70 });
+const KID1 = xt({ skin: '#E8B98F', shirt: '#2C6FB6', hair: 'spiky', hairCol: '#3A2418', iris: '#5A3A22', hs: 1.2, legX: 0, torsoX: 0 });
+const KID2 = xt({ skin: '#F1C7A0', shirt: '#F28FB0', hair: 'pony', hairCol: '#E0B13A', iris: '#3A7AC8', skirt: '#2C3E66', pants: '#F1C7A0', hs: 1.2, legX: 0, torsoX: 0 });
+const PAIV = xt({ skin: '#E8B98F', shirt: '#5A6070', hair: 'side', hairCol: '#2A211C' });
+const MAEESC = xt({ skin: '#D9A47A', shirt: '#C2A04A', hair: 'wavy', hairCol: '#6A4A2A', iris: '#5A3A22', skirt: '#3A3F4B', pants: '#D9A47A' });
+// ---------- utilidades de cena
+const sc = (bg, g, cam = [960, 540, 1]) => ({ bg, g, cam });
+const drift = (t, d, a, b) => { const k = eio(prog(t, 0, d)); return [lerp(a[0], b[0], k), lerp(a[1], b[1], k), lerp(a[2], b[2], k)]; };
+function rays(t, c1, c2) { const id = 'bg' + (ZID++); let g = `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient>` + R(-200, -200, 2320, 1480, 0, `url(#${id})`, 0); g += `<radialGradient id="${id}g"><stop offset="0" stop-color="#FFF0D2" stop-opacity="0.35"/><stop offset="1" stop-color="#FFF0D2" stop-opacity="0"/></radialGradient>` + C(960, 600, 700, `url(#${id}g)`, 0); const r = rng(11); for (let i = 0; i < 26; i++) { const x = r() * 1920, y = ((r() * 1080 - t * (20 + r() * 30)) % 1080 + 1080) % 1080; g += C(x, y, 3 + r() * 4, `rgba(255,250,230,${0.35 + 0.3 * Math.sin(t * 2 + i)})`, 0); } return g; }
+const dark = (a = 0.55) => R(-200, -200, 2320, 1480, 0, `rgba(10,8,20,${a})`, 0);
+function badgeB(x, y, k, txt, bg = '#1A1210', fg = '#FFE14D', size = 64, rot = -3) { if (k <= 0) return ''; const w = txt.length * size * 0.62 + 70; return G(`translate(${x},${y}) scale(${k}) rotate(${rot})`, R(-w / 2, -size * 0.85, w, size * 1.7, size * 0.5, bg, 7) + T(0, 6, txt, size, fg)); }
+function bigTxt(x, y, k, l1, l2, c1 = '#FFFFFF', c2 = '#FFE14D', s1 = 70, s2 = 86) { if (k <= 0) return ''; return G(`translate(${x},${y}) scale(${k})`, T(0, -s2 * 0.55, l1, s1, c1, 14) + (l2 ? T(0, s1 * 0.75, l2, s2, c2, 16) : '')); }
+function mirror2d(x, y, w, h, inner) { return R(x - w / 2 - 18, y - h / 2 - 18, w + 36, h + 36, 30, '#8FA4B3', 7) + clipG(`<rect x="${x - w / 2}" y="${y - h / 2}" width="${w}" height="${h}" rx="20"/>`, R(x - w / 2, y - h / 2, w, h, 0, '#CFE9F5', 0) + inner + `<path d="M${x - w * 0.35},${y + h * 0.1} L${x - w * 0.05},${y - h * 0.45}" stroke="rgba(255,255,255,0.55)" stroke-width="26"/>`); }
+const neoHead = (age, o = {}) => head(Object.assign(neoAt(age), { hs: 1 }, o));
+function phoneB(x, y, s, title, lines = [], t = 0, ring = 0) { const sh = ring ? Math.sin(t * 40) * 5 : 0; let g = R(-150, -280, 300, 560, 40, '#1A1A20', 8) + R(-132, -250, 264, 500, 24, '#F4F6FA', 0) + R(-132, -250, 264, 70, 24, '#2E7D5A', 0) + T(0, -212, title, 32, '#FFFFFF'); lines.forEach((l, i) => { const k = l[1]; if (k <= 0) return; g += G(`translate(${l[2] ? 20 : -20},${-130 + i * 110}) scale(${k})`, R(-110, -40, 220, 84, 18, l[2] ? '#DCF8C6' : '#FFFFFF', 4) + T(0, 4, l[0], 24, '#1A1210')); }); return G(`translate(${x + sh},${y}) scale(${s})`, g); }
+function idCard(x, y, s, age) { return G(`translate(${x},${y}) scale(${s})`, R(-220, -140, 440, 280, 24, '#BFE3C8', 7) + R(-200, -120, 160, 200, 12, '#FFFFFF', 5) + clipG('<rect x="-200" y="-120" width="160" height="200" rx="12"/>', G('translate(-120,-10) scale(0.62)', neoHead(age, { expr: 'neutral' }))) + T(90, -80, 'IDENTIDADE', 30, '#2C6F5A') + R(0, -40, 190, 18, 6, '#8FB59A', 0) + R(0, 0, 160, 18, 6, '#8FB59A', 0) + R(0, 40, 180, 18, 6, '#8FB59A', 0) + T(90, 100, `${age} ANOS`, 30, '#1A1210')); }
+function polaroid(x, y, s, rot, age, lab) { return G(`translate(${x},${y}) rotate(${rot}) scale(${s})`, R(-130, -150, 260, 300, 10, '#FFFFFF', 6) + R(-110, -130, 220, 200, 4, '#CFE6F2', 0) + clipG('<rect x="-110" y="-130" width="220" height="200"/>', G('translate(0,-20) scale(0.7)', neoHead(age, { expr: 'neutral' }))) + T(0, 110, lab, 34, '#1A1210')); }
+function note(x, y, s, rot, lines, child = false) { let g = R(-330, -400, 660, 800, 14, '#FFF8E6', 7) + R(-330, -400, 660, 800, 14, 'url(#vol)', 0) + Ln(-250, -400, -250, 400, 'rgba(220,80,80,0.4)', 4); for (let i = 0; i < 11; i++) g += Ln(-320, -300 + i * 64, 320, -300 + i * 64, 'rgba(120,150,200,0.45)', 3); lines.forEach((l, i) => { if (!l) return; g += T(child ? 0 : -230, -318 + i * 64, l, child ? 50 : 36, child ? '#3A3FAA' : '#2C3E66', 0, child ? `transform="rotate(${(i % 2 ? 2 : -2)} 0 ${-318 + i * 64})"` : 'text-anchor="start"'); }); return G(`translate(${x},${y}) rotate(${rot}) scale(${s})`, g); }
+function pills(x, y, s) { let g = ''; [['#E04B3C', -70], ['#2C6FB6', 0], ['#F2B636', 70]].forEach(([c, dx]) => { g += R(dx - 26, -80, 52, 80, 10, '#FFFFFF', 5) + R(dx - 28, -100, 56, 26, 8, c, 5); }); return G(`translate(${x},${y}) scale(${s})`, g); }
+function xray(x, y, s, t) { let g = R(-260, -300, 520, 600, 20, '#101826', 8) + C(0, -190, 70, 'none', 0, 'stroke="#BFE8FF" stroke-width="10"'); g += `<g stroke="#BFE8FF" stroke-width="10" fill="none" opacity="${0.75 + 0.25 * Math.sin(t * 4)}"><path d="M0,-120 L0,120 M-90,-90 L90,-90 M-60,-50 L60,-50 M-60,-10 L60,-10 M-60,30 L60,30 M-90,-90 L-150,60 M90,-90 L150,60 M0,120 L-60,280 M0,120 L60,280"/></g>`; return G(`translate(${x},${y}) scale(${s})`, g); }
+function boneIcon(x, y, s) { return G(`translate(${x},${y}) scale(${s})`, C(-110, -26, 34, '#FFF8E6', 6) + C(-110, 26, 34, '#FFF8E6', 6) + C(110, -26, 34, '#FFF8E6', 6) + C(110, 26, 34, '#FFF8E6', 6) + R(-110, -24, 220, 48, 10, '#FFF8E6', 0) + Ln(-110, -24, 110, -24, O, 5) + Ln(-110, 24, 110, 24, O, 5)); }
+function tooth(x, y, s, milk = false) { return G(`translate(${x},${y}) scale(${s})`, P('M-50,-60 Q0,-80 50,-60 Q70,0 40,30 L30,90 Q20,100 10,60 L0,40 L-10,60 Q-20,100 -30,90 L-40,30 Q-70,0 -50,-60Z', milk ? '#FFFDF5' : '#F2EBD8', 7) + E(-20, -40, 14, 8, 'rgba(255,255,255,0.8)', 0)); }
+function brainIco(x, y, s, fade = 0) { let g = P('M-120,0 C-150,-100 -40,-150 0,-110 C40,-150 150,-100 120,0 C150,80 60,130 0,100 C-60,130 -150,80 -120,0Z', '#F4A3B8', 8) + P('M0,-110 L0,100 M-80,-40 Q-40,-60 -20,-20 M80,-40 Q40,-60 20,-20 M-90,40 Q-50,30 -30,60 M90,40 Q50,30 30,60', 'none', 7); return G(`translate(${x},${y}) scale(${s})`, `<g opacity="${1 - fade}">${g}</g>`); }
+function babyHeld(x, y, s, sleep = false) { let g = E(0, 40, 150, 90, '#F4E6D8', 7) + E(0, 40, 150, 90, 'url(#vol)', 0) + G('translate(-80,-10) scale(0.62)', head(Object.assign(neoAt(0), { hs: 1, expr: sleep ? 'sleep' : 'neutral', blink: false }))); return G(`translate(${x},${y}) scale(${s})`, g); }
+function notes(t, x, y) { let g = ''; for (let i = 0; i < 4; i++) { const k = ((t * 0.35 + i / 4) % 1); g += G(`translate(${x + Math.sin(k * 6 + i) * 40 + i * 30},${y - k * 300})`, `<g opacity="${1 - k}">` + C(0, 0, 14, '#FFF6C8', 4) + Ln(12, 0, 12, -50, O, 6) + Ln(12, -50, 36, -40, O, 6) + '</g>'); } return g; }
+function sweatLines(x, y, t) { let g = ''; for (const sd of [-1, 1]) for (let i = 0; i < 3; i++) g += Ln(x + sd * (40 + i * 6), y - 20 + i * 26, x + sd * (66 + i * 6), y - 26 + i * 26, '#FFFFFF', 7); return g; }
+function doorIn(x, y) { return ''; }
+// chão onde os personagens pisam (frente)
+const FY = 1030;
+
