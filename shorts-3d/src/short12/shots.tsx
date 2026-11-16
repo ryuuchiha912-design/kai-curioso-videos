@@ -114,7 +114,7 @@ export const SHOTS: Shot[] = [
   {
     name: "03 100 m vista de cima", from: C(23), to: C(36),
     render: (f, s, e) => (
-      <Sky f={f} hundred cam={glide(f, s, e, { pos: [52, 150, 0.1], target: [52, 0, 0], fov: 52, roll: Math.PI / 2 }, { pos: [52, 130, 0.1], target: [52, 0, 0], fov: 52, roll: Math.PI / 2 + 0.05 })}>
+      <Sky f={f} hundred cam={glide(f, s, e, { pos: [-30, 62, 6], target: [62, 0, 0], fov: 50 }, { pos: [-22, 54, 4], target: [66, 0, 0], fov: 48 })}>
         <SoccerOutline k={kf(f, [[W(33) - 3, 0], [W(33) + 6, 1]])} />
       </Sky>
     ),
