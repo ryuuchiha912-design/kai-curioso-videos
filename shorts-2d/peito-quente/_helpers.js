@@ -1,0 +1,82 @@
+// ---------------- objetos
+function kitchen(wall = '#F6E7C8', floor = '#C98A5A', dark = 0) {
+  let g = room(wall, floor, 1500);
+  g += R(600, 1180, 520, 320, 10, '#E8DCC0', 8) + R(590, 1150, 540, 44, 8, '#B9874F', 8);           // balcão
+  g += R(640, 1260, 200, 200, 8, '#D9CBA8', 6) + R(870, 1260, 200, 200, 8, '#D9CBA8', 6);
+  g += R(620, 520, 460, 280, 10, '#B9874F', 8) + Ln(850, 520, 850, 800, O, 8) + C(830, 700, 12, '#F2B636', 5) + C(870, 700, 12, '#F2B636', 5); // armário alto
+  g += R(80, 820, 280, 680, 30, '#DDE6EE', 8) + Ln(80, 1080, 360, 1080, O, 7) + Ln(320, 900, 320, 1020, O, 9);      // geladeira
+  if (dark) g += R(-60, -60, 1200, 2200, 0, `rgba(10,14,40,${dark})`, 0);
+  return g;
+}
+function chair(x, y, s = 1) { return G(`translate(${x},${y}) scale(${s})`, R(-90, -180, 180, 30, 8, '#B9874F', 7) + Ln(-75, -150, -75, 0, O, 12) + Ln(75, -150, 75, 0, O, 12) + R(-80, -420, 160, 30, 8, '#B9874F', 7) + Ln(-70, -390, -70, -180, O, 10) + Ln(70, -390, 70, -180, O, 10)); }
+function crash(x, y, t, at, txt = 'CRASH!') { const k = pop1(t, at, 0.2); if (k <= 0 || t > at + 1.6) return ''; return G(`translate(${x},${y}) scale(${k}) rotate(-8)`, star(0, 0, 150, 90, 12, '#FFE14D') + T(0, 8, txt, 52, '#C62A2A')); }
+function tears(x, y, t, s = 1) { let g = ''; for (const sx of [-1, 1]) for (let i = 0; i < 2; i++) { const k = ((t * 0.9 + i * 0.5) % 1); g += G(`translate(${x + sx * 60 * s},${y + k * 160 * s}) scale(${s})`, `<g opacity="${(1 - k) * 0.95}">` + P('M0,-26 Q20,0 0,18 Q-20,0 0,-26Z', '#7FC6F0', 4) + '</g>'); } return g; }
+function sneaker(x, y, s, t) {
+  let g = E(0, 0, 90, 40, '#FFFFFF', 7) + R(-90, 10, 180, 20, 8, '#C62A2A', 6);
+  g += P(`M-20,-20 Q${-80 + Math.sin(t * 3) * 10},-60 -110,-10 M10,-20 Q${70 + Math.sin(t * 3 + 1) * 10},-70 110,-6`, 'none', 0, 'stroke="#E04B3C" stroke-width="8" fill="none"');
+  return G(`translate(${x},${y}) scale(${s})`, g);
+}
+function bigX(x, y, s, t, at) { const k = pop1(t, at, 0.2); if (k <= 0) return ''; return G(`translate(${x},${y}) scale(${k * s})`, Ln(-60, -60, 60, 60, O, 40) + Ln(60, -60, -60, 60, O, 40) + Ln(-60, -60, 60, 60, '#E04B3C', 24) + Ln(60, -60, -60, 60, '#E04B3C', 24)); }
+function candy(x, y, s, col = '#E04B3C') { return G(`translate(${x},${y}) scale(${s})`, P('M-70,-26 L-40,0 L-70,26Z', col, 6) + P('M70,-26 L40,0 L70,26Z', col, 6) + C(0, 0, 42, col, 7) + P('M-24,-24 L24,24 M-6,-36 L36,6', 'none', 0, 'stroke="#FFFFFF" stroke-width="8"')); }
+function lolli(x, y, s, col = '#F2B636') { return G(`translate(${x},${y}) scale(${s})`, Ln(0, 0, 0, 150, O, 16) + Ln(0, 0, 0, 150, '#FFFFFF', 8) + C(0, 0, 60, col, 7) + P('M0,0 m-34,0 a34,34 0 1,1 34,34 a20,20 0 1,1 -20,-20', 'none', 0, 'stroke="#FFFFFF" stroke-width="8" fill="none"')); }
+function table(x, y, w = 700) { return R(x - w / 2, y - 30, w, 40, 10, '#B9874F', 8) + Ln(x - w / 2 + 50, y + 10, x - w / 2 + 50, y + 260, O, 14) + Ln(x + w / 2 - 50, y + 10, x + w / 2 - 50, y + 260, O, 14); }
+function stove(x, y) { return R(x - 220, y - 360, 440, 360, 12, '#E9ECEF', 8) + R(x - 230, y - 400, 460, 50, 10, '#5A6070', 8) + R(x - 160, y - 280, 320, 200, 14, '#3A3F4B', 7) + C(x - 120, y - 330, 14, '#E04B3C', 5) + C(x + 120, y - 330, 14, '#E04B3C', 5); }
+function pot(x, y, s, burnt, t) {
+  let g = R(-130, -110, 260, 120, 20, '#9AA3AD', 8) + R(-160, -100, 40, 26, 10, '#5A6070', 6) + R(120, -100, 40, 26, 10, '#5A6070', 6) + E(0, -110, 130, 22, burnt ? '#2A2220' : '#FFFFFF', 7);
+  if (burnt) for (let i = 0; i < 4; i++) { const k = ((t * 0.5 + i / 4) % 1); g += C(Math.sin(i * 2 + t) * 50, -150 - k * 380, 50 + k * 70, `rgba(50,46,44,${0.75 * (1 - k)})`, 0); }
+  return G(`translate(${x},${y}) scale(${s})`, g);
+}
+function bulb(x, y, s, on, t = 0) {
+  let g = '';
+  if (on) for (let i = 0; i < 3; i++) g += C(0, 20, 120 + i * 70 + Math.sin(t * 3) * 6, `rgba(255,226,122,${0.28 - i * 0.07})`, 0);
+  g += Ln(0, -400, 0, -40, O, 8) + R(-24, -50, 48, 40, 8, '#9AA3AD', 6) + C(0, 20, 48, on ? '#FFE27A' : '#C9CCD3', 7);
+  return G(`translate(${x},${y}) scale(${s})`, g);
+}
+function switchPlate(x, y, on) { return R(x - 40, y - 60, 80, 120, 12, '#FFFFFF', 7) + R(x - 14, on ? y - 40 : y, 28, 40, 8, '#9AA3AD', 5); }
+function bedKid(x, y, s, col = '#F28FB0') { return G(`translate(${x},${y}) scale(${s})`, R(-300, -60, 600, 140, 24, '#B9874F', 8) + R(-340, -220, 60, 300, 14, '#8A5A3A', 8) + R(-270, -130, 170, 70, 30, '#FFFFFF', 7)); }
+function plates(x, y, s, n = 5) { let g = ''; for (let i = 0; i < n; i++) g += E(0, -i * 26, 110, 26, i % 2 ? '#FFFFFF' : '#EAF4FB', 6); return G(`translate(${x},${y}) scale(${s})`, g + C(70, -n * 26, 16, 'rgba(255,255,255,0.8)', 3) + C(100, -n * 26 - 30, 10, 'rgba(255,255,255,0.8)', 3)); }
+function shirtIcon(x, y, s, col = '#3E9B4A') { return G(`translate(${x},${y}) scale(${s})`, P('M-60,-90 L-130,-50 L-100,10 L-70,-6 L-70,100 L70,100 L70,-6 L100,10 L130,-50 L60,-90 Q0,-50 -60,-90Z', col, 8)); }
+function schoolIcon(x, y, s) { return G(`translate(${x},${y}) scale(${s})`, R(-150, -120, 300, 220, 8, '#E07B39', 8) + P('M-170,-120 L0,-220 L170,-120Z', '#C62A2A', 8) + R(-40, 20, 80, 80, 6, '#7A4A2A', 6) + R(-120, -80, 60, 50, 6, '#BFE3F5', 5) + R(60, -80, 60, 50, 6, '#BFE3F5', 5) + C(0, -150, 26, '#FFFFFF', 5)); }
+function mug(x, y, s, t) { let g = R(-50, -80, 100, 110, 16, '#FFFFFF', 7) + P('M50,-60 Q100,-40 50,0', 'none', 9); for (let i = 0; i < 2; i++) { const k = ((t * 0.6 + i * 0.5) % 1); g += P(`M${-14 + i * 28},${-100 - k * 90} q16,-20 0,-40 q-16,-20 0,-40`, 'none', 0, `stroke="rgba(255,255,255,${1 - k})" stroke-width="8" fill="none"`); } return G(`translate(${x},${y}) scale(${s})`, g); }
+function coffeePot(x, y, s, rot = 0) { return G(`translate(${x},${y}) rotate(${rot}) scale(${s})`, P('M-60,-140 L60,-140 L80,40 L-80,40Z', '#3A3F4B', 8) + R(-70, -170, 140, 40, 12, '#5A6070', 7) + P('M80,-110 Q150,-70 90,0', 'none', 12) + P('M-80,-100 L-130,-130 L-90,-70', '#3A3F4B', 7)); }
+function sun(x, y, r, t) { let g = ''; for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2 + t * 0.2; g += Ln(x + Math.cos(a) * (r + 20), y + Math.sin(a) * (r + 20), x + Math.cos(a) * (r + 60), y + Math.sin(a) * (r + 60), '#F2B636', 12); } return g + C(x, y, r, '#FFE14D', 8); }
+function stars(t) { let g = ''; const r = rng(7); for (let i = 0; i < 22; i++) { const x = r() * 1080, y = r() * 900; g += C(x, y, 4 + 3 * Math.sin(t * 2 + i), '#F4F1EA', 0); } return g; }
+function nightWin(x, y) { return windowFrame(x, y, 300, 320, '#1C2A55') + C(x + 210, y + 90, 40, '#F4F1EA', 6); }
+/** Kai sentado no chão (abraçando os joelhos). */
+function kaiSit(x, y, s, expr, t) {
+  let g = G(`translate(${x},${y}) scale(${s})`, limb(-42, -60, -120, -150, KAI.pants, 46) + limb(-120, -150, -130, -10, KAI.pants, 44) + limb(42, -60, 120, -150, KAI.pants, 46) + limb(120, -150, 130, -10, KAI.pants, 44)
+    + E(-140, -10, 50, 24, KAI.shoe) + E(140, -10, 50, 24, KAI.shoe));
+  g += person(Object.assign({}, KAI, { x, y: y + 90 * s, s, legs: false, expr, hl: [-120, -160], hr: [120, -160] }));
+  return g;
+}
+/** Painel de lembrança (sépia). */
+function memPanel(x, y, w, h, k, inner, id, rot = 0) {
+  if (k <= 0) return '';
+  return G(`translate(${x + w / 2},${y + h / 2}) scale(${k}) rotate(${rot}) translate(${-w / 2},${-h / 2})`, R(0, 0, w, h, 20, '#F4EAD8', 10) + `<clipPath id="mp${id}"><rect x="12" y="12" width="${w - 24}" height="${h - 24}"/></clipPath><g clip-path="url(#mp${id})">` + inner + '</g>');
+}
+
+
+/** Balão de pensamento simples. */
+function think(x, y, w, txt, size = 44, t = 1, at = 0, tx = null, ty = null, fill = '#FFFFFF') {
+  const k = back(prog(t, at, at + 0.25)); if (k <= 0) return '';
+  const h = 150; let g = R(x, y, w, h, 70, fill, 8);
+  if (tx !== null) for (let i = 1; i <= 2; i++) { const kk = i / 3; g += C(lerp(x + w / 2, tx, kk + 0.15), lerp(y + h, ty, kk + 0.15), 22 - i * 6, fill, 6); }
+  g += T(x + w / 2, y + h / 2 + 4, txt, size, '#1A1210');
+  return G(`translate(${x + w / 2},${y + h / 2}) scale(${k}) translate(${-(x + w / 2)},${-(y + h / 2)})`, g);
+}
+
+/** Fundo suave em degradê (no lugar dos raios de quadrinho), com brilho e poeirinha flutuando. */
+function rays(t, c1, c2) {
+  const id = 'bg' + (ZID++);
+  let g = `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient>` + R(-60, -60, 1200, 2200, 0, `url(#${id})`, 0);
+  g += `<radialGradient id="${id}g"><stop offset="0" stop-color="#FFF0D2" stop-opacity="0.38"/><stop offset="1" stop-color="#FFF0D2" stop-opacity="0"/></radialGradient>` + C(540, 1150, 620, `url(#${id}g)`, 0);
+  const r = rng(11);
+  for (let i = 0; i < 16; i++) { const x = r() * 1080, y0 = r() * 1920, y = ((y0 - t * (20 + r() * 30)) % 1920 + 1920) % 1920; g += C(x, y, 3 + r() * 4, `rgba(255,250,230,${0.35 + 0.3 * Math.sin(t * 2 + i)})`, 0); }
+  return g;
+}
+function sitPerson(d, x, y, s, o) {
+  let g = '';
+  for (const sd of [-1, 1]) g += limb(x + sd * 40 * s, y - 10 * s, x + sd * 46 * s, y + 160 * s, d.pants, 56 * s, 7) + E(x + sd * 52 * s, y + 175 * s, 50 * s, 26 * s, d.shoe);
+  g += person(Object.assign({}, d, { x, y: y + 196 * 0.92 * s, s, legs: false }, o));
+  return g;
+}
