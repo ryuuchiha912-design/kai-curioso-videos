@@ -12,9 +12,10 @@ for (let i = 0; i < 22; i++) { const a = i * (Math.PI * 2 / 22); right += '<poly
 const pile = (x, y, s) => { let p = ''; for (let r = 0; r < 5; r++) for (let c = 0; c < 6 - r; c++) p += G(`translate(${x + (c - (5 - r) / 2) * 92},${y - r * 40}) rotate(${(c + r) % 2 ? 4 : -5})`, R(-50, -24, 100, 48, 6, '#7BC67E', 4) + C(0, 0, 14, '#4E9A52', 0)); return G(`translate(0,0) scale(1)`, `<g transform="translate(${x},${y}) scale(${s}) translate(${-x},${-y})">${p}</g>`); };
 right += pile(1110, 1060, 1.3) + pile(1790, 1060, 1.3);
 right += bills(2.5, 40, 12).replace(/translate\((\d+(\.\d+)?)/g, (m, x) => 'translate(' + (960 + parseFloat(x) / 2));
-right += person(Object.assign({}, LUCIA, { x: 1440, y: 1640, s: 1.75, expr: 'happy', hr: [230, -340] }));
-right += G('translate(1470,330) rotate(-4)', R(-260, -82, 520, 164, 46, '#FFFFFF', 10) + P('M-120,78 L-170,150 L-40,78Z', '#FFFFFF', 10) + R(-110, 72, 80, 12, 0, '#FFFFFF', 0) + T(0, 32, '"TÔ ÓTIMA."', 84, '#1A1210'));
-right += G('translate(1500,450) rotate(-13)', `<rect x="-235" y="-66" width="470" height="132" rx="18" fill="rgba(255,255,255,0.88)" stroke="#E0201A" stroke-width="16"/>` + T(0, 34, 'MENTIRA', 96, '#E0201A'));
+const notif = (x, y, r, sc) => G(`translate(${x},${y}) rotate(${r}) scale(${sc})`, R(-190, -52, 380, 104, 22, '#FFFFFF', 7) + C(-138, 0, 32, '#2E7D5A', 0) + T(-138, 12, '$', 38, '#FFFFFF') + T(30, -6, '+R$ 100', 44, '#2E7D5A') + T(30, 32, 'MENTIRA DETECTADA', 20, '#C62A2A'));
+right += notif(1170, 390, -8, 0.95) + notif(1730, 360, 7, 0.95) + notif(1150, 720, 6, 0.85) + notif(1745, 690, -6, 0.85);
+right += C(1440, 560, 300, 'rgba(255,255,255,0.35)', 0);
+right += person(neoAt(25, { x: 1440, y: 1900, s: 2.05, expr: 'happy', smile: true, hl: [-190, -470], hr: [190, -470] }));
 g += panel(960, 960, 'maeCozinha', right, 'blur(2px) saturate(1.2)', 0);
 g += sep(960);
 g += BIG(480, 190, 'R$ 100', 175) + BIG(1440, 190, 'R$ 58 MIL', 185, '#3BE36A');
