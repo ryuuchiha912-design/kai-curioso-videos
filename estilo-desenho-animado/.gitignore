@@ -1,3 +1,6 @@
 node_modules/
 out/
 *.log
+audio/contato/el/
+audio/contato/_cache/
+*.wav
