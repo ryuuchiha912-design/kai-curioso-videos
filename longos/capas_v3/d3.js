@@ -1,0 +1,10 @@
+let g = VOL;
+let left = person(neoAt(25, { x: 480, y: 2050, s: 2.2, expr: 'happy', smile: true, hr: [150, -330] }));
+g += panel(0, 960, 'quarto', left, 'blur(1px) saturate(1.3) brightness(1.08)', 0);
+let right = '';
+[[LUTO1, 1080, 0.95], [LUTO2, 1260, 0.95], [LUCIA_P, 1660, 0.95], [LUTO3, 1840, 0.95]].forEach(([c, x, s]) => { right += person(Object.assign({}, c, { x, y: 1180, s, sx: x > 1440 ? -1 : 1, expr: 'sad' })) + tears(x, 1180 - 640 * s * 0.92 + 40, 0.4, 0.75 * s) + tears(x, 1180 - 640 * s * 0.92 + 40, 0.9, 0.75 * s); });
+right += person(neoAt(25, { x: 1440, y: 2080, s: 2.15, shirt: '#22222A', inner: '#22222A', expr: 'creepy' }));
+g += panel(960, 960, 'velorio', right, 'blur(1.5px) brightness(0.55) saturate(0.8)', 0);
+g += sep(960);
+g += BIG(480, 190, '100%', 180) + BIG(1440, 190, '409.600%', 170, '#FF4FA0');
+return g;

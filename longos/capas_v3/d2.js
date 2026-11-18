@@ -1,0 +1,10 @@
+let g = VOL;
+let left = person(neoAt(25, { x: 420, y: 1980, s: 2.1, expr: 'surprised', hr: [130, -420], hl: [-120, -250] })) + G('translate(720,560) rotate(8) scale(1.1)', R(-150, -280, 300, 560, 40, '#1A1A20', 8) + R(-132, -250, 264, 500, 24, '#F4F6FA', 0) + R(-132, -250, 264, 70, 24, '#2E7D5A', 0) + T(0, -205, 'BANCO', 32, '#FFFFFF') + R(-115, -130, 230, 120, 16, '#FFFFFF', 5) + T(0, -80, '+R$ 100', 48, '#2E7D5A') + T(0, -36, 'MENTIRA DETECTADA', 18, '#C62A2A'));
+g += panel(0, 960, 'quarto', left, 'blur(1px) saturate(1.25)', 0);
+let right = bills(1.8, 30, 4).replace(/translate\((\d+(\.\d+)?)/g, (m, x) => 'translate(' + (960 + parseFloat(x) / 2)) + person(Object.assign({}, LUCIA, { x: 1440, y: 1720, s: 1.7, expr: 'happy', hr: [220, -330] }));
+right += G('translate(1460,350) rotate(-4)', R(-250, -80, 500, 160, 44, '#FFFFFF', 10) + P('M-120,76 L-170,150 L-40,76Z', '#FFFFFF', 10) + R(-110, 70, 80, 12, 0, '#FFFFFF', 0) + T(0, 30, '"TÔ ÓTIMA."', 80, '#1A1210'));
+right += G('translate(1470,470) rotate(-12)', `<rect x="-200" y="-56" width="400" height="112" rx="16" fill="none" stroke="#E0201A" stroke-width="12"/>` + T(0, 28, 'MENTIRA', 78, '#E0201A'));
+g += panel(960, 960, 'maeCozinha', right, 'blur(1px) saturate(1.25)', 0);
+g += sep(960);
+g += BIG(480, 190, 'R$ 100', 170) + BIG(1440, 190, 'R$ 58 MIL', 170, '#5BE38A');
+return g;
