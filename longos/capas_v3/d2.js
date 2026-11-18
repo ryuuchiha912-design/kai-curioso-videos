@@ -1,10 +1,21 @@
 let g = VOL;
-let left = person(neoAt(25, { x: 420, y: 1980, s: 2.1, expr: 'surprised', hr: [130, -420], hl: [-120, -250] })) + G('translate(720,560) rotate(8) scale(1.1)', R(-150, -280, 300, 560, 40, '#1A1A20', 8) + R(-132, -250, 264, 500, 24, '#F4F6FA', 0) + R(-132, -250, 264, 70, 24, '#2E7D5A', 0) + T(0, -205, 'BANCO', 32, '#FFFFFF') + R(-115, -130, 230, 120, 16, '#FFFFFF', 5) + T(0, -80, '+R$ 100', 48, '#2E7D5A') + T(0, -36, 'MENTIRA DETECTADA', 18, '#C62A2A'));
-g += panel(0, 960, 'quarto', left, 'blur(1px) saturate(1.25)', 0);
-let right = bills(1.8, 30, 4).replace(/translate\((\d+(\.\d+)?)/g, (m, x) => 'translate(' + (960 + parseFloat(x) / 2)) + person(Object.assign({}, LUCIA, { x: 1440, y: 1720, s: 1.7, expr: 'happy', hr: [220, -330] }));
-right += G('translate(1460,350) rotate(-4)', R(-250, -80, 500, 160, 44, '#FFFFFF', 10) + P('M-120,76 L-170,150 L-40,76Z', '#FFFFFF', 10) + R(-110, 70, 80, 12, 0, '#FFFFFF', 0) + T(0, 30, '"TÔ ÓTIMA."', 80, '#1A1210'));
-right += G('translate(1470,470) rotate(-12)', `<rect x="-200" y="-56" width="400" height="112" rx="16" fill="none" stroke="#E0201A" stroke-width="12"/>` + T(0, 28, 'MENTIRA', 78, '#E0201A'));
-g += panel(960, 960, 'maeCozinha', right, 'blur(1px) saturate(1.25)', 0);
+// R$ 100 — frio, um celular brilhando, uma nota
+let left = R(-10, -10, 980, 1100, 0, 'rgba(30,70,140,0.32)', 0);
+left += C(740, 540, 260, 'rgba(120,255,170,0.25)', 0);
+left += person(neoAt(25, { x: 400, y: 1980, s: 2.15, expr: 'surprised', hr: [130, -420], hl: [-120, -250] })) + sweatLines(400, 600, 0);
+left += G('translate(740,540) rotate(8) scale(1.15)', R(-150, -280, 300, 560, 40, '#1A1A20', 8) + R(-132, -250, 264, 500, 24, '#F4F6FA', 0) + R(-132, -250, 264, 70, 24, '#2E7D5A', 0) + T(0, -205, 'BANCO', 32, '#FFFFFF') + R(-115, -130, 230, 130, 16, '#E9FFF0', 5) + T(0, -76, '+R$ 100', 52, '#2E7D5A') + T(0, -30, 'MENTIRA DETECTADA', 18, '#C62A2A') + T(0, 60, 'SALDO', 26, '#5A6070') + T(0, 110, 'R$ 100', 54, '#1A1210'));
+left += G('translate(820,900) rotate(-18) scale(1.6)', R(-50, -24, 100, 48, 6, '#7BC67E', 4) + C(0, 0, 14, '#4E9A52', 0) + T(0, 4, '100', 16, '#1F4D22'));
+g += panel(0, 960, 'quarto', left, 'blur(1px) saturate(1.1) brightness(0.92)', 0);
+// R$ 58 MIL — explosão dourada de dinheiro + a mãe "tô ótima" + MENTIRA
+let right = '<defs><radialGradient id="ouro" cx="0.5" cy="0.45" r="0.75"><stop offset="0" stop-color="#FFF3B0"/><stop offset="0.5" stop-color="#F2B636"/><stop offset="1" stop-color="#8A5A10"/></radialGradient></defs>' + R(950, -10, 980, 1100, 0, 'url(#ouro)', 0);
+for (let i = 0; i < 22; i++) { const a = i * (Math.PI * 2 / 22); right += '<polygon points="1440,520 ' + (1440 + Math.cos(a) * 1600) + ',' + (520 + Math.sin(a) * 1600) + ' ' + (1440 + Math.cos(a + 0.12) * 1600) + ',' + (520 + Math.sin(a + 0.12) * 1600) + '" fill="rgba(255,255,255,0.16)"/>'; }
+const pile = (x, y, s) => { let p = ''; for (let r = 0; r < 5; r++) for (let c = 0; c < 6 - r; c++) p += G(`translate(${x + (c - (5 - r) / 2) * 92},${y - r * 40}) rotate(${(c + r) % 2 ? 4 : -5})`, R(-50, -24, 100, 48, 6, '#7BC67E', 4) + C(0, 0, 14, '#4E9A52', 0)); return G(`translate(0,0) scale(1)`, `<g transform="translate(${x},${y}) scale(${s}) translate(${-x},${-y})">${p}</g>`); };
+right += pile(1110, 1060, 1.3) + pile(1790, 1060, 1.3);
+right += bills(2.5, 40, 12).replace(/translate\((\d+(\.\d+)?)/g, (m, x) => 'translate(' + (960 + parseFloat(x) / 2));
+right += person(Object.assign({}, LUCIA, { x: 1440, y: 1640, s: 1.75, expr: 'happy', hr: [230, -340] }));
+right += G('translate(1470,330) rotate(-4)', R(-260, -82, 520, 164, 46, '#FFFFFF', 10) + P('M-120,78 L-170,150 L-40,78Z', '#FFFFFF', 10) + R(-110, 72, 80, 12, 0, '#FFFFFF', 0) + T(0, 32, '"TÔ ÓTIMA."', 84, '#1A1210'));
+right += G('translate(1500,450) rotate(-13)', `<rect x="-235" y="-66" width="470" height="132" rx="18" fill="rgba(255,255,255,0.88)" stroke="#E0201A" stroke-width="16"/>` + T(0, 34, 'MENTIRA', 96, '#E0201A'));
+g += panel(960, 960, 'maeCozinha', right, 'blur(2px) saturate(1.2)', 0);
 g += sep(960);
-g += BIG(480, 190, 'R$ 100', 170) + BIG(1440, 190, 'R$ 58 MIL', 170, '#5BE38A');
+g += BIG(480, 190, 'R$ 100', 175) + BIG(1440, 190, 'R$ 58 MIL', 185, '#3BE36A');
 return g;
